@@ -78,5 +78,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Library\Library.csproj">
+      <Project>{3625c9df-ccfc-48d0-9561-559db497bc67}</Project>
+      <Name>Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TargetLogics\TargetLogics.csproj">
+      <Project>{a9315fed-aa3f-4c01-b338-912416c15410}</Project>
+      <Name>TargetLogics</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
