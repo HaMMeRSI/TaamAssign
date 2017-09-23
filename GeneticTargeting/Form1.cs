@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -19,25 +20,28 @@ namespace GeneticTargeting
         public bool IsLeftMouseDown { get; set; }
         public bool IsRightMouseDown { get; set; }
         public Point2D MouseDownLocation { get; set; }
-        public Point2D OldRotationLocation { get; set; }
+        public Point2D TransformOrigin { get; set; }
         public float TranslateRatio { get; set; }
         public float Angle { get; set; }
 
         public Form1()
         {
             InitializeComponent();
+            typeof(Panel).InvokeMember("DoubleBuffered", BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic, null, this.pnlView, new object[] { true });
+
             this.DoubleBuffered = true;
             this.TScale = ((float)this.tbScale.Value) / 25;
             this.Angle = 0;
             this.World = new CWorld();
+            this.TransformOrigin = new Point2D(-this.World.Terrain.GetWidth() / 2, -this.World.Terrain.GetHeight() / 2);
 
-            if (this.World.MyWorld.GetWidth() > this.World.MyWorld.GetHeight())
+            if (this.World.Terrain.GetWidth() > this.World.Terrain.GetHeight())
             {
-                this.TranslateRatio = (float)this.World.MyWorld.GetWidth() / (float)pnlView.Width;
+                this.TranslateRatio = (float)this.World.Terrain.GetWidth() / (float)pnlView.Width;
             }
             else
             {
-                this.TranslateRatio = (float)this.World.MyWorld.GetHeight() / (float)pnlView.Height;
+                this.TranslateRatio = (float)this.World.Terrain.GetHeight() / (float)pnlView.Height;
             }
         }
 
@@ -46,12 +50,14 @@ namespace GeneticTargeting
             e.Graphics.TranslateTransform(pnlView.Width / 2, pnlView.Height / 2);
             e.Graphics.ScaleTransform(this.TScale, this.TScale);
             e.Graphics.RotateTransform(this.Angle);
-            e.Graphics.TranslateTransform((float)this.World.Location.X , (float)this.World.Location.Y);
+            e.Graphics.TranslateTransform((float)this.TransformOrigin.X, (float)this.TransformOrigin.Y);
 
             World.Draw(e.Graphics);
             e.Graphics.RotateTransform(0);
             e.Graphics.ResetTransform();
         }
+
+        #region Annoying events
 
         private void tbScale_Scroll(object sender, EventArgs e)
         {
@@ -61,12 +67,12 @@ namespace GeneticTargeting
 
         private void pnlView_MouseDown(object sender, MouseEventArgs e)
         {
-            if(e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left)
             {
                 this.IsLeftMouseDown = true;
                 this.MouseDownLocation = (Point2D)e.Location;
-            } 
-            else if(e.Button == MouseButtons.Right)
+            }
+            else if (e.Button == MouseButtons.Right)
             {
                 this.IsRightMouseDown = true;
                 this.MouseDownLocation = (Point2D)e.Location;
@@ -77,14 +83,14 @@ namespace GeneticTargeting
         {
             if (this.IsLeftMouseDown)
             {
-                this.World.Location.X += (e.X - this.MouseDownLocation.X) / this.TScale;
-                this.World.Location.Y += (e.Y - this.MouseDownLocation.Y) / this.TScale;
+                this.TransformOrigin.X += (e.X - this.MouseDownLocation.X) / this.TScale;
+                this.TransformOrigin.Y += (e.Y - this.MouseDownLocation.Y) / this.TScale;
                 this.MouseDownLocation = (Point2D)e.Location;
                 this.pnlView.Refresh();
             }
-            else if(this.IsRightMouseDown)
+            else if (this.IsRightMouseDown)
             {
-                if(e.Location.Y > this.MouseDownLocation.Y)
+                if (e.Location.Y > this.MouseDownLocation.Y)
                 {
                     this.Angle += 10;
                 }
@@ -102,9 +108,12 @@ namespace GeneticTargeting
             {
                 this.IsLeftMouseDown = false;
             }
-            else if (e.Button == MouseButtons.Right) {
+            else if (e.Button == MouseButtons.Right)
+            {
                 this.IsRightMouseDown = false;
             }
         }
+        
+        #endregion
     }
 }

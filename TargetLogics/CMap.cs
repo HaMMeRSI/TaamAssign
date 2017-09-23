@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace TargetLogics
 {
-    public class CMap: ILive
+    public class CMap: IDrawable
     {
         public int[,] Map { get; set; }
         public int CellSize { get; set; }
@@ -29,9 +29,14 @@ namespace TargetLogics
             return this.Map.GetLength(1) * this.CellSize;
         }
 
-        public void Update()
+        public int GetColSize()
         {
-            throw new NotImplementedException();
+            return this.Map.GetLength(0);
+        }
+
+        public int GetRowSize()
+        {
+            return this.Map.GetLength(1);
         }
 
         Pen p = new Pen(Color.Black, 2);
