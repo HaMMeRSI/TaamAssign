@@ -28,12 +28,34 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.pnlView = new System.Windows.Forms.Panel();
+            this.SuspendLayout();
+            // 
+            // pnlView
+            // 
+            this.pnlView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.pnlView.Location = new System.Drawing.Point(13, 13);
+            this.pnlView.Name = "pnlView";
+            this.pnlView.Size = new System.Drawing.Size(928, 925);
+            this.pnlView.TabIndex = 0;
+            this.pnlView.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlView_Paint);
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1297, 950);
+            this.Controls.Add(this.pnlView);
+            this.Name = "Form1";
             this.Text = "Form1";
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private System.Windows.Forms.Panel pnlView;
     }
 }
 

@@ -16,5 +16,10 @@ namespace GeneticTargeting
         {
             InitializeComponent();
         }
+
+        private void pnlView_Paint(object sender, PaintEventArgs e)
+        {
+            // 
+        }
     }
 }
