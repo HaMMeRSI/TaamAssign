@@ -1,5 +1,4 @@
 ﻿using Library;
-using Logics;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,7 +15,7 @@ namespace GeneticTargeting
 {
     public partial class Form1 : Form
     {
-        public God PopGen { get; set; }
+        //public God PopGen { get; set; }
         public CWorld World { get; set; }
         public float TScale { get; set; }
         public bool IsLeftMouseDown { get; set; }
@@ -39,6 +38,7 @@ namespace GeneticTargeting
 
         private void pnlView_Paint(object sender, PaintEventArgs e)
         {
+            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             e.Graphics.TranslateTransform(pnlView.Width / 2, pnlView.Height / 2);
             e.Graphics.ScaleTransform(this.TScale, this.TScale);
             e.Graphics.RotateTransform(this.Angle);
@@ -110,7 +110,8 @@ namespace GeneticTargeting
 
         private void btnGeneratePopulation_Click(object sender, EventArgs e)
         {
-            this.PopGen.GeneratePopulation();
+            // this.PopGen.GeneratePopulation();
+            // this.World.Execute();
         }
     }
 }

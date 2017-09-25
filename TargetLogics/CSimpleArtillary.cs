@@ -37,11 +37,11 @@ namespace TargetLogics
                 this[1] = value;
             }
         }
-        public float Ammunition
+        public int Ammunition
         {
             get
             {
-                return this[2];
+                return (int)this[2];
             }
             set
             {
@@ -59,8 +59,21 @@ namespace TargetLogics
                 this[3] = value;
             }
         }
-
+        public int ShotsToFire {
+            get
+            {
+                return (int)this[4];
+            }
+            set
+            {
+                this[4] = value;
+            }
+        }
+        
         #endregion
+
+        public int ShotsTaken { get; set; }
+        public List<CSimpleArtillary> Targets { get; set; }
 
         #region Builder
 
@@ -73,7 +86,13 @@ namespace TargetLogics
         #endregion
 
         public CSimpleArtillary() : 
-            base(4)
+            base(5)
+        {
+            this.ShotsTaken = 0;
+            this.Targets = new List<CSimpleArtillary>();
+        }
+
+        public void InitiateGenome()
         {
             // Radius
             this[0] = Shared.Next(25) + 1;
@@ -86,12 +105,25 @@ namespace TargetLogics
 
             // Health
             this[3] = Shared.Next(5) + 1;
+
+            // Shots to fire
+            this[4] = Shared.Next((int)this[2]);
         }
 
-
-        public override void CalculateFitness(string target)
+        public void Shoot(List<CSimpleArtillary> colTargets)
         {
-            throw new NotImplementedException();
+            int nTargetInd = Shared.Next(colTargets.Count);
+
+            if (colTargets[nTargetInd].Health > 0)
+            {
+                this.Targets.Add(colTargets[nTargetInd]);
+                colTargets[nTargetInd].Health -= this.Damage;
+            }
+        }
+
+        public override void CalculateFitness()
+        {
+            this.Fitness = this.Targets.Count;
         }
 
         protected override void Mutate()
@@ -101,7 +133,7 @@ namespace TargetLogics
 
         protected override IDNA GetObj()
         {
-            return new CSimpleArtillary(this.Genes.Length);
+            return new CSimpleArtillary();
         }
     }
 }

@@ -9,9 +9,7 @@ namespace EvolutionaryLogic
     public interface IDNA
     {
         IDNA Crossover(IDNA partner);
-        void CalculateFitness(string target);
-        void Mutate();
-        IDNA GetObj();
+        void CalculateFitness();
         float GetFitnesss();
     }
 }

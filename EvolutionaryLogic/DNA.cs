@@ -60,7 +60,7 @@ namespace EvolutionaryLogic
             return ""; // new string(this.genes) + " - " + this.Fitness;
         }
 
-        public abstract void CalculateFitness(string target);
+        public abstract void CalculateFitness();
         protected abstract void Mutate();
         protected abstract IDNA GetObj();
     }

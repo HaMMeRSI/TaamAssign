@@ -1,89 +1,89 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Text;
+//using System.Threading.Tasks;
 
-namespace EvolutionaryLogic
-{
-    public class God<T> where T : new()
-    {
-        #region Properties
+//namespace EvolutionaryLogic
+//{
+//    public class God<T> where T : new()
+//    {
+//        #region Properties
 
-        private List<T> Population { get; set; }
-        private int MyPopulationSize { get; set; }
-        private string Target { get; set; }
-        public PopulationSelector MySelector { get; set; }
+//        private List<T> Population { get; set; }
+//        private int MyPopulationSize { get; set; }
+//        private string Target { get; set; }
+//        public PopulationSelector MySelector { get; set; }
 
-        public T BestFitness { get; set; }
-        public int GenerationCount { get; set; }
-        public float AvreageFitness { get; set; } 
+//        public T BestFitness { get; set; }
+//        public int GenerationCount { get; set; }
+//        public float AvreageFitness { get; set; } 
 
-        #endregion
+//        #endregion
 
-        public God(int nPopSize, string strTarget)
-        {
-            this.Target = strTarget;
-            this.Population = new List<T>();
-            this.MySelector = new PopulationSelector();
-            this.MyPopulationSize = nPopSize;
-            this.GenerationCount = 0;
+//        public God(int nPopSize, string strTarget)
+//        {
+//            this.Target = strTarget;
+//            this.Population = new List<T>();
+//            this.MySelector = new PopulationSelector();
+//            this.MyPopulationSize = nPopSize;
+//            this.GenerationCount = 0;
 
-            for (int i = 0; i < this.MyPopulationSize; i++)
-            {
-                this.Population.Add(new T(this.Target.Length));
-            }
+//            for (int i = 0; i < this.MyPopulationSize; i++)
+//            {
+//                this.Population.Add(new T(this.Target.Length));
+//            }
 
-            this.AssessPopulation();
-        }
+//            this.AssessPopulation();
+//        }
 
-        public void GeneratePopulation()
-        {
-            this.MySelector.NaturalSelection(this.Population);
+//        public void GeneratePopulation()
+//        {
+//            this.MySelector.NaturalSelection(this.Population);
 
-            MatingPool pool = new MatingPool(this.Population);
-            List<DNA> NewPop = new List<DNA>();
+//            MatingPool pool = new MatingPool(this.Population);
+//            List<DNA> NewPop = new List<DNA>();
 
-            for (int i = 0; i < this.MyPopulationSize; i++)
-            {
-                NewPop.Add(pool.GetChild());
-            }
+//            for (int i = 0; i < this.MyPopulationSize; i++)
+//            {
+//                NewPop.Add(pool.GetChild());
+//            }
 
-            this.Population = NewPop;
-            this.GenerationCount++;
-            this.AssessPopulation();
-        }
+//            this.Population = NewPop;
+//            this.GenerationCount++;
+//            this.AssessPopulation();
+//        }
 
-        private void AssessPopulation()
-        {
-            DNA BestDNA = new DNA(this.Target.Length);
-            float TotalFintess = 0;
+//        private void AssessPopulation()
+//        {
+//            DNA BestDNA = new DNA(this.Target.Length);
+//            float TotalFintess = 0;
 
-            foreach (DNA objDNA in this.Population)
-            {
-                objDNA.calcFitness(this.Target);
+//            foreach (DNA objDNA in this.Population)
+//            {
+//                objDNA.calcFitness(this.Target);
 
-                TotalFintess += objDNA.Fitness;
-                if (objDNA.Fitness > BestDNA.Fitness)
-                {
-                    BestDNA = objDNA;
-                }
-            }
+//                TotalFintess += objDNA.Fitness;
+//                if (objDNA.Fitness > BestDNA.Fitness)
+//                {
+//                    BestDNA = objDNA;
+//                }
+//            }
 
-            this.BestFitness = BestDNA;
-            this.AvreageFitness = TotalFintess / this.MyPopulationSize;
-        }
+//            this.BestFitness = BestDNA;
+//            this.AvreageFitness = TotalFintess / this.MyPopulationSize;
+//        }
 
-        public string PrintAll()
-        {
-            string strAll = "";
-            foreach (DNA obj in this.Population)
-            {
-                strAll += obj.ToString();
-                strAll += Environment.NewLine;
-            }
+//        public string PrintAll()
+//        {
+//            string strAll = "";
+//            foreach (DNA obj in this.Population)
+//            {
+//                strAll += obj.ToString();
+//                strAll += Environment.NewLine;
+//            }
 
-            return strAll;
-        }
-    }
-}
+//            return strAll;
+//        }
+//    }
+//}
