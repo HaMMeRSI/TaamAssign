@@ -4,32 +4,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logics
+namespace EvolutionaryLogic
 {
     public class MatingPool
     {
-        public RandomByRange<DNA> MyMatingPool { get; set; }
+        public RandomByRange<IDNA> MyMatingPool { get; set; }
 
-        public MatingPool(List<DNA> Population)
+        public MatingPool(List<IDNA> Population)
         {
-            this.MyMatingPool = new RandomByRange<DNA>();
+            this.MyMatingPool = new RandomByRange<IDNA>();
             for (int i = Population.Count - 1; i >= 0; i--)
             {
-                int n = (int)(Population[i].Fitness * 100);
+                int n = (int)(Population[i].GetFitnesss() * 100);
                 this.MyMatingPool.AddToRange(n, Population[i], (int item) => item * item);
             }
         }
 
-        public DNA GetChild()
+        public IDNA GetChild()
         {
-            DNA[] arrParents = this.PickParents();
+            IDNA[] arrParents = this.PickParents();
 
-            return arrParents[0].crossover(arrParents[1]);
+            return arrParents[0].Crossover(arrParents[1]);
         }
 
-        private DNA[] PickParents()
+        private IDNA[] PickParents()
         {
-            DNA[] arrParents = new DNA[2];
+            IDNA[] arrParents = new IDNA[2];
 
             //arrParents[0] = this.MyMatingPool[Shared.rnd.Next(this.MyMatingPool.Count)];
             //arrParents[1] = this.MyMatingPool[Shared.rnd.Next(this.MyMatingPool.Count)];

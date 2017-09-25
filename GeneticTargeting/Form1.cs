@@ -1,4 +1,5 @@
 ﻿using Library;
+using Logics;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,13 +16,13 @@ namespace GeneticTargeting
 {
     public partial class Form1 : Form
     {
+        public God PopGen { get; set; }
         public CWorld World { get; set; }
         public float TScale { get; set; }
         public bool IsLeftMouseDown { get; set; }
         public bool IsRightMouseDown { get; set; }
         public Point2D MouseDownLocation { get; set; }
         public Point2D TransformOrigin { get; set; }
-        public float TranslateRatio { get; set; }
         public float Angle { get; set; }
 
         public Form1()
@@ -34,15 +35,6 @@ namespace GeneticTargeting
             this.Angle = 0;
             this.World = new CWorld();
             this.TransformOrigin = new Point2D(-this.World.Terrain.GetWidth() / 2, -this.World.Terrain.GetHeight() / 2);
-
-            if (this.World.Terrain.GetWidth() > this.World.Terrain.GetHeight())
-            {
-                this.TranslateRatio = (float)this.World.Terrain.GetWidth() / (float)pnlView.Width;
-            }
-            else
-            {
-                this.TranslateRatio = (float)this.World.Terrain.GetHeight() / (float)pnlView.Height;
-            }
         }
 
         private void pnlView_Paint(object sender, PaintEventArgs e)
@@ -113,7 +105,12 @@ namespace GeneticTargeting
                 this.IsRightMouseDown = false;
             }
         }
-        
+
         #endregion
+
+        private void btnGeneratePopulation_Click(object sender, EventArgs e)
+        {
+            this.PopGen.GeneratePopulation();
+        }
     }
 }

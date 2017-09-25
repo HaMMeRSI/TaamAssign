@@ -4,18 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logics
+namespace EvolutionaryLogic
 {
-    public class God
+    public class God<T> where T : new()
     {
         #region Properties
 
-        private List<DNA> Population { get; set; }
+        private List<T> Population { get; set; }
         private int MyPopulationSize { get; set; }
         private string Target { get; set; }
         public PopulationSelector MySelector { get; set; }
 
-        public DNA BestFitness { get; set; }
+        public T BestFitness { get; set; }
         public int GenerationCount { get; set; }
         public float AvreageFitness { get; set; } 
 
@@ -24,14 +24,14 @@ namespace Logics
         public God(int nPopSize, string strTarget)
         {
             this.Target = strTarget;
-            this.Population = new List<DNA>();
+            this.Population = new List<T>();
             this.MySelector = new PopulationSelector();
             this.MyPopulationSize = nPopSize;
             this.GenerationCount = 0;
 
             for (int i = 0; i < this.MyPopulationSize; i++)
             {
-                this.Population.Add(new DNA(this.Target.Length));
+                this.Population.Add(new T(this.Target.Length));
             }
 
             this.AssessPopulation();

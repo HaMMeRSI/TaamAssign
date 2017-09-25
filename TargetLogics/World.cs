@@ -29,7 +29,6 @@ namespace TargetLogics
             for (int i = 0; i < 15; i++)
             {
                 CSimpleArtillary obj = new CSimpleArtillary();
-                obj.Randomize();
                 obj.SetLocation(this.Centerize(Shared.Next(this.Terrain.GetColSize())), this.Centerize(this.Terrain.GetRowSize() - Shared.Next(this.Terrain.GetRowSize() / 3) - 1));
                 this.Friendly.Add(obj);
             }
@@ -37,7 +36,6 @@ namespace TargetLogics
             for (int i = 0; i < 10; i++)
             {
                 CSimpleArtillary obj = new CSimpleArtillary();
-                obj.Randomize();
                 obj.SetLocation(this.Centerize(Shared.Next(this.Terrain.GetColSize())), this.Centerize(Shared.Next(this.Terrain.GetRowSize() / 3)));
                 this.Enemy.Add(obj);
             }

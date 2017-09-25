@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logics
+namespace EvolutionaryLogic
 {
     public class RandomByRange<T> where T: class
     {
@@ -41,7 +41,7 @@ namespace Logics
 
         public T PickFromRange()
         {
-            int nSelectend = Shared.Next(this.MyRange[this.MyRange.Count - 1].Item1);
+            int nSelectend = BaseLogic.Next(this.MyRange[this.MyRange.Count - 1].Item1);
             for (int i = 0; i < this.MyRange.Count; i++)
             {
                 if(nSelectend <= this.MyRange[i].Item1)

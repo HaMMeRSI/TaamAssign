@@ -4,19 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logics
+namespace EvolutionaryLogic
 {
     public class PopulationSelector
     {
-        public void NaturalSelection(List<DNA> Population)
+        public void NaturalSelection(List<IDNA> Population)
         {
             MergeSort.Sort(Population);
 
             for (int i = 0; i < Population.Count; i++)
             {
-                if (Shared.HitChance(.04))
+                if (BaseLogic.HitChance(.04))
                 {
-                    Population.RemoveAt(Shared.Next(Population.Count));
+                    Population.RemoveAt(BaseLogic.Next(Population.Count));
                 }
             }
 

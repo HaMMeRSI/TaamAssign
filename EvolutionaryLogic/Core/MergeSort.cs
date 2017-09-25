@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logics
+namespace EvolutionaryLogic
 {
     public class MergeSort
     {
-        public static void Sort(List<DNA> input, int low, int high)
+        public static void Sort(List<IDNA> input, int low, int high)
         {
             if (low < high)
             {
@@ -19,21 +19,21 @@ namespace Logics
             }
         }
 
-        public static void Sort(List<DNA> input)
+        public static void Sort(List<IDNA> input)
         {
             Sort(input, 0, input.Count - 1);
         }
 
-        private static void Merge(List<DNA> input, int low, int middle, int high)
+        private static void Merge(List<IDNA> input, int low, int middle, int high)
         {
             int left = low;
             int right = middle + 1;
-            DNA[] tmp = new DNA[(high - low) + 1];
+            IDNA[] tmp = new IDNA[(high - low) + 1];
             int tmpIndex = 0;
 
             while ((left <= middle) && (right <= high))
             {
-                if (input[left].Fitness < input[right].Fitness)
+                if (input[left].GetFitnesss() < input[right].GetFitnesss())
                 {
                     tmp[tmpIndex] = input[left];
                     left = left + 1;
@@ -67,7 +67,7 @@ namespace Logics
 
         }
 
-        public static string PrintArray(List<DNA> input)
+        public static string PrintArray(List<IDNA> input)
         {
             string result = String.Empty;
 

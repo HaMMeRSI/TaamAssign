@@ -47,6 +47,10 @@
     <Compile Include="World.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EvolutionaryLogic\EvolutionaryLogic.csproj">
+      <Project>{A15C7BDC-4C0A-4C4A-8918-A7800885596A}</Project>
+      <Name>EvolutionaryLogic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Library\Library.csproj">
       <Project>{3625c9df-ccfc-48d0-9561-559db497bc67}</Project>
       <Name>Library</Name>

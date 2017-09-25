@@ -30,6 +30,7 @@
         {
             this.pnlView = new System.Windows.Forms.Panel();
             this.tbScale = new System.Windows.Forms.TrackBar();
+            this.btnGeneratePopulation = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.tbScale)).BeginInit();
             this.SuspendLayout();
             // 
@@ -55,17 +56,28 @@
             this.tbScale.Maximum = 100;
             this.tbScale.Minimum = 1;
             this.tbScale.Name = "tbScale";
-            this.tbScale.Size = new System.Drawing.Size(338, 56);
+            this.tbScale.Size = new System.Drawing.Size(321, 56);
             this.tbScale.TabIndex = 1;
             this.tbScale.TickFrequency = 0;
             this.tbScale.Value = 25;
             this.tbScale.Scroll += new System.EventHandler(this.tbScale_Scroll);
+            // 
+            // btnGeneratePopulation
+            // 
+            this.btnGeneratePopulation.Location = new System.Drawing.Point(695, 75);
+            this.btnGeneratePopulation.Name = "btnGeneratePopulation";
+            this.btnGeneratePopulation.Size = new System.Drawing.Size(320, 68);
+            this.btnGeneratePopulation.TabIndex = 2;
+            this.btnGeneratePopulation.Text = "Generate Population";
+            this.btnGeneratePopulation.UseVisualStyleBackColor = true;
+            this.btnGeneratePopulation.Click += new System.EventHandler(this.btnGeneratePopulation_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1027, 655);
+            this.Controls.Add(this.btnGeneratePopulation);
             this.Controls.Add(this.tbScale);
             this.Controls.Add(this.pnlView);
             this.Name = "Form1";
@@ -80,6 +92,7 @@
 
         private System.Windows.Forms.Panel pnlView;
         private System.Windows.Forms.TrackBar tbScale;
+        private System.Windows.Forms.Button btnGeneratePopulation;
     }
 }
 

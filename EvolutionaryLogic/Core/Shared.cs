@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logics
+namespace EvolutionaryLogic
 {
-    public class Shared
+    public class BaseLogic
     {
         public static Random rnd = new Random();
 

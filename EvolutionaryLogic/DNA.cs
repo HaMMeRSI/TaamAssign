@@ -4,77 +4,64 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logics
+namespace EvolutionaryLogic
 {
-    public class DNA
+    public abstract class DNA<T>: IDNA
     {
         #region Properties
 
-        private char[] genes { get; set; }
-        public float Fitness { get; set; }
+        public T this[int key]
+        {
+            get
+            {
+                return this.Genes[key];
+            }
+            set
+            {
+                this.Genes[key] = value;
+            }
+        }
 
-        private string Mutations = " abcde fghi jklmn opqr stuvw xyz ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        protected T[] Genes { get; set; }
+        public float Fitness { get; set; }
 
         #endregion
         public DNA(int nGenesCount)
         {
-            this.genes = new char[nGenesCount];
+            this.Genes = new T[nGenesCount];
             this.Fitness = -1;
 
-            for (int i = 0; i < this.genes.Length; i++)
-            {
-                this.genes[i] = this.getFromMutations();
-            }
+            // Initiallize genes in apply
         }
 
-        public void calcFitness(string target)
+        public float GetFitnesss()
         {
-            int score = 0;
-
-            for (int i = 0; i < this.genes.Length; i++)
-            {
-                if(target[i] == this.genes[i])
-                {
-                    score++;
-                }
-            }
-
-            this.Fitness = (float)score / target.Length;
+            return this.Fitness;
         }
 
-        public DNA crossover(DNA partner)
+        public IDNA Crossover(IDNA objPartner)
         {
-            DNA child = new DNA(this.genes.Length);
+            return null;
+            //DNA<T> child = (DNA<T>)this.GetObj(objPartner);
+            //DNA<T> partner = (DNA<T>)objPartner;
 
-            for (int i = 0; i < partner.genes.Length; i++)
-            {
-                child.genes[i] = Shared.Coin() ? this.genes[i] : partner.genes[i];
-            }
+            //for (int i = 0; i < partner.Genes.Length; i++)
+            //{
+            //    child[i] = BaseLogic.Coin() ? this[i] : partner[i];
+            //}
 
-            child.mutate();
+            //child.Mutate();
 
-            return child;
-        }
-
-        private void mutate()
-        {           
-            for (int i = 0; i < this.genes.Length; i++)
-            {
-                if(Shared.HitChance(.01))
-                {
-                    this.genes[i] = this.getFromMutations();
-                }
-            }
-        }
-
-        private char getFromMutations()
-        {
-            return this.Mutations[Shared.Next(this.Mutations.Length)];
+            //return child;
         }
 
         public override string ToString()
         {
-            return new string(this.genes) + " - " + this.Fitness;
+            return ""; // new string(this.genes) + " - " + this.Fitness;
         }
+
+        public abstract void CalculateFitness(string target);
+        protected abstract void Mutate();
+        protected abstract IDNA GetObj();
     }
 }
