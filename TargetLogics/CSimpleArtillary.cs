@@ -9,68 +9,16 @@ using EvolutionaryLogic;
 
 namespace TargetLogics
 {
-    public class CSimpleArtillary : DNA<float>
+    public class CSimpleArtillary
     {
+        public const int ArtilSize = 50;
         public Point2D Location { get; set; }
 
-        #region Genome
-
-        public float Radius
-        {
-            get
-            {
-                return this[0];
-            }
-            set
-            {
-                this[0] = value;
-            }
-        }
-        public float Damage
-        {
-            get
-            {
-                return this[1];
-            }
-            set
-            {
-                this[1] = value;
-            }
-        }
-        public int Ammunition
-        {
-            get
-            {
-                return (int)this[2];
-            }
-            set
-            {
-                this[2] = value;
-            }
-        }
-        public float Health
-        {
-            get
-            {
-                return this[3];
-            }
-            set
-            {
-                this[3] = value;
-            }
-        }
-        public int ShotsToFire {
-            get
-            {
-                return (int)this[4];
-            }
-            set
-            {
-                this[4] = value;
-            }
-        }
-        
-        #endregion
+        public float Radius { get; set; }
+        public float Damage { get; set; }
+        public int Ammunition { get; set; }
+        public float Health { get; set; }
+        public int ShotsToFire { get; set; }
 
         public int ShotsTaken { get; set; }
         public List<CSimpleArtillary> Targets { get; set; }
@@ -83,57 +31,47 @@ namespace TargetLogics
             return this;
         }
 
+        public CSimpleArtillary SetLocation(Point2D Location)
+        {
+            this.Location = Location;
+            return this;
+        }
+
         #endregion
 
-        public CSimpleArtillary() : 
-            base(5)
+        public CSimpleArtillary()
         {
             this.ShotsTaken = 0;
             this.Targets = new List<CSimpleArtillary>();
+            this.Health = 1;// Shared.Next(5) + 1;
         }
 
         public void InitiateGenome()
         {
-            // Radius
-            this[0] = Shared.Next(25) + 1;
-
-            // Damage
-            this[1] = Shared.Next(5) + 1;
-
-            // Ammunition
-            this[2] = Shared.Next(3) + 1;
-
-            // Health
-            this[3] = Shared.Next(5) + 1;
-
-            // Shots to fire
-            this[4] = Shared.Next((int)this[2]);
+            this.Radius = Shared.Next(25) + 1;
+            this.Damage = Shared.Next(5) + 1;
+            this.Ammunition = Shared.Next(3) + 1;
+            this.Health = 1;// Shared.Next(5) + 1;
+            this.ShotsToFire = Shared.Next(this.Ammunition + 1);
         }
 
-        public void Shoot(List<CSimpleArtillary> colTargets)
+        public int Shoot(CSimpleArtillary[] colTargets)
         {
-            int nTargetInd = Shared.Next(colTargets.Count);
+            int nTargetInd = Shared.Next(colTargets.Length);
+            int IsEnemyDead = 0;
 
             if (colTargets[nTargetInd].Health > 0)
             {
                 this.Targets.Add(colTargets[nTargetInd]);
                 colTargets[nTargetInd].Health -= this.Damage;
+
+                if(colTargets[nTargetInd].Health <= 0)
+                {
+                    IsEnemyDead = 1;
+                }
             }
-        }
 
-        public override void CalculateFitness()
-        {
-            this.Fitness = this.Targets.Count;
-        }
-
-        protected override void Mutate()
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override IDNA GetObj()
-        {
-            return new CSimpleArtillary();
+            return IsEnemyDead;
         }
     }
 }

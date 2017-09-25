@@ -47,6 +47,7 @@
     <Compile Include="God.cs" />
     <Compile Include="IDNA.cs" />
     <Compile Include="MatingPool.cs" />
+    <Compile Include="Population.cs" />
     <Compile Include="PopulationSelector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

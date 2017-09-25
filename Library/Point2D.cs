@@ -35,5 +35,21 @@ namespace Library
         {
             return new Point2D(p.X, p.Y);
         }
+
+        public override bool Equals(object obj)
+        {
+            Point2D that = (Point2D)obj;
+            return that.X == this.X && that.Y == this.Y;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("({0}, {1})", this.X, this.Y);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

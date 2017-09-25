@@ -6,12 +6,8 @@ using System.Threading.Tasks;
 
 namespace EvolutionaryLogic
 {
-    public interface IDNA
+    public class Population
     {
-        IDNA Crossover(IDNA partner);
-        void CalculateFitness();
-        float GetFitnesss();
 
-        IDNA Clone();
     }
 }

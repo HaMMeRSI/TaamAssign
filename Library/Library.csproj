@@ -45,7 +45,7 @@
     <Compile Include="IGameLoop\IDrawable.cs" />
     <Compile Include="IGameLoop\ILive.cs" />
     <Compile Include="IGameLoop\IUpdateable.cs" />
-    <Compile Include="Poind2D.cs" />
+    <Compile Include="Point2D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared.cs" />
   </ItemGroup>
