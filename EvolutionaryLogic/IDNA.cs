@@ -8,10 +8,13 @@ namespace EvolutionaryLogic
 {
     public interface IDNA
     {
-        IDNA Crossover(IDNA partner);
+        IDNA Crossover(IDNA objPartner);
         void CalculateFitness();
         float GetFitnesss();
+        IDNA CreateChild();
 
-        IDNA Clone();
+        void ResetForNewGeneration();
+
+        void Execute();
     }
 }

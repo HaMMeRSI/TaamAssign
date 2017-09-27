@@ -34,12 +34,14 @@ namespace GeneticTargeting
             this.DoubleBuffered = true;
             this.TScale = ((float)this.tbScale.Value) / 25;
             this.Angle = 0;
-            this.Strategy = new TargetingStrategy(3, 7);
+            this.Strategy = new TargetingStrategy(10, 22);
+            this.lblAmmo.Text += this.Strategy.FriendliesTotalAmmunition;
             this.TransformOrigin = new Point2D(-this.Strategy.Terrain.GetWidth() / 2, -this.Strategy.Terrain.GetHeight() / 2);
         }
 
         private void pnlView_Paint(object sender, PaintEventArgs e)
         {
+            e.Graphics.Clear(Color.Silver);
             if (this.PopGen?.BestFitness != null)
             {
                 e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
@@ -132,13 +134,18 @@ namespace GeneticTargeting
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            this.PopGen = new God(20, () => new CWorld(Strategy));
+            this.PopGen = new God(500, () => new CWorld(Strategy));
             this.btnGeneratePopulation.Enabled = true;
             this.btnStart.Text = "Restart!";
 
             this.lblGenerationCount.Text = "Curr gen count: " + this.PopGen.GenerationCount;
             this.lblAverageFitness.Text = "Average fitness: " + this.PopGen.AvreageFitness;
             this.lblBestFitness.Text = "Best Fitness: " + this.PopGen.BestFitness.GetFitnesss();
+            this.pnlView.Refresh();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
             this.pnlView.Refresh();
         }
     }

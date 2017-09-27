@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Library;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,10 @@ namespace EvolutionaryLogic
             for (int i = Population.Count - 1; i >= 0; i--)
             {
                 int n = (int)(Population[i].GetFitnesss() * 100);
+                if (n == 0)
+                {
+                    n = Shared.Next(100);
+                }
                 this.MyMatingPool.AddToRange(n, Population[i], (int item) => item * item);
             }
         }

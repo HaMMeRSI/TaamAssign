@@ -20,7 +20,7 @@ namespace EvolutionaryLogic
                 }
             }
 
-            Population.RemoveRange(0, Population.Count / 2 - 1);
+            Population.RemoveRange(0, Population.Count / 2);
         }
     }
 }

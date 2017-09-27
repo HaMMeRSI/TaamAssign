@@ -9,24 +9,27 @@ using System.Threading.Tasks;
 
 namespace TargetLogics
 {
-    public class CWorld: DNA<CSimpleArtillary>, IDrawable
+    public class CWorld : DNA<CSimpleArtillary>, IDrawable
     {
         public CSimpleArtillary[] Enemies { get; set; }
         public int DeadCount { get; set; }
-        private TargetingStrategy Strategy{ get; set; }
+        private TargetingStrategy Strategy { get; set; }
 
         public CWorld(TargetingStrategy Strategy)
-            :base(Strategy.GetFriendlyCount())
+            : base(Strategy.GetFriendlyCount())
         {
             this.Strategy = Strategy;
             this.DeadCount = 0;
 
-            this.Genes = Strategy.GetFriendlyArtillary();
+            for (int i = 0; i < this.Genes.Length; i++)
+            {
+                this.Genes[i] = Strategy.Friendlies[i].Clone();
+            }
+
             this.Enemies = Strategy.GetEnemyArtillary();
-            this.Execute();
         }
 
-        public void Execute()
+        public override void Execute()
         {
             bool blnEndIndicator = false;
             while (!blnEndIndicator)
@@ -36,16 +39,16 @@ namespace TargetLogics
                 blnEndIndicator = true;
                 foreach (CSimpleArtillary Cannon in this.Genes)
                 {
-                    if (Cannon.Targets.Count < Cannon.ShotsToFire)
+                    if (Cannon.ShotsTaken < Cannon.ShotsToFire)
                     {
                         this.DeadCount += Cannon.Shoot(this.Enemies);
                     }
 
-                    blnEndIndicator &= Cannon.Targets.Count == Cannon.ShotsToFire;
+                    blnEndIndicator &= Cannon.ShotsTaken == Cannon.ShotsToFire;
                 }
             }
         }
-        
+
         public override void CalculateFitness()
         {
             int nDeadDiff = this.Enemies.Length - this.DeadCount;
@@ -57,47 +60,73 @@ namespace TargetLogics
         {
             foreach (CSimpleArtillary Cannon in this.Genes)
             {
-                if(Shared.HitChance(.01))
+                if (Shared.HitChance(.01))
                 {
-                    Cannon.InitiateGenome();
+                    Cannon.Mutate();
                 }
             }
         }
 
-        public override IDNA Clone()
+        public override IDNA CreateChild()
         {
-            CWorld c =  new CWorld(this.Strategy);
+            CWorld c = new CWorld(this.Strategy);
             c.Genes = this.Genes;
             c.Enemies = this.Enemies;
 
             return c;
         }
 
+        public override IDNA Crossover(IDNA objPartner)
+        {
+            CWorld child = new CWorld(this.Strategy);
+            CWorld partner = (CWorld)objPartner;
+
+            for (int i = 0; i < partner.Genes.Length; i++)
+            {
+                child[i] = BaseLogic.Coin() ? this[i].Clone() : partner[i].Clone();
+            }
+
+            child.Mutate();
+            child.Execute();
+
+            return child;
+        }
+
+        public override void ResetForNewGeneration()
+        {
+            this.DeadCount = 0;
+            foreach (CSimpleArtillary Friendly in this.Genes)
+            {
+                Friendly.ResetGeneome();
+            }
+
+            foreach (CSimpleArtillary Enemy in this.Enemies)
+            {
+                Enemy.ResetGeneome();
+            }
+        }
+
+        public override string ToString()
+        {
+            bool s = this.Genes.Select(x => x.Targets.Count).Sum() == this.DeadCount;
+            return string.Format("D: {0}, T: {1} - {2}", this.DeadCount, string.Join(", ", this.Genes.Select(x => x.Targets.Count).ToArray()), s);
+        }
+
         #region Render
 
-        Pen p = new Pen(Color.Green, 2);
         public void Draw(Graphics g)
         {
             foreach (CSimpleArtillary MyCannon in this.Enemies)
             {
-                g.FillEllipse(new SolidBrush(Color.Red), (float)MyCannon.Location.X, (float)MyCannon.Location.Y, CSimpleArtillary.ArtilSize, CSimpleArtillary.ArtilSize);
+                MyCannon.Draw(g);
             }
 
             foreach (CSimpleArtillary MyCannon in this.Genes)
             {
-                g.FillEllipse(new SolidBrush(Color.Cyan), (float)MyCannon.Location.X, (float)MyCannon.Location.Y, CSimpleArtillary.ArtilSize, CSimpleArtillary.ArtilSize);
-
-                foreach (CSimpleArtillary EnemyCannon in MyCannon.Targets)
-                {
-                    g.DrawLine(p, this.CentralizeShoot(MyCannon.Location), CentralizeShoot(EnemyCannon.Location));
-                }
+                MyCannon.Draw(g);
             }
         }
 
-        private Point2D CentralizeShoot(Point2D Original)
-        {
-            return new Point2D(Original.X + CSimpleArtillary.ArtilSize / 2, Original.Y + CSimpleArtillary.ArtilSize / 2);
-        }
 
         #endregion
     }

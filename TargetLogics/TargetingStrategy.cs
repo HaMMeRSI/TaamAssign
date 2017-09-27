@@ -11,15 +11,18 @@ namespace TargetLogics
     public class TargetingStrategy :IDrawable
     {
         public CMap Terrain;
-        private Point2D[] Friendlies;
-        private Point2D[] Enemies;
+        public CSimpleArtillary[] Friendlies;
+        public CSimpleArtillary[] Enemies;
+
+        public int FriendliesTotalAmmunition { get; set; }
 
         public TargetingStrategy(int nFriendlyCount, int nEnemyCount)
         {
             this.Terrain = new CMap(10, 100);
-            this.Friendlies = new Point2D[nFriendlyCount];
-            this.Enemies = new Point2D[nEnemyCount];
+            this.Friendlies = new CSimpleArtillary[nFriendlyCount];
+            this.Enemies = new CSimpleArtillary[nEnemyCount];
 
+            // SHOULD Be replaced by dataSource
             for (int i = 0; i < nFriendlyCount; i++)
             {
                 Point2D point = null;
@@ -32,9 +35,14 @@ namespace TargetLogics
                 }
                 while (this.Contains(this.Friendlies, point));
 
-                this.Friendlies[i] = point;
+                CSimpleArtillary objCannon = new CSimpleArtillary(1, Shared.Next(5), 1,0);
+                objCannon.Mutate();
+                objCannon.SetLocation(point);
+
+                this.Friendlies[i] = objCannon;
             }
 
+            // SHOULD Be replaced by dataSource
             for (int i = 0; i < nEnemyCount; i++)
             {
                 Point2D point = null;
@@ -46,19 +54,27 @@ namespace TargetLogics
                         this.CenterizeArtillaryInGrid(Shared.Next(this.Terrain.GetRowSize() / 3)));
                 }
                 while (this.Contains(this.Enemies, point));
-                this.Enemies[i] = point;
+
+                CSimpleArtillary objCannon = new CSimpleArtillary(1, 1, 1, 0);
+                objCannon.SetLocation(point);
+
+                this.Enemies[i] = objCannon;
+            }
+
+            this.FriendliesTotalAmmunition = 0;
+            foreach (CSimpleArtillary Cannon in this.Friendlies)
+            {
+                this.FriendliesTotalAmmunition += Cannon.Ammunition;
             }
         }
 
-        public CSimpleArtillary[] GetFriendlyArtillary()
+        public CSimpleArtillary[] GetMutatedFriendlyArtillary()
         {
             CSimpleArtillary[] FriendlyArtillary = new CSimpleArtillary[this.Friendlies.Length];
             for (int i = 0; i < this.Friendlies.Length; i++)
             {
-                CSimpleArtillary obj = new CSimpleArtillary();
-                obj.InitiateGenome();
-                obj.SetLocation(this.Friendlies[i]);
-                FriendlyArtillary[i] = obj;
+                FriendlyArtillary[i] = this.Friendlies[i].Clone();
+                FriendlyArtillary[i].Mutate();
             }
 
             return FriendlyArtillary;
@@ -69,10 +85,7 @@ namespace TargetLogics
             CSimpleArtillary[] EnemyArtillary = new CSimpleArtillary[this.Enemies.Length];
             for (int i = 0; i < this.Enemies.Length; i++)
             {
-                CSimpleArtillary obj = new CSimpleArtillary();
-                // obj.InitiateGenome();
-                obj.SetLocation(this.Enemies[i]);
-                EnemyArtillary[i] = obj;
+                EnemyArtillary[i] = this.Enemies[i].Clone();
             }
 
             return EnemyArtillary;
@@ -98,16 +111,16 @@ namespace TargetLogics
             return (float)nNum * this.Terrain.CellSize + this.Terrain.CellSize / 2 - CSimpleArtillary.ArtilSize / 2;
         }
 
-        private bool Contains(Point2D[] list, Point2D Target)
+        private bool Contains(CSimpleArtillary[] list, Point2D Target)
         {
-            foreach (Point2D item in list)
+            foreach (CSimpleArtillary item in list)
             {
                 if(item == null)
                 {
                     return false;
                 }
 
-                if(item.Equals(Target))
+                if(item.Location.Equals(Target))
                 {
                     return true;
                 }

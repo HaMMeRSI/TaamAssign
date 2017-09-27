@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,7 +30,9 @@ namespace EvolutionaryLogic
 
             for (int i = 0; i < this.MyPopulationSize; i++)
             {
-                this.Population.Add(PopulationGenerator());
+                IDNA dna = PopulationGenerator();
+                dna.Execute();
+                this.Population.Add(dna);
             }
 
             this.AssessPopulation();
@@ -43,7 +46,9 @@ namespace EvolutionaryLogic
 
             for (int i = 0; i < this.MyPopulationSize; i++)
             {
-                NewPop.Add(pool.GetChild());
+                var p = pool.GetChild();
+
+                NewPop.Add(p);
             }
 
             this.Population = NewPop;
@@ -53,23 +58,19 @@ namespace EvolutionaryLogic
 
         private void AssessPopulation()
         {
-            IDNA BestDNA = null;
-            float BestDNAFitness = -1;
+            float BestDNAFitness = -2;
             float TotalFintess = 0;
-
             foreach (IDNA objDNA in this.Population)
             {
                 objDNA.CalculateFitness();
-
                 TotalFintess += objDNA.GetFitnesss();
                 if (objDNA.GetFitnesss() > BestDNAFitness)
                 {
                     BestDNAFitness = objDNA.GetFitnesss();
-                    BestDNA = objDNA;
+                    this.BestFitness = objDNA;
                 }
             }
 
-            this.BestFitness = BestDNA;
             this.AvreageFitness = TotalFintess / this.MyPopulationSize;
         }
 

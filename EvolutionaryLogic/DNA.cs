@@ -39,28 +39,21 @@ namespace EvolutionaryLogic
             return this.Fitness;
         }
 
-        public IDNA Crossover(IDNA objPartner)
-        {
-            DNA<T> child = (DNA<T>)this.Clone();
-            DNA<T> partner = (DNA<T>)objPartner;
-
-            for (int i = 0; i < partner.Genes.Length; i++)
-            {
-                child[i] = BaseLogic.Coin() ? this[i] : partner[i];
-            }
-
-            child.Mutate();
-
-            return child;
-        }
+        public abstract IDNA Crossover(IDNA objPartner);
 
         public override string ToString()
         {
             return this.Fitness.ToString(); // new string(this.genes) + " - " + this.Fitness;
         }
 
+        public virtual void Execute()
+        {
+
+        }
+
         public abstract void CalculateFitness();
         protected abstract void Mutate();
-        public abstract IDNA Clone();
+        public abstract IDNA CreateChild();
+        public abstract void ResetForNewGeneration();
     }
 }

@@ -18,6 +18,10 @@ namespace Library
             this.Y = dY;
         }
 
+        public Point2D Clone()
+        {
+            return new Point2D(this.X, this.Y);
+        }
 
         public static implicit operator Point(Point2D p)
         {
