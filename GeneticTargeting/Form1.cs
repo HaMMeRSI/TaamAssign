@@ -34,7 +34,7 @@ namespace GeneticTargeting
             this.DoubleBuffered = true;
             this.TScale = ((float)this.tbScale.Value) / 25;
             this.Angle = 0;
-            this.Strategy = new TargetingStrategy(10, 22);
+            this.Strategy = new TargetingStrategy(20, 30);
             this.lblAmmo.Text += this.Strategy.FriendliesTotalAmmunition;
             this.TransformOrigin = new Point2D(-this.Strategy.Terrain.GetWidth() / 2, -this.Strategy.Terrain.GetHeight() / 2);
         }
@@ -134,7 +134,7 @@ namespace GeneticTargeting
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            this.PopGen = new God(500, () => new CWorld(Strategy));
+            this.PopGen = new God(100, () => new CWorld(Strategy));
             this.btnGeneratePopulation.Enabled = true;
             this.btnStart.Text = "Restart!";
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Library;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,9 +15,9 @@ namespace EvolutionaryLogic
 
             for (int i = 0; i < Population.Count; i++)
             {
-                if (BaseLogic.HitChance(.04))
+                if (Shared.HitChance(.04))
                 {
-                    Population.RemoveAt(BaseLogic.Next(Population.Count));
+                    Population.RemoveAt(Shared.Next(Population.Count));
                 }
             }
 

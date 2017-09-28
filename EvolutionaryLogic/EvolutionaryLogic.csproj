@@ -42,7 +42,6 @@
   <ItemGroup>
     <Compile Include="Core\MergeSort.cs" />
     <Compile Include="Core\RandomByRange.cs" />
-    <Compile Include="Core\Shared.cs" />
     <Compile Include="DNA.cs" />
     <Compile Include="God.cs" />
     <Compile Include="IDNA.cs" />

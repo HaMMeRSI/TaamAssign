@@ -11,16 +11,16 @@ namespace TargetLogics
     public class TargetingStrategy :IDrawable
     {
         public CMap Terrain;
-        public CSimpleArtillary[] Friendlies;
-        public CSimpleArtillary[] Enemies;
+        public CSimpleArtillary[] FriendliesData;
+        public CSimpleArtillary[] EnemiesData;
 
         public int FriendliesTotalAmmunition { get; set; }
 
         public TargetingStrategy(int nFriendlyCount, int nEnemyCount)
         {
             this.Terrain = new CMap(10, 100);
-            this.Friendlies = new CSimpleArtillary[nFriendlyCount];
-            this.Enemies = new CSimpleArtillary[nEnemyCount];
+            this.FriendliesData = new CSimpleArtillary[nFriendlyCount];
+            this.EnemiesData = new CSimpleArtillary[nEnemyCount];
 
             // SHOULD Be replaced by dataSource
             for (int i = 0; i < nFriendlyCount; i++)
@@ -33,13 +33,12 @@ namespace TargetLogics
                         this.CenterizeArtillaryInGrid(Shared.Next(this.Terrain.GetColSize())),
                         this.CenterizeArtillaryInGrid(this.Terrain.GetRowSize() - Shared.Next(this.Terrain.GetRowSize() / 3) - 1));
                 }
-                while (this.Contains(this.Friendlies, point));
+                while (this.Contains(this.FriendliesData, point));
 
-                CSimpleArtillary objCannon = new CSimpleArtillary(1, Shared.Next(5), 1,0);
-                objCannon.Mutate();
+                CSimpleArtillary objCannon = new CSimpleArtillary(1, Shared.Next(5), 1);
                 objCannon.SetLocation(point);
 
-                this.Friendlies[i] = objCannon;
+                this.FriendliesData[i] = objCannon;
             }
 
             // SHOULD Be replaced by dataSource
@@ -53,16 +52,16 @@ namespace TargetLogics
                         this.CenterizeArtillaryInGrid(Shared.Next(this.Terrain.GetColSize())),
                         this.CenterizeArtillaryInGrid(Shared.Next(this.Terrain.GetRowSize() / 3)));
                 }
-                while (this.Contains(this.Enemies, point));
+                while (this.Contains(this.EnemiesData, point));
 
-                CSimpleArtillary objCannon = new CSimpleArtillary(1, 1, 1, 0);
+                CSimpleArtillary objCannon = new CSimpleArtillary(1, 1, 1);
                 objCannon.SetLocation(point);
 
-                this.Enemies[i] = objCannon;
+                this.EnemiesData[i] = objCannon;
             }
 
             this.FriendliesTotalAmmunition = 0;
-            foreach (CSimpleArtillary Cannon in this.Friendlies)
+            foreach (CSimpleArtillary Cannon in this.FriendliesData)
             {
                 this.FriendliesTotalAmmunition += Cannon.Ammunition;
             }
@@ -70,10 +69,10 @@ namespace TargetLogics
 
         public CSimpleArtillary[] GetMutatedFriendlyArtillary()
         {
-            CSimpleArtillary[] FriendlyArtillary = new CSimpleArtillary[this.Friendlies.Length];
-            for (int i = 0; i < this.Friendlies.Length; i++)
+            CSimpleArtillary[] FriendlyArtillary = new CSimpleArtillary[this.FriendliesData.Length];
+            for (int i = 0; i < this.FriendliesData.Length; i++)
             {
-                FriendlyArtillary[i] = this.Friendlies[i].Clone();
+                FriendlyArtillary[i] = this.FriendliesData[i].Clone();
                 FriendlyArtillary[i].Mutate();
             }
 
@@ -82,10 +81,10 @@ namespace TargetLogics
 
         public CSimpleArtillary[] GetEnemyArtillary()
         {
-            CSimpleArtillary[] EnemyArtillary = new CSimpleArtillary[this.Enemies.Length];
-            for (int i = 0; i < this.Enemies.Length; i++)
+            CSimpleArtillary[] EnemyArtillary = new CSimpleArtillary[this.EnemiesData.Length];
+            for (int i = 0; i < this.EnemiesData.Length; i++)
             {
-                EnemyArtillary[i] = this.Enemies[i].Clone();
+                EnemyArtillary[i] = this.EnemiesData[i].Clone();
             }
 
             return EnemyArtillary;
@@ -93,12 +92,12 @@ namespace TargetLogics
 
         public int GetFriendlyCount()
         {
-            return this.Friendlies.Length;
+            return this.FriendliesData.Length;
         }
 
         public int GetEnemyCount()
         {
-            return this.Enemies.Length;
+            return this.EnemiesData.Length;
         }
 
         public void Draw(Graphics g)

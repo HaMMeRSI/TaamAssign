@@ -23,47 +23,84 @@ namespace TargetLogics
 
             for (int i = 0; i < this.Genes.Length; i++)
             {
-                this.Genes[i] = Strategy.Friendlies[i].Clone();
+                this.Genes[i] = Strategy.FriendliesData[i].Clone().Mutate();
             }
 
             this.Enemies = Strategy.GetEnemyArtillary();
         }
+
+        //public override void Execute()
+        //{
+        //    bool blnEndIndicator = false;
+        //    while (!blnEndIndicator)
+        //    {
+        //        if (this.DeadCount == this.Enemies.Length) break;
+
+        //        blnEndIndicator = true;
+        //        foreach (CSimpleArtillary Cannon in this.Genes)
+        //        {
+        //            if (Cannon.ShotsTaken < Cannon.ShotsToFire)
+        //            {
+        //                this.DeadCount += Cannon.Shoot(this.Enemies);
+        //            }
+
+        //            blnEndIndicator &= Cannon.ShotsTaken == Cannon.ShotsToFire;
+        //        }
+        //    }
+        //}
 
         public override void Execute()
         {
             bool blnEndIndicator = false;
             while (!blnEndIndicator)
             {
-                if (this.DeadCount == this.Enemies.Length) break;
-
                 blnEndIndicator = true;
+
                 foreach (CSimpleArtillary Cannon in this.Genes)
                 {
-                    if (Cannon.ShotsTaken < Cannon.ShotsToFire)
+                    if (Cannon.Targets.Count < Cannon.ShotsToFire)
                     {
-                        this.DeadCount += Cannon.Shoot(this.Enemies);
+                        Cannon.ChooseTarget(this.Enemies);
                     }
 
-                    blnEndIndicator &= Cannon.ShotsTaken == Cannon.ShotsToFire;
+                    blnEndIndicator &= Cannon.Targets.Count == Cannon.ShotsToFire;
                 }
             }
         }
 
         public override void CalculateFitness()
         {
-            int nDeadDiff = this.Enemies.Length - this.DeadCount;
+            int nDeadCount = 0;
+            bool blnEndIndicator = false;
 
-            this.Fitness = this.DeadCount;
+            while (!blnEndIndicator)
+            {
+                blnEndIndicator = true;
+                foreach (CSimpleArtillary Cannon in this.Genes)
+                {
+                    nDeadCount += Cannon.Shoot(this.Enemies);
+                    blnEndIndicator &= Cannon.ShotsTaken == Cannon.ShotsToFire;
+                }
+            }
+
+            this.Fitness = nDeadCount;
         }
 
         protected override void Mutate()
         {
+            bool Mutated = false;
             foreach (CSimpleArtillary Cannon in this.Genes)
             {
                 if (Shared.HitChance(.01))
                 {
                     Cannon.Mutate();
+                    Mutated = true;
                 }
+            }
+
+            if(Mutated)
+            {
+                this.Execute();
             }
         }
 
@@ -83,11 +120,11 @@ namespace TargetLogics
 
             for (int i = 0; i < partner.Genes.Length; i++)
             {
-                child[i] = BaseLogic.Coin() ? this[i].Clone() : partner[i].Clone();
+                child[i] = Shared.Coin() ? this[i].Clone() : partner[i].Clone();
             }
 
             child.Mutate();
-            child.Execute();
+            // child.Execute();
 
             return child;
         }

@@ -20,8 +20,9 @@ namespace TargetLogics
         public float Health { get; set; }
         public int ShotsToFire { get; set; }
         public int ShotsTaken { get; set; }
+        public CSimpleArtillary KilledBy { get; set; }
 
-        public List<CSimpleArtillary> Targets { get; set; }
+        public List<int> Targets { get; set; }
 
         #region Builder
 
@@ -37,11 +38,17 @@ namespace TargetLogics
             return this;
         }
 
+        public CSimpleArtillary SetTargets(List<int> colTargets)
+        {
+            this.Targets = colTargets;
+            return this;
+        }
+
         #endregion
 
         public CSimpleArtillary(float nRadius, int nAmmunition, float nDamage, int nShotsToFire)
         {
-            this.Targets = new List<CSimpleArtillary>();
+            this.Targets = new List<int>();
             this.Health = 1;
             this.Damage = nDamage;
             this.Radius = nRadius;
@@ -50,51 +57,108 @@ namespace TargetLogics
             this.ShotsTaken = 0;
         }
 
+        public CSimpleArtillary(float nRadius, int nAmmunition, float nDamage)
+        {
+            this.Targets = new List<int>();
+            this.Health = 1;
+            this.Damage = nDamage;
+            this.Radius = nRadius;
+            this.Ammunition = nAmmunition;
+            this.ShotsToFire = 0;
+            this.ShotsTaken = 0;
+        }
+
         public CSimpleArtillary Mutate()
         {
             this.ShotsToFire = Shared.Next(this.Ammunition + 1);
+            this.Targets.Clear();
+
             return this;
         }
 
+        //public int Shoot(CSimpleArtillary[] colTargets)
+        //{
+        //    int nTargetInd = Shared.Next(colTargets.Length);
+        //    int IsEnemyDead = 0;
+        //    this.ShotsTaken++;
+
+        //    if (colTargets[nTargetInd].Health > 0)
+        //    {
+        //        this.Targets.Add(colTargets[nTargetInd]);
+        //        colTargets[nTargetInd].Health -= this.Damage;
+
+        //        if (colTargets[nTargetInd].Health <= 0)
+        //        {
+        //            IsEnemyDead = 1;
+        //        }
+        //    }
+
+        //    return IsEnemyDead;
+        //}
+
         public int Shoot(CSimpleArtillary[] colTargets)
         {
-            int nTargetInd = Shared.Next(colTargets.Length);
             int IsEnemyDead = 0;
-            this.ShotsTaken++;
 
-            if (colTargets[nTargetInd].Health > 0)
+            if (this.Targets.Count > this.ShotsTaken)
             {
-                this.Targets.Add(colTargets[nTargetInd]);
-                colTargets[nTargetInd].Health -= this.Damage;
-
-                if(colTargets[nTargetInd].Health <= 0)
+                CSimpleArtillary currTarget = colTargets[this.Targets[this.ShotsTaken]];
+                if (currTarget.Health > 0)
                 {
-                    IsEnemyDead = 1;
+                    currTarget.Health -= this.Damage;
+
+                    if (currTarget.Health <= 0)
+                    {
+                        IsEnemyDead = 1;
+                        currTarget.KilledBy = this;
+                    }
                 }
+
+                this.ShotsTaken++;
             }
 
             return IsEnemyDead;
         }
 
+        public void ChooseTarget(CSimpleArtillary[] colTargets)
+        {
+            int nTargetInd = Shared.Next(colTargets.Length);
+            this.Targets.Add(nTargetInd);
+        }
+
         public void ResetGeneome()
         {
-            this.Targets = new List<CSimpleArtillary>();
+            this.Targets = new List<int>();
             this.Health = 1;
             this.ShotsTaken = 0;
         }
 
         public CSimpleArtillary Clone()
         {
-            return (new CSimpleArtillary(this.Radius, this.Ammunition, this.Damage, this.ShotsToFire)).SetLocation(this.Location.Clone());
+            //List<CSimpleArtillary> colTargets = new List<CSimpleArtillary>();
+
+            //foreach (CSimpleArtillary EnemyCannon in this.Targets)
+            //{
+            //    colTargets.Add(EnemyCannon.Clone());
+            //}
+
+            return (new CSimpleArtillary(this.Radius, this.Ammunition, this.Damage, this.ShotsToFire))
+                .SetLocation(this.Location.Clone())
+                .SetTargets(new List<int>(this.Targets));
         }
 
         Pen p = new Pen(Color.Green, 2);
         public void Draw(Graphics g)
         {
             g.FillEllipse(new SolidBrush(Color.Cyan), (float)this.Location.X, (float)this.Location.Y, CSimpleArtillary.ArtilSize, CSimpleArtillary.ArtilSize);
-            foreach (CSimpleArtillary EnemyCannon in this.Targets)
+            //foreach (CSimpleArtillary EnemyCannon in this.Targets)
+            //{
+            //    g.DrawLine(p, this.CentralizeShoot(this.Location, false), CentralizeShoot(EnemyCannon.Location, true));
+            //}
+
+            if (this.KilledBy != null)
             {
-                g.DrawLine(p, this.CentralizeShoot(this.Location, false), CentralizeShoot(EnemyCannon.Location, true));
+                g.DrawLine(p, this.CentralizeShoot(this.Location, true), CentralizeShoot(this.KilledBy.Location, false));
             }
             g.DrawString(this.ShotsToFire.ToString(), new Font("Microsoft Sans Serif", 12),new SolidBrush(Color.Black), (float)this.Location.X, (float)this.Location.Y);
             g.DrawString(this.Ammunition.ToString(), new Font("Microsoft Sans Serif", 12),new SolidBrush(Color.Black), (float)this.Location.X + 20, (float)this.Location.Y);

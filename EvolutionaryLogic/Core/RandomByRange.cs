@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Library;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -41,7 +42,7 @@ namespace EvolutionaryLogic
 
         public T PickFromRange()
         {
-            int nSelectend = BaseLogic.Next(this.MyRange[this.MyRange.Count - 1].Item1);
+            int nSelectend = Shared.Next(this.MyRange[this.MyRange.Count - 1].Item1);
             for (int i = 0; i < this.MyRange.Count; i++)
             {
                 if(nSelectend <= this.MyRange[i].Item1)
