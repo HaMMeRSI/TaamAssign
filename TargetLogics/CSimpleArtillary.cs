@@ -20,7 +20,7 @@ namespace TargetLogics
         public float Health { get; set; }
         public int ShotsToFire { get; set; }
         public int ShotsTaken { get; set; }
-        public CSimpleArtillary KilledBy { get; set; }
+        public List<CSimpleArtillary> HittedBy { get; set; }
 
         public List<int> Targets { get; set; }
 
@@ -49,6 +49,7 @@ namespace TargetLogics
         public CSimpleArtillary(float nRadius, int nAmmunition, float nDamage, int nShotsToFire)
         {
             this.Targets = new List<int>();
+            this.HittedBy = new List<CSimpleArtillary>();
             this.Health = 1;
             this.Damage = nDamage;
             this.Radius = nRadius;
@@ -57,15 +58,10 @@ namespace TargetLogics
             this.ShotsTaken = 0;
         }
 
-        public CSimpleArtillary(float nRadius, int nAmmunition, float nDamage)
+        public CSimpleArtillary(float nRadius, int nAmmunition, float nDamage):
+            this(nRadius, nAmmunition, nDamage, 0)
         {
-            this.Targets = new List<int>();
-            this.Health = 1;
-            this.Damage = nDamage;
-            this.Radius = nRadius;
-            this.Ammunition = nAmmunition;
-            this.ShotsToFire = 0;
-            this.ShotsTaken = 0;
+            
         }
 
         public CSimpleArtillary Mutate()
@@ -106,11 +102,11 @@ namespace TargetLogics
                 if (currTarget.Health > 0)
                 {
                     currTarget.Health -= this.Damage;
+                    currTarget.HittedBy.Add(this);
 
                     if (currTarget.Health <= 0)
                     {
                         IsEnemyDead = 1;
-                        currTarget.KilledBy = this;
                     }
                 }
 
@@ -156,14 +152,15 @@ namespace TargetLogics
             //    g.DrawLine(p, this.CentralizeShoot(this.Location, false), CentralizeShoot(EnemyCannon.Location, true));
             //}
 
-            if (this.KilledBy != null)
+            if (this.HittedBy.Count > 0)
             {
-                g.DrawLine(p, this.CentralizeShoot(this.Location, true), CentralizeShoot(this.KilledBy.Location, false));
+                foreach (CSimpleArtillary Cannon in this.HittedBy)
+                {
+                    g.DrawLine(p, this.CentralizeShoot(this.Location, true), CentralizeShoot(Cannon.Location, false));
+                }
             }
             g.DrawString(this.ShotsToFire.ToString(), new Font("Microsoft Sans Serif", 12),new SolidBrush(Color.Black), (float)this.Location.X, (float)this.Location.Y);
             g.DrawString(this.Ammunition.ToString(), new Font("Microsoft Sans Serif", 12),new SolidBrush(Color.Black), (float)this.Location.X + 20, (float)this.Location.Y);
-            g.DrawString(this.ShotsTaken.ToString(), new Font("Microsoft Sans Serif", 12),new SolidBrush(Color.Black), (float)this.Location.X + 40, (float)this.Location.Y);
-            g.DrawString(this.Targets.Count.ToString(), new Font("Microsoft Sans Serif", 12),new SolidBrush(Color.Black), (float)this.Location.X + 40, (float)this.Location.Y + 20);
         }
 
         private Point2D CentralizeShoot(Point2D Original, bool Randomize)
