@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace TargetLogics
 {
-    public class TargetingStrategy :IDrawable
+    public class TargetingStrategy : IDrawable
     {
         public CMap Terrain;
         public CSimpleArtillary[] FriendliesData;
@@ -35,7 +35,7 @@ namespace TargetLogics
                 }
                 while (this.Contains(this.FriendliesData, point));
 
-                CSimpleArtillary objCannon = new CSimpleArtillary(1, Shared.Next(5), (float)Shared.rnd.NextDouble());
+                CSimpleArtillary objCannon = new CSimpleArtillary(Shared.Next(1001) + 800, Shared.Next(5), (float)Shared.rnd.NextDouble());
                 objCannon.SetLocation(point);
 
                 this.FriendliesData[i] = objCannon;
@@ -107,7 +107,7 @@ namespace TargetLogics
 
         private float CenterizeArtillaryInGrid(double nNum)
         {
-            return (float)nNum * this.Terrain.CellSize + this.Terrain.CellSize / 2 - CSimpleArtillary.ArtilSize / 2;
+            return (float)nNum * this.Terrain.CellSize + this.Terrain.CellSize / 2;
         }
 
         private bool Contains(CSimpleArtillary[] list, Point2D Target)

@@ -18,7 +18,7 @@ namespace GeneticTargeting
     {
         public const int FRIENDLY_COUNT = 20;
         public const int ENEMY_COUNT = 30;
-        public const int POPULATION_SIZE = 500;
+        public const int POPULATION_SIZE = 1000;
 
         public God PopGen { get; set; }
         public TargetingStrategy Strategy { get; set; }
@@ -56,7 +56,7 @@ namespace GeneticTargeting
 
                 this.Strategy.Draw(e.Graphics);
                 ((CWorld)this.PopGen.BestFitness).Draw(e.Graphics);
-
+                e.Graphics.FillEllipse(new SolidBrush(Color.Red), new Rectangle(Shared.MouseLocation, new Size(3, 3)));
                 e.Graphics.RotateTransform(0);
             }
             e.Graphics.ResetTransform();
@@ -86,6 +86,9 @@ namespace GeneticTargeting
 
         private void pnlView_MouseMove(object sender, MouseEventArgs e)
         {
+            Shared.MouseLocation.X = e.Location.X / this.TScale - (this.TransformOrigin.X + this.pnlView.Width / this.TScale / 2);
+            Shared.MouseLocation.Y = e.Location.Y / this.TScale - (this.TransformOrigin.Y + this.pnlView.Height / this.TScale / 2);
+
             if (this.IsLeftMouseDown)
             {
                 this.TransformOrigin.X += (e.X - this.MouseDownLocation.X) / this.TScale;
@@ -103,6 +106,11 @@ namespace GeneticTargeting
                 {
                     this.Angle -= 10;
                 }
+                this.pnlView.Refresh();
+            }
+            else if (e.Button == MouseButtons.Middle)
+            {
+                ((CWorld)this.PopGen.BestFitness).Update();
                 this.pnlView.Refresh();
             }
         }

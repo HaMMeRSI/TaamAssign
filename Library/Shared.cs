@@ -9,6 +9,7 @@ namespace Library
     public class Shared
     {
         public static Random rnd = new Random();
+        public static Point2D MouseLocation = new Point2D(0, 0);
 
         public static bool Coin()
         {

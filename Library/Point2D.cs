@@ -23,6 +23,12 @@ namespace Library
             return new Point2D(this.X, this.Y);
         }
 
+
+        public float Distance(Point2D point)
+        {
+            return (float)Math.Sqrt(Math.Pow(this.X - point.X, 2) + Math.Pow(this.Y - point.Y, 2));
+        }
+
         public static implicit operator Point(Point2D p)
         {
             return new Point((int)p.X, (int)p.Y);

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace TargetLogics
 {
-    public class CWorld : DNA<CSimpleArtillary>, IDrawable
+    public class CWorld : DNA<CSimpleArtillary>, ILive
     {
         public CSimpleArtillary[] Enemies { get; set; }
         public int DeadCount { get; set; }
@@ -91,7 +91,7 @@ namespace TargetLogics
             bool Mutated = false;
             foreach (CSimpleArtillary Cannon in this.Genes)
             {
-                if (Shared.HitChance(.01))
+                if (Shared.HitChance(.1))
                 {
                     Cannon.Mutate();
                     Mutated = true;
@@ -161,6 +161,19 @@ namespace TargetLogics
             foreach (CSimpleArtillary MyCannon in this.Genes)
             {
                 MyCannon.Draw(g);
+            }
+        }
+
+        public void Update()
+        {
+            foreach (CSimpleArtillary MyCannon in this.Enemies)
+            {
+                MyCannon.Update();
+            }
+
+            foreach (CSimpleArtillary MyCannon in this.Genes)
+            {
+                MyCannon.Update();
             }
         }
 

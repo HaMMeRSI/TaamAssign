@@ -51,7 +51,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlView.BackColor = System.Drawing.Color.Silver;
             this.pnlView.Location = new System.Drawing.Point(17, 16);
-            this.pnlView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pnlView.Margin = new System.Windows.Forms.Padding(4);
             this.pnlView.Name = "pnlView";
             this.pnlView.Size = new System.Drawing.Size(900, 775);
             this.pnlView.TabIndex = 0;
@@ -64,7 +64,7 @@
             // 
             this.tbScale.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.tbScale.Location = new System.Drawing.Point(1, 4);
-            this.tbScale.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbScale.Margin = new System.Windows.Forms.Padding(4);
             this.tbScale.Maximum = 100;
             this.tbScale.Minimum = 1;
             this.tbScale.Name = "tbScale";
@@ -77,7 +77,7 @@
             // btnGeneratePopulation
             // 
             this.btnGeneratePopulation.Location = new System.Drawing.Point(84, 85);
-            this.btnGeneratePopulation.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnGeneratePopulation.Margin = new System.Windows.Forms.Padding(4);
             this.btnGeneratePopulation.Name = "btnGeneratePopulation";
             this.btnGeneratePopulation.Size = new System.Drawing.Size(345, 84);
             this.btnGeneratePopulation.TabIndex = 2;
@@ -98,7 +98,12 @@
             // numCycles
             // 
             this.numCycles.Location = new System.Drawing.Point(193, 62);
-            this.numCycles.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.numCycles.Margin = new System.Windows.Forms.Padding(4);
+            this.numCycles.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
             this.numCycles.Name = "numCycles";
             this.numCycles.Size = new System.Drawing.Size(236, 22);
             this.numCycles.TabIndex = 4;
@@ -131,7 +136,7 @@
             // btnStart
             // 
             this.btnStart.Location = new System.Drawing.Point(4, 85);
-            this.btnStart.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnStart.Margin = new System.Windows.Forms.Padding(4);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(69, 84);
             this.btnStart.TabIndex = 6;
@@ -183,7 +188,7 @@
             this.ClientSize = new System.Drawing.Size(1369, 806);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.pnlView);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.tbScale)).EndInit();
