@@ -15,7 +15,7 @@ namespace EvolutionaryLogic
 
             for (int i = 0; i < Population.Count; i++)
             {
-                if (Shared.HitChance(.04))
+                if (Shared.HitChance(.001))
                 {
                     Population.RemoveAt(Shared.Next(Population.Count));
                 }

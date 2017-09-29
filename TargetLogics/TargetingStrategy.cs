@@ -35,7 +35,7 @@ namespace TargetLogics
                 }
                 while (this.Contains(this.FriendliesData, point));
 
-                CSimpleArtillary objCannon = new CSimpleArtillary(Shared.Next(1001) + 800, Shared.Next(5), (float)Shared.rnd.NextDouble());
+                CSimpleArtillary objCannon = new CSimpleArtillary(Shared.Next(1001) + 800, Shared.Next(5)+1, (float)Shared.rnd.NextDouble());
                 objCannon.SetLocation(point);
 
                 this.FriendliesData[i] = objCannon;

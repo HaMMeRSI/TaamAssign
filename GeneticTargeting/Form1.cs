@@ -17,8 +17,8 @@ namespace GeneticTargeting
     public partial class Form1 : Form
     {
         public const int FRIENDLY_COUNT = 20;
-        public const int ENEMY_COUNT = 30;
-        public const int POPULATION_SIZE = 1000;
+        public const int ENEMY_COUNT = 25;
+        public const int POPULATION_SIZE = 500;
 
         public God PopGen { get; set; }
         public TargetingStrategy Strategy { get; set; }

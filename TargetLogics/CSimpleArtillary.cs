@@ -60,14 +60,14 @@ namespace TargetLogics
         }
 
         public CSimpleArtillary(float nRadius, int nAmmunition, float nDamage):
-            this(nRadius, nAmmunition, nDamage, 0)
+            this(nRadius, nAmmunition, nDamage, nAmmunition)
         {
             
         }
 
         public CSimpleArtillary Mutate()
         {
-            this.ShotsToFire = Shared.Next(this.Ammunition + 1);
+            //this.ShotsToFire = Shared.Next(this.Ammunition + 1);
             this.Targets.Clear();
 
             return this;
@@ -181,16 +181,17 @@ namespace TargetLogics
         public void Draw(Graphics g)
         {
             g.FillEllipse(new SolidBrush(p.Color), (float)this.RenderLoc.X, (float)this.RenderLoc.Y, CSimpleArtillary.ArtilSize, CSimpleArtillary.ArtilSize);
+
             //foreach (CSimpleArtillary EnemyCannon in this.Targets)
             //{
             //    g.DrawLine(p, this.CentralizeShoot(this.Location, false), CentralizeShoot(EnemyCannon.Location, true));
             //}
 
-            if (this.HittedBy.Count > 0)
+            if (this.HittedBy.Count > 0 && this.Health <= 0)
             {
                 foreach (CSimpleArtillary Cannon in this.HittedBy)
                 {
-                    g.DrawLine(p, this.CentralizeShoot(this.Location, false), CentralizeShoot(Cannon.Location, false));
+                    g.DrawLine(p, this.CentralizeShoot(this.Location, true), CentralizeShoot(Cannon.Location, false));
                 }
             }
 
