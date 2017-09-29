@@ -43,17 +43,43 @@ namespace GeneticTargeting
 
         public void initConfigDelegation()
         {
-            this.tbFriendlyCount.Tag    = GlobalConfiguration.GetFriendlyCountDelegate();
-            this.tbFriendlyCount.Value  = GlobalConfiguration.FriendlyCount;
+            #region Genetic Configuration
 
-            this.tbEnemyCount.Tag       = GlobalConfiguration.GetEnemyCountDelegate();
-            this.tbEnemyCount.Value     = GlobalConfiguration.EnemyCount;
+            this.tbFriendlyCount.Tag = GlobalConfiguration.GetDelegate("FriendlyCount");
+            this.tbFriendlyCount.Value = GlobalConfiguration.FriendlyCount;
 
-            this.tbPopulationSize.Tag   = GlobalConfiguration.GetPopulationCountDelegate();
+            this.tbEnemyCount.Tag = GlobalConfiguration.GetDelegate("EnemyCount");
+            this.tbEnemyCount.Value = GlobalConfiguration.EnemyCount;
+
+            this.tbPopulationSize.Tag = GlobalConfiguration.GetDelegate("PopulationCount");
             this.tbPopulationSize.Value = GlobalConfiguration.PopulationCount;
 
-            this.tbMutationChance.Tag   = GlobalConfiguration.GetMutationChanceDelegate();
+            this.tbMutationChance.Tag = GlobalConfiguration.GetDelegate("MutationChance");
             this.tbMutationChance.Value = (decimal)GlobalConfiguration.MutationChance;
+
+            #endregion
+
+            #region Game Settings
+
+            this.nmMaxDamage.Tag = GlobalConfiguration.GameSettings.GetDelegate("MaxDamage");
+            this.nmMaxDamage.Value = (decimal)GlobalConfiguration.GameSettings.MaxDamage;
+
+            this.nmMinDamage.Tag    = GlobalConfiguration.GameSettings.GetDelegate("MinDamage");
+            this.nmMinDamage.Value  = (decimal)GlobalConfiguration.GameSettings.MinDamage;
+
+            this.nmMaxRadius.Tag = GlobalConfiguration.GameSettings.GetDelegate("MaxRadius");
+            this.nmMaxRadius.Value = GlobalConfiguration.GameSettings.MaxRadius;
+
+            this.nmMinRadius.Tag = GlobalConfiguration.GameSettings.GetDelegate("MinRadius");
+            this.nmMinRadius.Value = GlobalConfiguration.GameSettings.MinRadius;
+
+            this.nmMaxAmmunition.Tag = GlobalConfiguration.GameSettings.GetDelegate("MaxAmmunition");
+            this.nmMaxAmmunition.Value = GlobalConfiguration.GameSettings.MaxAmmunition;
+
+            this.nmMinAmmunition.Tag = GlobalConfiguration.GameSettings.GetDelegate("MinAmmunition");
+            this.nmMinAmmunition.Value = GlobalConfiguration.GameSettings.MinAmmunition;
+
+            #endregion
         }
 
         private void pnlView_Paint(object sender, PaintEventArgs e)

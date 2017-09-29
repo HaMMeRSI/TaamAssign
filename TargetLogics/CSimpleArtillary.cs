@@ -182,6 +182,7 @@ namespace TargetLogics
                 g.FillEllipse(new SolidBrush(Color.FromArgb(127, 255, 0, 0)), new RectangleF((float)this.Location.X - this.Range / 2, (float)this.Location.Y - this.Range / 2, this.Range, this.Range));
                 g.DrawString(this.Damage.ToString(), new Font("Microsoft Sans Serif", 12), new SolidBrush(Color.Black), (float)this.RenderLoc.X, (float)this.RenderLoc.Y);
                 g.DrawString(this.Health.ToString(), new Font("Microsoft Sans Serif", 12), new SolidBrush(Color.Black), (float)this.RenderLoc.X, (float)this.RenderLoc.Y + 20);
+                g.DrawString((this.Range / 2).ToString(), new Font("Microsoft Sans Serif", 12), new SolidBrush(Color.Black), (float)this.RenderLoc.X, (float)this.RenderLoc.Y + 40);
             }
             else
             {

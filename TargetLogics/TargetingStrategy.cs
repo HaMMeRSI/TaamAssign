@@ -36,8 +36,8 @@ namespace TargetLogics
                 while (this.Contains(this.FriendliesData, point));
 
                 double fDamage = Shared.GetMinMax(Shared.rnd.NextDouble(), GlobalConfiguration.GameSettings.MinDamage, GlobalConfiguration.GameSettings.MaxDamage);
-                int Radius = Shared.GetMinMax(Shared.Next(GlobalConfiguration.GameSettings.MaxRadius), GlobalConfiguration.GameSettings.MinRadius, GlobalConfiguration.GameSettings.MaxRadius);
-                int Ammo = Shared.GetMinMax(Shared.Next(GlobalConfiguration.GameSettings.MaxAmmunition), GlobalConfiguration.GameSettings.MinAmmunition, GlobalConfiguration.GameSettings.MaxAmmunition);
+                int Radius = Math.Max(Shared.Next(GlobalConfiguration.GameSettings.MaxRadius), GlobalConfiguration.GameSettings.MinRadius);
+                int Ammo = Math.Max(Shared.Next(GlobalConfiguration.GameSettings.MaxAmmunition), GlobalConfiguration.GameSettings.MinAmmunition);
 
                 CSimpleArtillary objCannon = new CSimpleArtillary(Radius, Ammo, (float)fDamage);
                 objCannon.SetLocation(point);

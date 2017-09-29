@@ -64,6 +64,7 @@ namespace EvolutionaryLogic
         {
             float BestDNAFitness = -2;
             float TotalFintess = 0;
+
             foreach (IDNA objDNA in this.Population)
             {
                 objDNA.CalculateFitness();

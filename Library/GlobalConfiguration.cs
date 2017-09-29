@@ -14,22 +14,19 @@ namespace Library
         public static int EnemyCount = 25;
         public static int PopulationCount = 500;
         public static float MutationChance = 13f;
+        private static Dictionary<string, Action<decimal>> Delegates = new Dictionary<string, Action<decimal>>();
 
-        public static Action<decimal> GetFriendlyCountDelegate()
+        static GlobalConfiguration()
         {
-            return (value) => FriendlyCount = (int)value;
+            Delegates["FriendlyCount"] = (value) => FriendlyCount = (int)value;
+            Delegates["EnemyCount"] = (value) => EnemyCount = (int)value;
+            Delegates["PopulationCount"] = (value) => PopulationCount = (int)value;
+            Delegates["MutationChance"] = (value) => MutationChance = (float)value;
         }
-        public static Action<decimal> GetEnemyCountDelegate()
+
+        public static Action<decimal> GetDelegate(string Name)
         {
-            return (value) => EnemyCount = (int)value;
-        }
-        public static Action<decimal> GetPopulationCountDelegate()
-        {
-            return (value) => PopulationCount = (int)value;
-        }
-        public static Action<decimal> GetMutationChanceDelegate()
-        {
-            return (value) => MutationChance = (float)value;
+            return Delegates[Name];
         }
 
         #endregion
@@ -38,12 +35,30 @@ namespace Library
         {
             public static double MaxDamage = 1;
             public static double MinDamage = .3;
-            public static int MaxRadius = 1500;
-            public static int MinRadius = 800;
+            public static int MaxRadius = 2500;
+            public static int MinRadius = 1250;
             public static int MaxAmmunition = 5;
             public static int MinAmmunition = 1;
-            public static int MaxShotsToFire = 1;
+            public static int MaxShotsToFire = 5;
             public static int MinShotsToFire = 1;
+            private static Dictionary<string, Action<decimal>> Delegates = new Dictionary<string, Action<decimal>>();
+
+            static GameSettings()
+            {
+                Delegates["MaxDamage"] = (value) => MaxDamage = (double)value;
+                Delegates["MinDamage"] = (value) => MinDamage = (double)value;
+                Delegates["MaxRadius"] = (value) => MaxRadius = (int)value;
+                Delegates["MinRadius"] = (value) => MinRadius = (int)value;
+                Delegates["MaxAmmunition"] = (value) => MaxAmmunition = (int)value;
+                Delegates["MinAmmunition"] = (value) => MinAmmunition = (int)value;
+                Delegates["MaxShotsToFire"] = (value) => MaxShotsToFire = (int)value;
+                Delegates["MinShotsToFire"] = (value) => MinShotsToFire = (int)value;
+            }
+
+            public static Action<decimal> GetDelegate(string Name)
+            {
+                return Delegates[Name];
+            }
         }
     }
 }

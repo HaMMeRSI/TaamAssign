@@ -51,12 +51,16 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
+            this.nmMinDamage = new System.Windows.Forms.NumericUpDown();
+            this.nmMinAmmunition = new System.Windows.Forms.NumericUpDown();
+            this.nmMinRadius = new System.Windows.Forms.NumericUpDown();
+            this.nmMaxDamage = new System.Windows.Forms.NumericUpDown();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.nmMaxAmmunition = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
-            this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
+            this.nmMaxRadius = new System.Windows.Forms.NumericUpDown();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.tbScale)).BeginInit();
@@ -69,10 +73,12 @@
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmMinDamage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmMinAmmunition)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmMinRadius)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmMaxDamage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmMaxAmmunition)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmMaxRadius)).BeginInit();
             this.SuspendLayout();
             // 
             // pnlView
@@ -187,8 +193,7 @@
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.Controls.Add(this.btnRestrategize);
             this.panel1.Controls.Add(this.lblAmmo);
             this.panel1.Controls.Add(this.lblBestFitness);
@@ -231,6 +236,7 @@
             this.tbMutationChance.Size = new System.Drawing.Size(256, 22);
             this.tbMutationChance.TabIndex = 1;
             this.tbMutationChance.TextChanged += new System.EventHandler(this.tbConfig_TextChanged);
+            this.tbMutationChance.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
             // 
             // tbPopulationSize
             // 
@@ -254,6 +260,7 @@
             0,
             0});
             this.tbPopulationSize.TextChanged += new System.EventHandler(this.tbConfig_TextChanged);
+            this.tbPopulationSize.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
             // 
             // tbEnemyCount
             // 
@@ -277,6 +284,7 @@
             0,
             0});
             this.tbEnemyCount.TextChanged += new System.EventHandler(this.tbConfig_TextChanged);
+            this.tbEnemyCount.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
             // 
             // tbFriendlyCount
             // 
@@ -300,6 +308,7 @@
             0,
             0});
             this.tbFriendlyCount.TextChanged += new System.EventHandler(this.tbConfig_TextChanged);
+            this.tbFriendlyCount.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
             // 
             // label5
             // 
@@ -339,6 +348,8 @@
             // 
             // tabControl1
             // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Location = new System.Drawing.Point(924, 448);
@@ -368,12 +379,16 @@
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPage2.Controls.Add(this.numericUpDown1);
-            this.tabPage2.Controls.Add(this.numericUpDown2);
-            this.tabPage2.Controls.Add(this.numericUpDown3);
+            this.tabPage2.Controls.Add(this.nmMinDamage);
+            this.tabPage2.Controls.Add(this.nmMinAmmunition);
+            this.tabPage2.Controls.Add(this.nmMinRadius);
+            this.tabPage2.Controls.Add(this.nmMaxDamage);
+            this.tabPage2.Controls.Add(this.label13);
+            this.tabPage2.Controls.Add(this.label12);
             this.tabPage2.Controls.Add(this.label6);
+            this.tabPage2.Controls.Add(this.nmMaxAmmunition);
             this.tabPage2.Controls.Add(this.label7);
-            this.tabPage2.Controls.Add(this.numericUpDown4);
+            this.tabPage2.Controls.Add(this.nmMaxRadius);
             this.tabPage2.Controls.Add(this.label8);
             this.tabPage2.Controls.Add(this.label9);
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
@@ -383,115 +398,184 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Game setting";
             // 
-            // numericUpDown1
+            // nmMinDamage
             // 
-            this.numericUpDown1.DecimalPlaces = 5;
-            this.numericUpDown1.Location = new System.Drawing.Point(169, 86);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(256, 22);
-            this.numericUpDown1.TabIndex = 6;
+            this.nmMinDamage.DecimalPlaces = 5;
+            this.nmMinDamage.Location = new System.Drawing.Point(168, 32);
+            this.nmMinDamage.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nmMinDamage.Name = "nmMinDamage";
+            this.nmMinDamage.Size = new System.Drawing.Size(256, 22);
+            this.nmMinDamage.TabIndex = 6;
+            this.nmMinDamage.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
             // 
-            // numericUpDown2
+            // nmMinAmmunition
             // 
-            this.numericUpDown2.Location = new System.Drawing.Point(169, 32);
-            this.numericUpDown2.Maximum = new decimal(new int[] {
+            this.nmMinAmmunition.Location = new System.Drawing.Point(169, 139);
+            this.nmMinAmmunition.Maximum = new decimal(new int[] {
             9999,
             0,
             0,
             0});
-            this.numericUpDown2.Minimum = new decimal(new int[] {
+            this.nmMinAmmunition.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(256, 22);
-            this.numericUpDown2.TabIndex = 7;
-            this.numericUpDown2.Value = new decimal(new int[] {
+            this.nmMinAmmunition.Name = "nmMinAmmunition";
+            this.nmMinAmmunition.Size = new System.Drawing.Size(256, 22);
+            this.nmMinAmmunition.TabIndex = 7;
+            this.nmMinAmmunition.Value = new decimal(new int[] {
             1,
             0,
             0,
             0});
+            this.nmMinAmmunition.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
             // 
-            // numericUpDown3
+            // nmMinRadius
             // 
-            this.numericUpDown3.Location = new System.Drawing.Point(169, 58);
-            this.numericUpDown3.Maximum = new decimal(new int[] {
+            this.nmMinRadius.Location = new System.Drawing.Point(168, 86);
+            this.nmMinRadius.Maximum = new decimal(new int[] {
             9999,
             0,
             0,
             0});
-            this.numericUpDown3.Minimum = new decimal(new int[] {
+            this.nmMinRadius.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.numericUpDown3.Name = "numericUpDown3";
-            this.numericUpDown3.Size = new System.Drawing.Size(256, 22);
-            this.numericUpDown3.TabIndex = 8;
-            this.numericUpDown3.Value = new decimal(new int[] {
+            this.nmMinRadius.Name = "nmMinRadius";
+            this.nmMinRadius.Size = new System.Drawing.Size(256, 22);
+            this.nmMinRadius.TabIndex = 7;
+            this.nmMinRadius.Value = new decimal(new int[] {
             1,
             0,
             0,
             0});
+            this.nmMinRadius.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
+            // 
+            // nmMaxDamage
+            // 
+            this.nmMaxDamage.DecimalPlaces = 5;
+            this.nmMaxDamage.Location = new System.Drawing.Point(168, 4);
+            this.nmMaxDamage.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nmMaxDamage.Name = "nmMaxDamage";
+            this.nmMaxDamage.Size = new System.Drawing.Size(256, 22);
+            this.nmMaxDamage.TabIndex = 8;
+            this.nmMaxDamage.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nmMaxDamage.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(4, 116);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(113, 17);
+            this.label13.TabIndex = 2;
+            this.label13.Text = "Max ammunition:";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(4, 142);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(110, 17);
+            this.label12.TabIndex = 3;
+            this.label12.Text = "Min ammunition:";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(4, 9);
+            this.label6.Location = new System.Drawing.Point(3, 63);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(101, 17);
+            this.label6.Size = new System.Drawing.Size(80, 17);
             this.label6.TabIndex = 2;
-            this.label6.Text = "Friendly count:";
+            this.label6.Text = "Max radius:";
             // 
-            // label7
+            // nmMaxAmmunition
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(4, 35);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(94, 17);
-            this.label7.TabIndex = 3;
-            this.label7.Text = "Enemy count:";
-            // 
-            // numericUpDown4
-            // 
-            this.numericUpDown4.Location = new System.Drawing.Point(169, 6);
-            this.numericUpDown4.Maximum = new decimal(new int[] {
+            this.nmMaxAmmunition.Location = new System.Drawing.Point(169, 113);
+            this.nmMaxAmmunition.Maximum = new decimal(new int[] {
             9999,
             0,
             0,
             0});
-            this.numericUpDown4.Minimum = new decimal(new int[] {
+            this.nmMaxAmmunition.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.numericUpDown4.Name = "numericUpDown4";
-            this.numericUpDown4.Size = new System.Drawing.Size(256, 22);
-            this.numericUpDown4.TabIndex = 9;
-            this.numericUpDown4.Value = new decimal(new int[] {
+            this.nmMaxAmmunition.Name = "nmMaxAmmunition";
+            this.nmMaxAmmunition.Size = new System.Drawing.Size(256, 22);
+            this.nmMaxAmmunition.TabIndex = 9;
+            this.nmMaxAmmunition.Value = new decimal(new int[] {
             1,
             0,
             0,
             0});
+            this.nmMaxAmmunition.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 89);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(77, 17);
+            this.label7.TabIndex = 3;
+            this.label7.Text = "Min radius:";
+            // 
+            // nmMaxRadius
+            // 
+            this.nmMaxRadius.Location = new System.Drawing.Point(168, 60);
+            this.nmMaxRadius.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.nmMaxRadius.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nmMaxRadius.Name = "nmMaxRadius";
+            this.nmMaxRadius.Size = new System.Drawing.Size(256, 22);
+            this.nmMaxRadius.TabIndex = 9;
+            this.nmMaxRadius.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nmMaxRadius.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(4, 61);
+            this.label8.Location = new System.Drawing.Point(3, 7);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(108, 17);
+            this.label8.Size = new System.Drawing.Size(92, 17);
             this.label8.TabIndex = 4;
-            this.label8.Text = "Population size:";
+            this.label8.Text = "Max damage:";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(4, 89);
+            this.label9.Location = new System.Drawing.Point(3, 35);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(116, 17);
+            this.label9.Size = new System.Drawing.Size(89, 17);
             this.label9.TabIndex = 5;
-            this.label9.Text = "Mutation chance:";
+            this.label9.Text = "Min damage:";
             // 
             // Form1
             // 
@@ -517,10 +601,12 @@
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmMinDamage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmMinAmmunition)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmMinRadius)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmMaxDamage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmMaxAmmunition)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmMaxRadius)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -550,14 +636,18 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.NumericUpDown numericUpDown2;
-        private System.Windows.Forms.NumericUpDown numericUpDown3;
+        private System.Windows.Forms.NumericUpDown nmMinDamage;
+        private System.Windows.Forms.NumericUpDown nmMinRadius;
+        private System.Windows.Forms.NumericUpDown nmMaxDamage;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.NumericUpDown numericUpDown4;
+        private System.Windows.Forms.NumericUpDown nmMaxRadius;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.NumericUpDown nmMinAmmunition;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.NumericUpDown nmMaxAmmunition;
     }
 }
 

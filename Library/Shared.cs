@@ -38,8 +38,8 @@ namespace Library
         }
         public static int GetMinMax(int Value, int Min, int Max)
         {
-            int tMinMax = Math.Min(Value, Max);
-            return Math.Max(tMinMax, Min);
+            int tMinMax = Math.Max(Value, Min);
+            return Math.Min(tMinMax, Max);
 
         }
     }
