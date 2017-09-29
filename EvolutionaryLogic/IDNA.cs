@@ -11,10 +11,6 @@ namespace EvolutionaryLogic
         IDNA Crossover(IDNA objPartner);
         void CalculateFitness();
         float GetFitnesss();
-        IDNA CreateChild();
-
-        void ResetForNewGeneration();
-
         void Execute();
     }
 }

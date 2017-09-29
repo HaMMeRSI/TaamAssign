@@ -13,13 +13,11 @@ namespace TargetLogics
     {
         public CSimpleArtillary[] Enemies { get; set; }
         private TargetingStrategy Strategy { get; set; }
-        public int DeadCount { get; set; }
 
         public CWorld(TargetingStrategy Strategy)
             : base(Strategy.GetFriendlyCount())
         {
             this.Strategy = Strategy;
-            this.DeadCount = 0;
 
             for (int i = 0; i < this.Genes.Length; i++)
             {
@@ -33,19 +31,11 @@ namespace TargetLogics
 
         public override void Execute()
         {
-            bool blnEndIndicator = false;
-            while (!blnEndIndicator)
+            foreach (CSimpleArtillary Cannon in this.Genes)
             {
-                blnEndIndicator = true;
-
-                foreach (CSimpleArtillary Cannon in this.Genes)
+                if(Cannon.Targets.Count < Cannon.ShotsToFire)
                 {
-                    if (Cannon.Targets.Count < Cannon.ShotsToFire)
-                    {
-                        Cannon.ChooseTarget(this.Enemies);
-                    }
-
-                    blnEndIndicator &= Cannon.Targets.Count == Cannon.ShotsToFire;
+                    Cannon.ChooseTargets(this.Enemies);
                 }
             }
         }
@@ -73,12 +63,28 @@ namespace TargetLogics
             bool Mutated = false;
             foreach (CSimpleArtillary Cannon in this.Genes)
             {
-                if (Shared.HitChance(.05))
+                if (Shared.HitChance(GlobalConfiguration.MutationChance / 100))
                 {
                     Cannon.Mutate();
                     Mutated = true;
                 }
             }
+
+            //if (Shared.HitChance(.05))
+            //{
+            //    int nReplaceWith;
+            //    CSimpleArtillary Temp;
+            //    for (int i = 0; i < this.Genes.Length; i++)
+            //    {
+            //        if (Shared.HitChance(.6))
+            //        {
+            //            nReplaceWith = Shared.Next(this.Genes.Length);
+            //            Temp = this.Genes[nReplaceWith];
+            //            this.Genes[nReplaceWith] = this[i];
+            //            this[i] = Temp;
+            //        }
+            //    }
+            //}
 
             if (Mutated)
             {
@@ -133,11 +139,5 @@ namespace TargetLogics
         }
 
         #endregion
-
-        public override string ToString()
-        {
-            bool s = this.Genes.Select(x => x.Targets.Count).Sum() == this.DeadCount;
-            return string.Format("D: {0}, T: {1} - {2}", this.DeadCount, string.Join(", ", this.Genes.Select(x => x.Targets.Count).ToArray()), s);
-        }
     }
 }

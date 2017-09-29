@@ -1,6 +1,7 @@
 ﻿using Library;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 
 namespace TargetLogics
@@ -73,26 +74,6 @@ namespace TargetLogics
             return this;
         }
 
-        //public int Shoot(CSimpleArtillary[] colTargets)
-        //{
-        //    int nTargetInd = Shared.Next(colTargets.Length);
-        //    int IsEnemyDead = 0;
-        //    this.ShotsTaken++;
-
-        //    if (colTargets[nTargetInd].Health > 0)
-        //    {
-        //        this.Targets.Add(colTargets[nTargetInd]);
-        //        colTargets[nTargetInd].Health -= this.Damage;
-
-        //        if (colTargets[nTargetInd].Health <= 0)
-        //        {
-        //            IsEnemyDead = 1;
-        //        }
-        //    }
-
-        //    return IsEnemyDead;
-        //}
-
         public int Shoot(CSimpleArtillary[] colTargets)
         {
             int IsEnemyDead = 0;
@@ -126,6 +107,18 @@ namespace TargetLogics
             this.Targets.Add(nTargetInd);
         }
 
+        public void ChooseTargets(CSimpleArtillary[] colTargets)
+        {
+            int nTargetInd;
+            this.Targets.Clear();
+            
+            for (int i = 0; i < this.ShotsToFire; i++)
+            {
+                nTargetInd = Shared.Next(colTargets.Length);
+                this.Targets.Add(nTargetInd);
+            }
+        }
+
         public bool WithinRange(CSimpleArtillary Cannon)
         {
             return this.Location.Distance(Cannon.Location) <= this.Range / 2;
@@ -140,13 +133,6 @@ namespace TargetLogics
 
         public CSimpleArtillary Clone()
         {
-            //List<CSimpleArtillary> colTargets = new List<CSimpleArtillary>();
-
-            //foreach (CSimpleArtillary EnemyCannon in this.Targets)
-            //{
-            //    colTargets.Add(EnemyCannon.Clone());
-            //}
-
             return (new CSimpleArtillary(this.Range, this.Ammunition, this.Damage, this.ShotsToFire))
                 .SetLocation(this.Location.Clone())
                 .SetTargets(new List<int>(this.Targets));
@@ -182,16 +168,12 @@ namespace TargetLogics
         {
             g.FillEllipse(new SolidBrush(p.Color), (float)this.RenderLoc.X, (float)this.RenderLoc.Y, CSimpleArtillary.ArtilSize, CSimpleArtillary.ArtilSize);
 
-            //foreach (CSimpleArtillary EnemyCannon in this.Targets)
-            //{
-            //    g.DrawLine(p, this.CentralizeShoot(this.Location, false), CentralizeShoot(EnemyCannon.Location, true));
-            //}
-
             if (this.HittedBy.Count > 0 && this.Health <= 0)
             {
                 foreach (CSimpleArtillary Cannon in this.HittedBy)
                 {
-                    g.DrawLine(p, this.CentralizeShoot(this.Location, true), CentralizeShoot(Cannon.Location, false));
+                    Pen pp = new Pen(Cannon.p.Color, 2);
+                    g.DrawLine(pp, this.CentralizeShoot(this.Location, true), CentralizeShoot(Cannon.Location, false));
                 }
             }
 

@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CConvert.cs" />
+    <Compile Include="GlobalConfiguration.cs" />
     <Compile Include="IGameLoop\IDrawable.cs" />
     <Compile Include="IGameLoop\ILive.cs" />
     <Compile Include="IGameLoop\IUpdateable.cs" />

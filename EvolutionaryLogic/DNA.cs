@@ -53,7 +53,5 @@ namespace EvolutionaryLogic
 
         public abstract void CalculateFitness();
         protected abstract void Mutate();
-        public abstract IDNA CreateChild();
-        public abstract void ResetForNewGeneration();
     }
 }

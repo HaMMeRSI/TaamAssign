@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Library;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -12,7 +13,6 @@ namespace EvolutionaryLogic
         #region Properties
 
         private List<IDNA> Population { get; set; }
-        private int MyPopulationSize { get; set; }
         public PopulationSelector MySelector { get; set; }
 
         public IDNA BestFitness { get; set; }
@@ -21,14 +21,13 @@ namespace EvolutionaryLogic
 
         #endregion
 
-        public God(int nPopSize, Func<IDNA> PopulationGenerator)
+        public God(Func<IDNA> PopulationGenerator)
         {
             this.Population = new List<IDNA>();
             this.MySelector = new PopulationSelector();
-            this.MyPopulationSize = nPopSize;
             this.GenerationCount = 0;
 
-            for (int i = 0; i < this.MyPopulationSize; i++)
+            for (int i = 0; i < GlobalConfiguration.PopulationCount; i++)
             {
                 IDNA dna = PopulationGenerator();
                 dna.Execute();
@@ -38,22 +37,27 @@ namespace EvolutionaryLogic
             this.AssessPopulation();
         }
 
-        public void GeneratePopulation()
+        public void GeneratePopulation(int Generations, IProgress<string> progress)
         {
-            this.MySelector.NaturalSelection(this.Population);
-            MatingPool pool = new MatingPool(this.Population);
-            List<IDNA> NewPop = new List<IDNA>();
-
-            for (int i = 0; i < this.MyPopulationSize; i++)
+            for (int i = 0; i < Generations; i++)
             {
-                var p = pool.GetChild();
+                this.MySelector.NaturalSelection(this.Population);
+                MatingPool pool = new MatingPool(this.Population);
+                List<IDNA> NewPop = new List<IDNA>();
 
-                NewPop.Add(p);
+                for (int j = 0; j < GlobalConfiguration.PopulationCount; j++)
+                {
+                    var p = pool.GetChild();
+
+                    NewPop.Add(p);
+                }
+
+                this.Population = NewPop;
+                this.GenerationCount++;
+                this.AssessPopulation();
+
+                progress.Report(this.GenerationCount.ToString());
             }
-
-            this.Population = NewPop;
-            this.GenerationCount++;
-            this.AssessPopulation();
         }
 
         private void AssessPopulation()
@@ -71,7 +75,7 @@ namespace EvolutionaryLogic
                 }
             }
 
-            this.AvreageFitness = TotalFintess / this.MyPopulationSize;
+            this.AvreageFitness = TotalFintess / GlobalConfiguration.PopulationCount;
         }
 
         public string PrintAll()

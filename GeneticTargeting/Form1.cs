@@ -16,11 +16,7 @@ namespace GeneticTargeting
 {
     public partial class Form1 : Form
     {
-        public const int FRIENDLY_COUNT = 20;
-        public const int ENEMY_COUNT = 25;
-        public const int POPULATION_SIZE = 500;
-
-        public God PopGen { get; set; }
+        public static God PopGen { get; set; }
         public TargetingStrategy Strategy { get; set; }
 
         public float TScale { get; set; }
@@ -38,15 +34,32 @@ namespace GeneticTargeting
             this.DoubleBuffered = true;
             this.TScale = ((float)this.tbScale.Value) / 25;
             this.Angle = 0;
-            this.Strategy = new TargetingStrategy(FRIENDLY_COUNT, ENEMY_COUNT);
+            this.Strategy = new TargetingStrategy(GlobalConfiguration.FriendlyCount, GlobalConfiguration.EnemyCount);
             this.lblAmmo.Text += this.Strategy.FriendliesTotalAmmunition;
             this.TransformOrigin = new Point2D(-this.Strategy.Terrain.GetWidth() / 2, -this.Strategy.Terrain.GetHeight() / 2);
+
+            this.initConfigDelegation();
+        }
+
+        public void initConfigDelegation()
+        {
+            this.tbFriendlyCount.Tag    = GlobalConfiguration.GetFriendlyCountDelegate();
+            this.tbFriendlyCount.Value  = GlobalConfiguration.FriendlyCount;
+
+            this.tbEnemyCount.Tag       = GlobalConfiguration.GetEnemyCountDelegate();
+            this.tbEnemyCount.Value     = GlobalConfiguration.EnemyCount;
+
+            this.tbPopulationSize.Tag   = GlobalConfiguration.GetPopulationCountDelegate();
+            this.tbPopulationSize.Value = GlobalConfiguration.PopulationCount;
+
+            this.tbMutationChance.Tag   = GlobalConfiguration.GetMutationChanceDelegate();
+            this.tbMutationChance.Value = (decimal)GlobalConfiguration.MutationChance;
         }
 
         private void pnlView_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.Clear(Color.Silver);
-            if (this.PopGen?.BestFitness != null)
+            if (PopGen?.BestFitness != null)
             {
                 e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 e.Graphics.TranslateTransform(pnlView.Width / 2, pnlView.Height / 2);
@@ -55,10 +68,11 @@ namespace GeneticTargeting
                 e.Graphics.TranslateTransform((float)this.TransformOrigin.X, (float)this.TransformOrigin.Y);
 
                 this.Strategy.Draw(e.Graphics);
-                ((CWorld)this.PopGen.BestFitness).Draw(e.Graphics);
+                ((CWorld)PopGen.BestFitness).Draw(e.Graphics);
                 e.Graphics.FillEllipse(new SolidBrush(Color.Red), new Rectangle(Shared.MouseLocation, new Size(3, 3)));
                 e.Graphics.RotateTransform(0);
             }
+
             e.Graphics.ResetTransform();
         }
 
@@ -81,6 +95,11 @@ namespace GeneticTargeting
             {
                 this.IsRightMouseDown = true;
                 this.MouseDownLocation = (Point2D)e.Location;
+            }
+            else if (e.Button == MouseButtons.Middle)
+            {
+                ((CWorld)PopGen.BestFitness).Update();
+                this.pnlView.Refresh();
             }
         }
 
@@ -108,11 +127,6 @@ namespace GeneticTargeting
                 }
                 this.pnlView.Refresh();
             }
-            else if (e.Button == MouseButtons.Middle)
-            {
-                ((CWorld)this.PopGen.BestFitness).Update();
-                this.pnlView.Refresh();
-            }
         }
 
         private void pnlView_MouseUp(object sender, MouseEventArgs e)
@@ -129,36 +143,61 @@ namespace GeneticTargeting
 
         #endregion
 
-        private void btnGeneratePopulation_Click(object sender, EventArgs e)
+        private async void btnGeneratePopulation_Click(object sender, EventArgs e)
         {
             int cycles = Convert.ToInt32(this.numCycles.Value);
 
-            for (int i = 0; i < cycles; i++)
-            {
-                this.PopGen.GeneratePopulation();
-            }
+            Progress<string> progress = new Progress<string>(s => {
+                lblGenerationCount.Text = "Curr gen count: " + s;
+                this.lblGenerationCount.Text = "Curr gen count: " + PopGen.GenerationCount;
+                this.lblAverageFitness.Text = "Average fitness: " + PopGen.AvreageFitness;
+                this.lblBestFitness.Text = "Best Fitness: " + PopGen.BestFitness.GetFitnesss();
+            });
+            await Task.Factory.StartNew(() => PopGen.GeneratePopulation(cycles, progress),TaskCreationOptions.LongRunning);
 
-            this.lblGenerationCount.Text = "Curr gen count: " + this.PopGen.GenerationCount;
-            this.lblAverageFitness.Text = "Average fitness: " + this.PopGen.AvreageFitness;
-            this.lblBestFitness.Text = "Best Fitness: " + this.PopGen.BestFitness.GetFitnesss();
+            this.lblGenerationCount.Text = "Curr gen count: " + PopGen.GenerationCount;
+            this.lblAverageFitness.Text = "Average fitness: " + PopGen.AvreageFitness;
+            this.lblBestFitness.Text = "Best Fitness: " + PopGen.BestFitness.GetFitnesss();
             this.pnlView.Refresh();
         }
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            this.PopGen = new God(POPULATION_SIZE, () => new CWorld(Strategy));
+            PopGen = new God(() => new CWorld(Strategy));
             this.btnGeneratePopulation.Enabled = true;
             this.btnStart.Text = "Restart!";
 
-            this.lblGenerationCount.Text = "Curr gen count: " + this.PopGen.GenerationCount;
-            this.lblAverageFitness.Text = "Average fitness: " + this.PopGen.AvreageFitness;
-            this.lblBestFitness.Text = "Best Fitness: " + this.PopGen.BestFitness.GetFitnesss();
+            this.lblGenerationCount.Text = "Curr gen count: " + PopGen.GenerationCount;
+            this.lblAverageFitness.Text = "Average fitness: " + PopGen.AvreageFitness;
+            this.lblBestFitness.Text = "Best Fitness: " + PopGen.BestFitness.GetFitnesss();
             this.pnlView.Refresh();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
             this.pnlView.Refresh();
+        }
+
+        private void btnRestrategize_Click(object sender, EventArgs e)
+        {
+            this.Strategy = new TargetingStrategy(GlobalConfiguration.FriendlyCount, GlobalConfiguration.EnemyCount);
+            PopGen = new God(() => new CWorld(Strategy));
+            this.btnGeneratePopulation.Enabled = true;
+            this.btnStart.Text = "Restart!";
+
+            this.lblGenerationCount.Text = "Curr gen count: " + PopGen.GenerationCount;
+            this.lblAverageFitness.Text = "Average fitness: " + PopGen.AvreageFitness;
+            this.lblBestFitness.Text = "Best Fitness: " + PopGen.BestFitness.GetFitnesss();
+            this.pnlView.Refresh();
+        }
+
+        private void tbConfig_TextChanged(object sender, EventArgs e)
+        {
+            NumericUpDown tb = (NumericUpDown)sender;
+            if (tb.Tag != null)
+            {
+                ((Action<decimal>)(tb).Tag)(tb.Value);
+            }
         }
     }
 }
