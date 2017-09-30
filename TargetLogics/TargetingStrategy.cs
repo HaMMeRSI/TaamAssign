@@ -39,7 +39,7 @@ namespace TargetLogics
                 int Radius = Math.Max(Shared.Next(GlobalConfiguration.GameSettings.MaxRadius), GlobalConfiguration.GameSettings.MinRadius);
                 int Ammo = Math.Max(Shared.Next(GlobalConfiguration.GameSettings.MaxAmmunition), GlobalConfiguration.GameSettings.MinAmmunition);
                 int PricePerShot = Math.Max(Shared.Next(GlobalConfiguration.GameSettings.MaxPricePerShot), GlobalConfiguration.GameSettings.MinPricePerShot);
-
+                GlobalConfiguration.GameData.MaxAttackPrice += PricePerShot * Ammo;
                 CSimpleArtillary objCannon = new CSimpleArtillary(Radius, Ammo, Damage, PricePerShot);
                 objCannon.SetLocation(point);
 

@@ -31,6 +31,11 @@ namespace Library
 
         #endregion
 
+        public class GameData
+        {
+            public static int MaxAttackPrice = 1;
+        }
+
         public class GameSettings
         {
             #region General

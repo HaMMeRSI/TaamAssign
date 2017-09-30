@@ -69,7 +69,7 @@ namespace TargetLogics
                 }
             }
 
-            double PriceFactor = 1 - ((double)this.TotalAttackPrice / (this.Strategy.GetFriendlyCount() * GlobalConfiguration.GameSettings.MaxPricePerShot));
+            double PriceFactor = 1 - ((double)this.TotalAttackPrice / GlobalConfiguration.GameData.MaxAttackPrice);
             this.Fitness = (float)(PriceFactor * GlobalConfiguration.GameSettings.PriceWeight + DeadFactor * GlobalConfiguration.GameSettings.DeadCountWeight) / 2;
         }
 
