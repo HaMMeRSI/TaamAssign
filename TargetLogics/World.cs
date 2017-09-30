@@ -33,7 +33,7 @@ namespace TargetLogics
         {
             foreach (CSimpleArtillary Cannon in this.Genes)
             {
-                if(Cannon.Targets.Count < Cannon.ShotsToFire)
+                if(Cannon.Targets.Count < Cannon.Ammunition)
                 {
                     Cannon.ChooseTargets(this.Enemies);
                 }
@@ -51,7 +51,7 @@ namespace TargetLogics
                 foreach (CSimpleArtillary Cannon in this.Genes)
                 {
                     nDeadCount += Cannon.Shoot(this.Enemies);
-                    blnEndIndicator &= Cannon.ShotsTaken == Cannon.ShotsToFire;
+                    blnEndIndicator &= Cannon.ShotsTaken == Cannon.Ammunition;
                 }
             }
 
@@ -79,8 +79,8 @@ namespace TargetLogics
             //        if (Shared.HitChance(.6))
             //        {
             //            nReplaceWith = Shared.Next(this.Genes.Length);
-            //            Temp = this.Genes[nReplaceWith];
-            //            this.Genes[nReplaceWith] = this[i];
+            //            Temp = this[nReplaceWith];
+            //            this[nReplaceWith] = this[i];
             //            this[i] = Temp;
             //        }
             //    }
@@ -103,9 +103,19 @@ namespace TargetLogics
             }
 
             child.Mutate();
-            // child.Execute();
 
             return child;
+        }
+
+        public override IDNA Clone()
+        {
+            CWorld world = new CWorld(this.Strategy);
+            for (int i = 0; i < this.Genes.Length; i++)
+            {
+                world[i] = this[i].Clone();
+            }
+
+            return world;
         }
 
         #endregion

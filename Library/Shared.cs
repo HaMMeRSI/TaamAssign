@@ -36,11 +36,11 @@ namespace Library
             double tMinMax = Math.Min(Value, Max);
             return Math.Max(tMinMax, Min);
         }
+
         public static int GetMinMax(int Value, int Min, int Max)
         {
             int tMinMax = Math.Max(Value, Min);
             return Math.Min(tMinMax, Max);
-
         }
     }
 }

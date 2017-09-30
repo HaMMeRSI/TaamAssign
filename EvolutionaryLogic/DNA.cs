@@ -53,5 +53,6 @@ namespace EvolutionaryLogic
 
         public abstract void CalculateFitness();
         protected abstract void Mutate();
+        public abstract IDNA Clone();
     }
 }

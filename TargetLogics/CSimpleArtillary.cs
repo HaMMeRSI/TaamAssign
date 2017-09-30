@@ -13,15 +13,17 @@ namespace TargetLogics
 
         public float Range { get; set; }
         public float Damage { get; set; }
-        public int Ammunition { get; set; }
         public float Health { get; set; }
-        public int ShotsToFire { get; set; }
+        public float PriceForShot { get; set; }
+        public int Ammunition { get; set; }
         public int ShotsTaken { get; set; }
-        public List<CSimpleArtillary> HittedBy { get; set; }
 
+        public List<CSimpleArtillary> HittedBy { get; set; }
         public List<int> Targets { get; set; }
-        Pen p = new Pen(Color.Green, 2);
+
+        public Color MyColor { get; set; }
         private Point2D RenderLoc { get; set; }
+
         #region Builder
 
         public CSimpleArtillary SetLocation(float nX, float nY)
@@ -46,7 +48,12 @@ namespace TargetLogics
 
         #endregion
 
-        public CSimpleArtillary(float nRadius, int nAmmunition, float nDamage, int nShotsToFire)
+        public CSimpleArtillary(float nRadius, int nAmmunition, float nDamage) :
+            this(nRadius, nAmmunition, nDamage, Color.FromArgb(Shared.Next(256), Shared.Next(256), Shared.Next(256)))
+        {
+        }
+
+        public CSimpleArtillary(float nRadius, int nAmmunition, float nDamage, Color cColor)
         {
             this.Targets = new List<int>();
             this.HittedBy = new List<CSimpleArtillary>();
@@ -54,25 +61,12 @@ namespace TargetLogics
             this.Damage = nDamage;
             this.Range = nRadius;
             this.Ammunition = nAmmunition;
-            this.ShotsToFire = nShotsToFire;
             this.ShotsTaken = 0;
 
-            p.Color = Color.FromArgb(Shared.Next(256), Shared.Next(256), Shared.Next(256));
+            this.MyColor = cColor;
         }
 
-        public CSimpleArtillary(float nRadius, int nAmmunition, float nDamage):
-            this(nRadius, nAmmunition, nDamage, nAmmunition)
-        {
-            
-        }
 
-        public CSimpleArtillary Mutate()
-        {
-            //this.ShotsToFire = Shared.Next(this.Ammunition + 1);
-            this.Targets.Clear();
-
-            return this;
-        }
 
         public int Shoot(CSimpleArtillary[] colTargets)
         {
@@ -95,27 +89,18 @@ namespace TargetLogics
                         }
                     }
                 }
+
                 this.ShotsTaken++;
             }
 
             return IsEnemyDead;
         }
 
-        public void ChooseTarget(CSimpleArtillary[] colTargets)
-        {
-            int nTargetInd = Shared.Next(colTargets.Length);
-            this.Targets.Add(nTargetInd);
-        }
-
         public void ChooseTargets(CSimpleArtillary[] colTargets)
         {
-            int nTargetInd;
-            this.Targets.Clear();
-            
-            for (int i = 0; i < this.ShotsToFire; i++)
+            for (int i = 0; i < this.Ammunition; i++)
             {
-                nTargetInd = Shared.Next(colTargets.Length);
-                this.Targets.Add(nTargetInd);
+                this.Targets.Add(Shared.Next(colTargets.Length));
             }
         }
 
@@ -124,31 +109,21 @@ namespace TargetLogics
             return this.Location.Distance(Cannon.Location) <= this.Range / 2;
         }
 
-        public void ResetGeneome()
+        public CSimpleArtillary Mutate()
         {
-            this.Targets = new List<int>();
-            this.Health = 1;
-            this.ShotsTaken = 0;
+            this.Targets.Clear();
+            return this;
         }
 
         public CSimpleArtillary Clone()
         {
-            return (new CSimpleArtillary(this.Range, this.Ammunition, this.Damage, this.ShotsToFire))
+            return (new CSimpleArtillary(this.Range, this.Ammunition, this.Damage, this.MyColor))
                 .SetLocation(this.Location.Clone())
                 .SetTargets(new List<int>(this.Targets));
         }
 
-        private Point2D CentralizeShoot(Point2D Original, bool Randomize)
-        {
-            if (!Randomize)
-            {
-                return new Point2D(Original.X, Original.Y);
-            }
 
-            int randomX = CSimpleArtillary.ArtilSize / 2 - Shared.Next(CSimpleArtillary.ArtilSize);
-            int randomY = CSimpleArtillary.ArtilSize / 2 - Shared.Next(CSimpleArtillary.ArtilSize);
-            return new Point2D(Original.X + randomX, Original.Y + randomY);
-        }
+        #region ILive
 
         public bool DrawRange { get; set; }
         public void Update()
@@ -166,31 +141,47 @@ namespace TargetLogics
 
         public void Draw(Graphics g)
         {
-            g.FillEllipse(new SolidBrush(p.Color), (float)this.RenderLoc.X, (float)this.RenderLoc.Y, CSimpleArtillary.ArtilSize, CSimpleArtillary.ArtilSize);
+            g.FillEllipse(new SolidBrush(this.MyColor), (float)this.RenderLoc.X, (float)this.RenderLoc.Y, CSimpleArtillary.ArtilSize, CSimpleArtillary.ArtilSize);
 
             if (this.HittedBy.Count > 0 && this.Health <= 0)
             {
                 foreach (CSimpleArtillary Cannon in this.HittedBy)
                 {
-                    Pen pp = new Pen(Cannon.p.Color, 2);
-                    g.DrawLine(pp, this.CentralizeShoot(this.Location, true), CentralizeShoot(Cannon.Location, false));
+                    Pen pp = new Pen(Cannon.MyColor, 2);
+                    g.DrawLine(pp, this.CentralizeShoot(this.Location, this.HittedBy.Count > 1), CentralizeShoot(Cannon.Location, false));
                 }
             }
 
             if (this.DrawRange)
             {
                 g.FillEllipse(new SolidBrush(Color.FromArgb(127, 255, 0, 0)), new RectangleF((float)this.Location.X - this.Range / 2, (float)this.Location.Y - this.Range / 2, this.Range, this.Range));
-                g.DrawString(this.Damage.ToString(), new Font("Microsoft Sans Serif", 12), new SolidBrush(Color.Black), (float)this.RenderLoc.X, (float)this.RenderLoc.Y);
-                g.DrawString(this.Health.ToString(), new Font("Microsoft Sans Serif", 12), new SolidBrush(Color.Black), (float)this.RenderLoc.X, (float)this.RenderLoc.Y + 20);
-                g.DrawString((this.Range / 2).ToString(), new Font("Microsoft Sans Serif", 12), new SolidBrush(Color.Black), (float)this.RenderLoc.X, (float)this.RenderLoc.Y + 40);
+                g.DrawString("Damage: " + this.Damage.ToString(), new Font("Microsoft Sans Serif", 12), new SolidBrush(Color.White), (float)this.RenderLoc.X, (float)this.RenderLoc.Y);
+                g.DrawString("HP: " + this.Health.ToString(), new Font("Microsoft Sans Serif", 12), new SolidBrush(Color.White), (float)this.RenderLoc.X, (float)this.RenderLoc.Y + 20);
+                g.DrawString("Radius: " + (this.Range / 2).ToString(), new Font("Microsoft Sans Serif", 12), new SolidBrush(Color.White), (float)this.RenderLoc.X, (float)this.RenderLoc.Y + 40);
             }
             else
             {
-                g.DrawString(this.ShotsToFire.ToString(), new Font("Microsoft Sans Serif", 12), new SolidBrush(Color.Black), (float)this.RenderLoc.X, (float)this.RenderLoc.Y);
-                g.DrawString(this.Ammunition.ToString(), new Font("Microsoft Sans Serif", 12), new SolidBrush(Color.Black), (float)this.RenderLoc.X + 20, (float)this.RenderLoc.Y);
-                g.DrawString(this.ShotsTaken.ToString(), new Font("Microsoft Sans Serif", 12), new SolidBrush(Color.Black), (float)this.RenderLoc.X + 40, (float)this.RenderLoc.Y);
-                g.DrawString(this.Targets.Count.ToString(), new Font("Microsoft Sans Serif", 12), new SolidBrush(Color.Black), (float)this.RenderLoc.X + 40, (float)this.RenderLoc.Y + 20);
+                g.DrawString(this.Ammunition.ToString(), new Font("Microsoft Sans Serif", 12), new SolidBrush(Color.White), (float)this.Location.X - 5, (float)this.Location.Y - 5);
             }
+        }
+
+        private Point2D CentralizeShoot(Point2D Original, bool Randomize)
+        {
+            if (!Randomize)
+            {
+                return new Point2D(Original.X, Original.Y);
+            }
+
+            int randomX = CSimpleArtillary.ArtilSize / 2 - Shared.Next(CSimpleArtillary.ArtilSize);
+            int randomY = CSimpleArtillary.ArtilSize / 2 - Shared.Next(CSimpleArtillary.ArtilSize);
+            return new Point2D(Original.X + randomX, Original.Y + randomY);
+        }
+
+        #endregion
+
+        public override string ToString()
+        {
+            return string.Format("X: {0}, Y: {1}", this.Location.X, this.Location.Y);
         }
     }
 }

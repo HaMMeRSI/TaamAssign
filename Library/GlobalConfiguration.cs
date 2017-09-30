@@ -10,21 +10,21 @@ namespace Library
     {
         #region Genetic configuration
 
-        public static int FriendlyCount = 20;
-        public static int EnemyCount = 25;
         public static int PopulationCount = 500;
-        public static float MutationChance = 13f;
-        private static Dictionary<string, Action<decimal>> Delegates = new Dictionary<string, Action<decimal>>();
+        public static float MutationChance = 7f;
+        public static float ParentChance = 10f;
+        public static bool ApplyElitist = true;
+        private static Dictionary<string, Action<object>> Delegates = new Dictionary<string, Action<object>>();
 
         static GlobalConfiguration()
         {
-            Delegates["FriendlyCount"] = (value) => FriendlyCount = (int)value;
-            Delegates["EnemyCount"] = (value) => EnemyCount = (int)value;
-            Delegates["PopulationCount"] = (value) => PopulationCount = (int)value;
-            Delegates["MutationChance"] = (value) => MutationChance = (float)value;
+            Delegates["PopulationCount"] = (value) => PopulationCount = Convert.ToInt32(value);
+            Delegates["MutationChance"] = (value) => MutationChance = (float)Convert.ToDouble(value);
+            Delegates["ParentChance"] = (value) => ParentChance = (float)Convert.ToDouble(value);
+            Delegates["ApplyElitist"] = (value) => ApplyElitist = Convert.ToBoolean(value);
         }
 
-        public static Action<decimal> GetDelegate(string Name)
+        public static Action<object> GetDelegate(string Name)
         {
             return Delegates[Name];
         }
@@ -33,6 +33,9 @@ namespace Library
 
         public class GameSettings
         {
+            public static int FriendlyCount = 20;
+            public static int EnemyCount = 25;
+
             public static double MaxDamage = 1;
             public static double MinDamage = .3;
             public static int MaxRadius = 2500;
@@ -41,21 +44,22 @@ namespace Library
             public static int MinAmmunition = 1;
             public static int MaxShotsToFire = 5;
             public static int MinShotsToFire = 1;
-            private static Dictionary<string, Action<decimal>> Delegates = new Dictionary<string, Action<decimal>>();
 
             static GameSettings()
             {
-                Delegates["MaxDamage"] = (value) => MaxDamage = (double)value;
-                Delegates["MinDamage"] = (value) => MinDamage = (double)value;
-                Delegates["MaxRadius"] = (value) => MaxRadius = (int)value;
-                Delegates["MinRadius"] = (value) => MinRadius = (int)value;
-                Delegates["MaxAmmunition"] = (value) => MaxAmmunition = (int)value;
-                Delegates["MinAmmunition"] = (value) => MinAmmunition = (int)value;
-                Delegates["MaxShotsToFire"] = (value) => MaxShotsToFire = (int)value;
-                Delegates["MinShotsToFire"] = (value) => MinShotsToFire = (int)value;
+                Delegates["FriendlyCount"] = (value) => FriendlyCount = Convert.ToInt32(value);
+                Delegates["EnemyCount"] = (value) => EnemyCount = Convert.ToInt32(value);
+                Delegates["MaxDamage"] = (value) => MaxDamage = Convert.ToDouble(value);
+                Delegates["MinDamage"] = (value) => MinDamage = Convert.ToDouble(value);
+                Delegates["MaxRadius"] = (value) => MaxRadius = Convert.ToInt32(value);
+                Delegates["MinRadius"] = (value) => MinRadius = Convert.ToInt32(value);
+                Delegates["MaxAmmunition"] = (value) => MaxAmmunition = Convert.ToInt32(value);
+                Delegates["MinAmmunition"] = (value) => MinAmmunition = Convert.ToInt32(value);
+                Delegates["MaxShotsToFire"] = (value) => MaxShotsToFire = Convert.ToInt32(value);
+                Delegates["MinShotsToFire"] = (value) => MinShotsToFire = Convert.ToInt32(value);
             }
 
-            public static Action<decimal> GetDelegate(string Name)
+            public static Action<object> GetDelegate(string Name)
             {
                 return Delegates[Name];
             }

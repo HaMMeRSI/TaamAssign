@@ -34,7 +34,7 @@ namespace GeneticTargeting
             this.DoubleBuffered = true;
             this.TScale = ((float)this.tbScale.Value) / 25;
             this.Angle = 0;
-            this.Strategy = new TargetingStrategy(GlobalConfiguration.FriendlyCount, GlobalConfiguration.EnemyCount);
+            this.Strategy = new TargetingStrategy(GlobalConfiguration.GameSettings.FriendlyCount, GlobalConfiguration.GameSettings.EnemyCount);
             this.lblAmmo.Text += this.Strategy.FriendliesTotalAmmunition;
             this.TransformOrigin = new Point2D(-this.Strategy.Terrain.GetWidth() / 2, -this.Strategy.Terrain.GetHeight() / 2);
 
@@ -45,38 +45,45 @@ namespace GeneticTargeting
         {
             #region Genetic Configuration
 
-            this.tbFriendlyCount.Tag = GlobalConfiguration.GetDelegate("FriendlyCount");
-            this.tbFriendlyCount.Value = GlobalConfiguration.FriendlyCount;
-
-            this.tbEnemyCount.Tag = GlobalConfiguration.GetDelegate("EnemyCount");
-            this.tbEnemyCount.Value = GlobalConfiguration.EnemyCount;
-
             this.tbPopulationSize.Tag = GlobalConfiguration.GetDelegate("PopulationCount");
             this.tbPopulationSize.Value = GlobalConfiguration.PopulationCount;
 
             this.tbMutationChance.Tag = GlobalConfiguration.GetDelegate("MutationChance");
             this.tbMutationChance.Value = (decimal)GlobalConfiguration.MutationChance;
 
+            this.tbParentChance.Tag = GlobalConfiguration.GetDelegate("ParentChance");
+            this.tbParentChance.Value = (decimal)GlobalConfiguration.ParentChance;
+
+            this.cbApplyElitist.Tag = GlobalConfiguration.GetDelegate("ApplyElitist");
+            this.cbApplyElitist.CheckState = GlobalConfiguration.ApplyElitist ? CheckState.Checked : CheckState.Unchecked;
+
             #endregion
 
             #region Game Settings
 
-            this.nmMaxDamage.Tag = GlobalConfiguration.GameSettings.GetDelegate("MaxDamage");
+            this.tbFriendlyCount.Tag = GlobalConfiguration.GetDelegate("FriendlyCount");
+            this.tbFriendlyCount.Value = GlobalConfiguration.GameSettings.FriendlyCount;
+
+            this.tbEnemyCount.Tag = GlobalConfiguration.GetDelegate("EnemyCount");
+            this.tbEnemyCount.Value = GlobalConfiguration.GameSettings.EnemyCount;
+
+
+            this.nmMaxDamage.Tag = GlobalConfiguration.GetDelegate("MaxDamage");
             this.nmMaxDamage.Value = (decimal)GlobalConfiguration.GameSettings.MaxDamage;
 
-            this.nmMinDamage.Tag    = GlobalConfiguration.GameSettings.GetDelegate("MinDamage");
+            this.nmMinDamage.Tag    = GlobalConfiguration.GetDelegate("MinDamage");
             this.nmMinDamage.Value  = (decimal)GlobalConfiguration.GameSettings.MinDamage;
 
-            this.nmMaxRadius.Tag = GlobalConfiguration.GameSettings.GetDelegate("MaxRadius");
+            this.nmMaxRadius.Tag = GlobalConfiguration.GetDelegate("MaxRadius");
             this.nmMaxRadius.Value = GlobalConfiguration.GameSettings.MaxRadius;
 
-            this.nmMinRadius.Tag = GlobalConfiguration.GameSettings.GetDelegate("MinRadius");
+            this.nmMinRadius.Tag = GlobalConfiguration.GetDelegate("MinRadius");
             this.nmMinRadius.Value = GlobalConfiguration.GameSettings.MinRadius;
 
-            this.nmMaxAmmunition.Tag = GlobalConfiguration.GameSettings.GetDelegate("MaxAmmunition");
+            this.nmMaxAmmunition.Tag = GlobalConfiguration.GetDelegate("MaxAmmunition");
             this.nmMaxAmmunition.Value = GlobalConfiguration.GameSettings.MaxAmmunition;
 
-            this.nmMinAmmunition.Tag = GlobalConfiguration.GameSettings.GetDelegate("MinAmmunition");
+            this.nmMinAmmunition.Tag = GlobalConfiguration.GetDelegate("MinAmmunition");
             this.nmMinAmmunition.Value = GlobalConfiguration.GameSettings.MinAmmunition;
 
             #endregion
@@ -179,7 +186,16 @@ namespace GeneticTargeting
                 this.lblAverageFitness.Text = "Average fitness: " + PopGen.AvreageFitness;
                 this.lblBestFitness.Text = "Best Fitness: " + PopGen.BestFitness.GetFitnesss();
             });
+
+            this.btnGeneratePopulation.Enabled = false;
+            this.btnRestrategize.Enabled = false;
+            this.btnStart.Enabled = false;
+
             await Task.Factory.StartNew(() => PopGen.GeneratePopulation(cycles, progress),TaskCreationOptions.LongRunning);
+
+            this.btnGeneratePopulation.Enabled = true;
+            this.btnRestrategize.Enabled = true;
+            this.btnStart.Enabled = true;
 
             this.lblGenerationCount.Text = "Curr gen count: " + PopGen.GenerationCount;
             this.lblAverageFitness.Text = "Average fitness: " + PopGen.AvreageFitness;
@@ -191,6 +207,7 @@ namespace GeneticTargeting
         {
             PopGen = new God(() => new CWorld(Strategy));
             this.btnGeneratePopulation.Enabled = true;
+            this.btnRestrategize.Enabled = true;
             this.btnStart.Text = "Restart!";
 
             this.lblGenerationCount.Text = "Curr gen count: " + PopGen.GenerationCount;
@@ -206,7 +223,7 @@ namespace GeneticTargeting
 
         private void btnRestrategize_Click(object sender, EventArgs e)
         {
-            this.Strategy = new TargetingStrategy(GlobalConfiguration.FriendlyCount, GlobalConfiguration.EnemyCount);
+            this.Strategy = new TargetingStrategy(GlobalConfiguration.GameSettings.FriendlyCount, GlobalConfiguration.GameSettings.EnemyCount);
             PopGen = new God(() => new CWorld(Strategy));
             this.btnGeneratePopulation.Enabled = true;
             this.btnStart.Text = "Restart!";
@@ -222,7 +239,16 @@ namespace GeneticTargeting
             NumericUpDown tb = (NumericUpDown)sender;
             if (tb.Tag != null)
             {
-                ((Action<decimal>)(tb).Tag)(tb.Value);
+                ((Action<object>)(tb).Tag)(tb.Value);
+            }
+        }
+
+        private void cbConfig_TextChanged(object sender, EventArgs e)
+        {
+            CheckBox tb = (CheckBox)sender;
+            if (tb.Tag != null)
+            {
+                ((Action<object>)(tb).Tag)(tb.CheckState == CheckState.Checked);
             }
         }
     }

@@ -12,5 +12,7 @@ namespace EvolutionaryLogic
         void CalculateFitness();
         float GetFitnesss();
         void Execute();
+
+        IDNA Clone();
     }
 }

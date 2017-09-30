@@ -39,13 +39,19 @@ namespace EvolutionaryLogic
 
         public void GeneratePopulation(int Generations, IProgress<string> progress)
         {
+            int nElitilst = (int)(GlobalConfiguration.ApplyElitist ? Math.Max(this.Population.Count * .01f, 1) : 0);
             for (int i = 0; i < Generations; i++)
             {
                 this.MySelector.NaturalSelection(this.Population);
-                MatingPool pool = new MatingPool(this.Population);
+                MatingPool pool = new MatingPool(this.Population, this.AvreageFitness, item => (int)((float)item / this.AvreageFitness * Math.Pow(item, 2)));
                 List<IDNA> NewPop = new List<IDNA>();
 
-                for (int j = 0; j < GlobalConfiguration.PopulationCount; j++)
+                for (int j = 0; j < nElitilst; j++)
+                {
+                    NewPop.Add(this.Population[this.Population.Count - 1 - j].Clone());
+                }
+
+                for (int j = 0; j < GlobalConfiguration.PopulationCount - nElitilst; j++)
                 {
                     var p = pool.GetChild();
 
