@@ -61,18 +61,23 @@ namespace GeneticTargeting
 
             #region Game Settings
 
+            #region General
+
             this.tbFriendlyCount.Tag = GlobalConfiguration.GetDelegate("FriendlyCount");
             this.tbFriendlyCount.Value = GlobalConfiguration.GameSettings.FriendlyCount;
 
             this.tbEnemyCount.Tag = GlobalConfiguration.GetDelegate("EnemyCount");
             this.tbEnemyCount.Value = GlobalConfiguration.GameSettings.EnemyCount;
 
+            #endregion
+
+            #region DeadCount
 
             this.nmMaxDamage.Tag = GlobalConfiguration.GetDelegate("MaxDamage");
             this.nmMaxDamage.Value = (decimal)GlobalConfiguration.GameSettings.MaxDamage;
 
-            this.nmMinDamage.Tag    = GlobalConfiguration.GetDelegate("MinDamage");
-            this.nmMinDamage.Value  = (decimal)GlobalConfiguration.GameSettings.MinDamage;
+            this.nmMinDamage.Tag = GlobalConfiguration.GetDelegate("MinDamage");
+            this.nmMinDamage.Value = (decimal)GlobalConfiguration.GameSettings.MinDamage;
 
             this.nmMaxRadius.Tag = GlobalConfiguration.GetDelegate("MaxRadius");
             this.nmMaxRadius.Value = GlobalConfiguration.GameSettings.MaxRadius;
@@ -86,6 +91,23 @@ namespace GeneticTargeting
             this.nmMinAmmunition.Tag = GlobalConfiguration.GetDelegate("MinAmmunition");
             this.nmMinAmmunition.Value = GlobalConfiguration.GameSettings.MinAmmunition;
 
+            this.nmDeadCountWeight.Tag = GlobalConfiguration.GetDelegate("DeadCountWeight");
+            this.nmDeadCountWeight.Value = (decimal)GlobalConfiguration.GameSettings.DeadCountWeight;
+
+            #endregion
+
+            #region Price
+
+            this.nmMaxPricePerShot.Tag = GlobalConfiguration.GetDelegate("MaxPricePerShot");
+            this.nmMaxPricePerShot.Value = GlobalConfiguration.GameSettings.MaxPricePerShot;
+
+            this.nmMinPricePerShot.Tag = GlobalConfiguration.GetDelegate("MinPricePerShot");
+            this.nmMinPricePerShot.Value = GlobalConfiguration.GameSettings.MinPricePerShot;
+
+            this.nmPriceWeight.Tag = GlobalConfiguration.GetDelegate("PriceWeight");
+            this.nmPriceWeight.Value = (decimal)GlobalConfiguration.GameSettings.PriceWeight;
+
+            #endregion
             #endregion
         }
 
@@ -181,10 +203,7 @@ namespace GeneticTargeting
             int cycles = Convert.ToInt32(this.numCycles.Value);
 
             Progress<string> progress = new Progress<string>(s => {
-                lblGenerationCount.Text = "Curr gen count: " + s;
-                this.lblGenerationCount.Text = "Curr gen count: " + PopGen.GenerationCount;
-                this.lblAverageFitness.Text = "Average fitness: " + PopGen.AvreageFitness;
-                this.lblBestFitness.Text = "Best Fitness: " + PopGen.BestFitness.GetFitnesss();
+                this.UpdateBestFitnessLabels();
             });
 
             this.btnGeneratePopulation.Enabled = false;
@@ -197,9 +216,7 @@ namespace GeneticTargeting
             this.btnRestrategize.Enabled = true;
             this.btnStart.Enabled = true;
 
-            this.lblGenerationCount.Text = "Curr gen count: " + PopGen.GenerationCount;
-            this.lblAverageFitness.Text = "Average fitness: " + PopGen.AvreageFitness;
-            this.lblBestFitness.Text = "Best Fitness: " + PopGen.BestFitness.GetFitnesss();
+            this.UpdateBestFitnessLabels();
             this.pnlView.Refresh();
         }
 
@@ -210,9 +227,7 @@ namespace GeneticTargeting
             this.btnRestrategize.Enabled = true;
             this.btnStart.Text = "Restart!";
 
-            this.lblGenerationCount.Text = "Curr gen count: " + PopGen.GenerationCount;
-            this.lblAverageFitness.Text = "Average fitness: " + PopGen.AvreageFitness;
-            this.lblBestFitness.Text = "Best Fitness: " + PopGen.BestFitness.GetFitnesss();
+            this.UpdateBestFitnessLabels();
             this.pnlView.Refresh();
         }
 
@@ -228,10 +243,17 @@ namespace GeneticTargeting
             this.btnGeneratePopulation.Enabled = true;
             this.btnStart.Text = "Restart!";
 
+            this.UpdateBestFitnessLabels();
+            this.pnlView.Refresh();
+        }
+
+        private void UpdateBestFitnessLabels()
+        {
             this.lblGenerationCount.Text = "Curr gen count: " + PopGen.GenerationCount;
             this.lblAverageFitness.Text = "Average fitness: " + PopGen.AvreageFitness;
             this.lblBestFitness.Text = "Best Fitness: " + PopGen.BestFitness.GetFitnesss();
-            this.pnlView.Refresh();
+            this.lblBestDeadCount.Text = "Best dead count: " + ((CWorld)PopGen.BestFitness).DeadCount;
+            this.lblBestTotalPrice.Text = "Best total price: " + ((CWorld)PopGen.BestFitness).TotalAttackPrice;
         }
 
         private void tbConfig_TextChanged(object sender, EventArgs e)

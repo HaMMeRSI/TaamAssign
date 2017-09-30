@@ -35,11 +35,12 @@ namespace TargetLogics
                 }
                 while (this.Contains(this.FriendliesData, point));
 
-                double fDamage = Shared.GetMinMax(Shared.rnd.NextDouble(), GlobalConfiguration.GameSettings.MinDamage, GlobalConfiguration.GameSettings.MaxDamage);
+                float Damage = (float)Shared.GetMinMax(Shared.rnd.NextDouble(), GlobalConfiguration.GameSettings.MinDamage, GlobalConfiguration.GameSettings.MaxDamage);
                 int Radius = Math.Max(Shared.Next(GlobalConfiguration.GameSettings.MaxRadius), GlobalConfiguration.GameSettings.MinRadius);
                 int Ammo = Math.Max(Shared.Next(GlobalConfiguration.GameSettings.MaxAmmunition), GlobalConfiguration.GameSettings.MinAmmunition);
+                int PricePerShot = Math.Max(Shared.Next(GlobalConfiguration.GameSettings.MaxPricePerShot), GlobalConfiguration.GameSettings.MinPricePerShot);
 
-                CSimpleArtillary objCannon = new CSimpleArtillary(Radius, Ammo, (float)fDamage);
+                CSimpleArtillary objCannon = new CSimpleArtillary(Radius, Ammo, Damage, PricePerShot);
                 objCannon.SetLocation(point);
 
                 this.FriendliesData[i] = objCannon;
@@ -58,7 +59,7 @@ namespace TargetLogics
                 }
                 while (this.Contains(this.EnemiesData, point));
 
-                CSimpleArtillary objCannon = new CSimpleArtillary(1, 1, 1);
+                CSimpleArtillary objCannon = new CSimpleArtillary(1, 1, 1, 1);
                 objCannon.SetLocation(point);
 
                 this.EnemiesData[i] = objCannon;

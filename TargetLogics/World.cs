@@ -14,10 +14,15 @@ namespace TargetLogics
         public CSimpleArtillary[] Enemies { get; set; }
         private TargetingStrategy Strategy { get; set; }
 
+        public int TotalAttackPrice { get; set; }
+        public int DeadCount { get; set; }
+
         public CWorld(TargetingStrategy Strategy)
             : base(Strategy.GetFriendlyCount())
         {
             this.Strategy = Strategy;
+            this.TotalAttackPrice = 0;
+            this.DeadCount = 0;
 
             for (int i = 0; i < this.Genes.Length; i++)
             {
@@ -42,7 +47,6 @@ namespace TargetLogics
 
         public override void CalculateFitness()
         {
-            int nDeadCount = 0;
             bool blnEndIndicator = false;
 
             while (!blnEndIndicator)
@@ -50,12 +54,23 @@ namespace TargetLogics
                 blnEndIndicator = true;
                 foreach (CSimpleArtillary Cannon in this.Genes)
                 {
-                    nDeadCount += Cannon.Shoot(this.Enemies);
+                    this.DeadCount += Cannon.Shoot(this.Enemies);
                     blnEndIndicator &= Cannon.ShotsTaken == Cannon.Ammunition;
                 }
             }
 
-            this.Fitness = nDeadCount;
+            float DeadFactor = (float)this.DeadCount / this.Strategy.GetEnemyCount();
+
+            foreach (CSimpleArtillary EnemyCannon in this.Enemies)
+            {
+                foreach (CSimpleArtillary HittedBy in EnemyCannon.HittedBy)
+                {
+                    this.TotalAttackPrice += HittedBy.PriceForShot;
+                }
+            }
+
+            double PriceFactor = 1 - ((double)this.TotalAttackPrice / (this.Strategy.GetFriendlyCount() * GlobalConfiguration.GameSettings.MaxPricePerShot));
+            this.Fitness = (float)(PriceFactor * GlobalConfiguration.GameSettings.PriceWeight + DeadFactor * GlobalConfiguration.GameSettings.DeadCountWeight) / 2;
         }
 
         protected override void Mutate()

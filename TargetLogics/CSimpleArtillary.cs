@@ -14,7 +14,7 @@ namespace TargetLogics
         public float Range { get; set; }
         public float Damage { get; set; }
         public float Health { get; set; }
-        public float PriceForShot { get; set; }
+        public int PriceForShot { get; set; }
         public int Ammunition { get; set; }
         public int ShotsTaken { get; set; }
 
@@ -48,12 +48,12 @@ namespace TargetLogics
 
         #endregion
 
-        public CSimpleArtillary(float nRadius, int nAmmunition, float nDamage) :
-            this(nRadius, nAmmunition, nDamage, Color.FromArgb(Shared.Next(256), Shared.Next(256), Shared.Next(256)))
+        public CSimpleArtillary(float nRadius, int nAmmunition, float fDamage, int nPriceForShot) :
+            this(nRadius, nAmmunition, fDamage, nPriceForShot, Color.FromArgb(Shared.Next(256), Shared.Next(256), Shared.Next(256)))
         {
         }
 
-        public CSimpleArtillary(float nRadius, int nAmmunition, float nDamage, Color cColor)
+        public CSimpleArtillary(float nRadius, int nAmmunition, float nDamage, int nPriceForShot, Color cColor)
         {
             this.Targets = new List<int>();
             this.HittedBy = new List<CSimpleArtillary>();
@@ -62,6 +62,7 @@ namespace TargetLogics
             this.Range = nRadius;
             this.Ammunition = nAmmunition;
             this.ShotsTaken = 0;
+            this.PriceForShot = nPriceForShot;
 
             this.MyColor = cColor;
         }
@@ -117,7 +118,7 @@ namespace TargetLogics
 
         public CSimpleArtillary Clone()
         {
-            return (new CSimpleArtillary(this.Range, this.Ammunition, this.Damage, this.MyColor))
+            return (new CSimpleArtillary(this.Range, this.Ammunition, this.Damage, this.PriceForShot, this.MyColor))
                 .SetLocation(this.Location.Clone())
                 .SetTargets(new List<int>(this.Targets));
         }
@@ -161,7 +162,8 @@ namespace TargetLogics
             }
             else
             {
-                g.DrawString(this.Ammunition.ToString(), new Font("Microsoft Sans Serif", 12), new SolidBrush(Color.White), (float)this.Location.X - 5, (float)this.Location.Y - 5);
+                g.DrawString("A: " + this.Ammunition.ToString(), new Font("Microsoft Sans Serif", 12), new SolidBrush(Color.White), (float)this.Location.X - 15, (float)this.Location.Y - 20);
+                g.DrawString("P: " + this.PriceForShot.ToString(), new Font("Microsoft Sans Serif", 12), new SolidBrush(Color.White), (float)this.Location.X - 15, (float)this.Location.Y);
             }
         }
 

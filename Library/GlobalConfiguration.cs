@@ -33,9 +33,12 @@ namespace Library
 
         public class GameSettings
         {
+            #region General
             public static int FriendlyCount = 20;
-            public static int EnemyCount = 25;
+            public static int EnemyCount = 25; 
+            #endregion
 
+            #region DeadCount
             public static double MaxDamage = 1;
             public static double MinDamage = .3;
             public static int MaxRadius = 2500;
@@ -44,6 +47,14 @@ namespace Library
             public static int MinAmmunition = 1;
             public static int MaxShotsToFire = 5;
             public static int MinShotsToFire = 1;
+            public static double DeadCountWeight = 1.7f;
+            #endregion
+
+            #region Price
+            public static int MaxPricePerShot = 100;
+            public static int MinPricePerShot = 50; 
+            public static double PriceWeight = .3f;
+            #endregion
 
             static GameSettings()
             {
@@ -55,8 +66,10 @@ namespace Library
                 Delegates["MinRadius"] = (value) => MinRadius = Convert.ToInt32(value);
                 Delegates["MaxAmmunition"] = (value) => MaxAmmunition = Convert.ToInt32(value);
                 Delegates["MinAmmunition"] = (value) => MinAmmunition = Convert.ToInt32(value);
-                Delegates["MaxShotsToFire"] = (value) => MaxShotsToFire = Convert.ToInt32(value);
-                Delegates["MinShotsToFire"] = (value) => MinShotsToFire = Convert.ToInt32(value);
+                Delegates["MaxPricePerShot"] = (value) => MaxPricePerShot = Convert.ToInt32(value);
+                Delegates["MinPricePerShot"] = (value) => MinPricePerShot = Convert.ToInt32(value);
+                Delegates["DeadCountWeight"] = (value) => { double val = Convert.ToDouble(value); DeadCountWeight = val;  PriceWeight = 2 - val; };
+                Delegates["PriceWeight"] = (value) => { double val = Convert.ToDouble(value); PriceWeight = val; DeadCountWeight = 2 - val; };
             }
 
             public static Action<object> GetDelegate(string Name)
