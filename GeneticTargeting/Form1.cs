@@ -35,7 +35,6 @@ namespace GeneticTargeting
             this.TScale = ((float)this.tbScale.Value) / 25;
             this.Angle = 0;
             this.Strategy = new TargetingStrategy(GlobalConfiguration.GameSettings.FriendlyCount, GlobalConfiguration.GameSettings.EnemyCount);
-            this.lblAmmo.Text += this.Strategy.FriendliesTotalAmmunition;
             this.TransformOrigin = new Point2D(-this.Strategy.Terrain.GetWidth() / 2, -this.Strategy.Terrain.GetHeight() / 2);
 
             this.initConfigDelegation();
@@ -69,6 +68,9 @@ namespace GeneticTargeting
             this.tbEnemyCount.Tag = GlobalConfiguration.GetDelegate("EnemyCount");
             this.tbEnemyCount.Value = GlobalConfiguration.GameSettings.EnemyCount;
 
+            this.nmGridSize.Tag = GlobalConfiguration.GetDelegate("GridSize");
+            this.nmGridSize.Value = GlobalConfiguration.GameSettings.GridSize;
+
             #endregion
 
             #region DeadCount
@@ -91,8 +93,11 @@ namespace GeneticTargeting
             this.nmMinAmmunition.Tag = GlobalConfiguration.GetDelegate("MinAmmunition");
             this.nmMinAmmunition.Value = GlobalConfiguration.GameSettings.MinAmmunition;
 
-            this.nmDeadCountWeight.Tag = GlobalConfiguration.GetDelegate("DeadCountWeight");
-            this.nmDeadCountWeight.Value = (decimal)GlobalConfiguration.GameSettings.DeadCountWeight;
+            this.nmMinAccuracyForShot.Tag = GlobalConfiguration.GetDelegate("MinAccuracyForShot");
+            this.nmMinAccuracyForShot.Value = (decimal)GlobalConfiguration.GameSettings.MinAccuracyForShot;
+
+            this.nmMaxAccuracyForShot.Tag = GlobalConfiguration.GetDelegate("MaxAccuracyForShot");
+            this.nmMaxAccuracyForShot.Value = (decimal)GlobalConfiguration.GameSettings.MaxAccuracyForShot;
 
             #endregion
 
@@ -104,10 +109,28 @@ namespace GeneticTargeting
             this.nmMinPricePerShot.Tag = GlobalConfiguration.GetDelegate("MinPricePerShot");
             this.nmMinPricePerShot.Value = GlobalConfiguration.GameSettings.MinPricePerShot;
 
+            this.nmMaxImportance.Tag = GlobalConfiguration.GetDelegate("MaxImportance");
+            this.nmMaxImportance.Value = GlobalConfiguration.GameSettings.MaxImportance;
+
+            this.nmMinImportance.Tag = GlobalConfiguration.GetDelegate("MinImportance");
+            this.nmMinImportance.Value = GlobalConfiguration.GameSettings.MinImportance;
+
+            
+            #endregion
+
+            #region Weights
+
+            this.nmDeadCountWeight.Tag = GlobalConfiguration.GetDelegate("DeadCountWeight");
+            this.nmDeadCountWeight.Value = (decimal)GlobalConfiguration.GameSettings.DeadCountWeight;
+
             this.nmPriceWeight.Tag = GlobalConfiguration.GetDelegate("PriceWeight");
             this.nmPriceWeight.Value = (decimal)GlobalConfiguration.GameSettings.PriceWeight;
 
+            this.nmImportanceWeight.Tag = GlobalConfiguration.GetDelegate("ImportanceWeight");
+            this.nmImportanceWeight.Value = (decimal)GlobalConfiguration.GameSettings.ImportanceWeight;
+
             #endregion
+
             #endregion
         }
 
@@ -238,6 +261,11 @@ namespace GeneticTargeting
 
         private void btnRestrategize_Click(object sender, EventArgs e)
         {
+            this.Restrategize();
+        }
+
+        private void Restrategize()
+        {
             this.Strategy = new TargetingStrategy(GlobalConfiguration.GameSettings.FriendlyCount, GlobalConfiguration.GameSettings.EnemyCount);
             PopGen = new God(() => new CWorld(Strategy));
             this.btnGeneratePopulation.Enabled = true;
@@ -254,6 +282,7 @@ namespace GeneticTargeting
             this.lblBestFitness.Text = "Best Fitness: " + PopGen.BestFitness.GetFitnesss();
             this.lblBestDeadCount.Text = "Best dead count: " + ((CWorld)PopGen.BestFitness).DeadCount;
             this.lblBestTotalPrice.Text = "Best total price: " + ((CWorld)PopGen.BestFitness).TotalAttackPrice;
+            this.lblTotalImportance.Text = "Best total importance: " + ((CWorld)PopGen.BestFitness).TotalAttackImportance;
         }
 
         private void tbConfig_TextChanged(object sender, EventArgs e)
@@ -272,6 +301,12 @@ namespace GeneticTargeting
             {
                 ((Action<object>)(tb).Tag)(tb.CheckState == CheckState.Checked);
             }
+        }
+
+        private void nmGridSize_ValueChanged(object sender, EventArgs e)
+        {
+            GlobalConfiguration.GameSettings.GridSize = (int)((NumericUpDown)sender).Value;
+            this.Restrategize();
         }
     }
 }

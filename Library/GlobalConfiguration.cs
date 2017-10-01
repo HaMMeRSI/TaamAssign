@@ -34,13 +34,15 @@ namespace Library
         public class GameData
         {
             public static int MaxAttackPrice = 1;
+            public static int MaxAttackImportance = 1;
         }
 
         public class GameSettings
         {
             #region General
             public static int FriendlyCount = 20;
-            public static int EnemyCount = 25; 
+            public static int EnemyCount = 25;
+            public static int GridSize = 10;
             #endregion
 
             #region DeadCount
@@ -52,34 +54,46 @@ namespace Library
             public static int MinAmmunition = 1;
             public static int MaxShotsToFire = 5;
             public static int MinShotsToFire = 1;
-            public static double DeadCountWeight = 1.7f;
+            public static int MinAccuracyForShot = 50;
+            public static int MaxAccuracyForShot = 100;
             #endregion
 
             #region Price
-            public static int MaxPricePerShot = 100;
-            public static int MinPricePerShot = 50; 
-            public static double PriceWeight = .3f;
+            public static int MaxPricePerShot = 50;
+            public static int MinPricePerShot = 0;
+
+            public static int MaxImportance = 1000;
+            public static int MinImportance = 0;
+            #endregion
+
+            #region Weights
+            public static double DeadCountWeight = .7f;
+            public static double PriceWeight = .15f;
+            public static double ImportanceWeight = .15f;
             #endregion
 
             static GameSettings()
             {
                 Delegates["FriendlyCount"] = (value) => FriendlyCount = Convert.ToInt32(value);
                 Delegates["EnemyCount"] = (value) => EnemyCount = Convert.ToInt32(value);
+                Delegates["GridSize"] = (value) => GridSize = Convert.ToInt32(value);
                 Delegates["MaxDamage"] = (value) => MaxDamage = Convert.ToDouble(value);
                 Delegates["MinDamage"] = (value) => MinDamage = Convert.ToDouble(value);
                 Delegates["MaxRadius"] = (value) => MaxRadius = Convert.ToInt32(value);
                 Delegates["MinRadius"] = (value) => MinRadius = Convert.ToInt32(value);
                 Delegates["MaxAmmunition"] = (value) => MaxAmmunition = Convert.ToInt32(value);
                 Delegates["MinAmmunition"] = (value) => MinAmmunition = Convert.ToInt32(value);
+                Delegates["MinAccuracyForShot"] = (value) => MinAccuracyForShot = Convert.ToInt32(value);
+                Delegates["MaxAccuracyForShot"] = (value) => MaxAccuracyForShot = Convert.ToInt32(value);
+
+                Delegates["MinImportance"] = (value) => MinImportance = Convert.ToInt32(value);
+                Delegates["MaxImportance"] = (value) => MaxImportance = Convert.ToInt32(value);
+
                 Delegates["MaxPricePerShot"] = (value) => MaxPricePerShot = Convert.ToInt32(value);
                 Delegates["MinPricePerShot"] = (value) => MinPricePerShot = Convert.ToInt32(value);
-                Delegates["DeadCountWeight"] = (value) => { double val = Convert.ToDouble(value); DeadCountWeight = val;  PriceWeight = 2 - val; };
-                Delegates["PriceWeight"] = (value) => { double val = Convert.ToDouble(value); PriceWeight = val; DeadCountWeight = 2 - val; };
-            }
-
-            public static Action<object> GetDelegate(string Name)
-            {
-                return Delegates[Name];
+                Delegates["DeadCountWeight"] = (value) => { double val = Convert.ToDouble(value); DeadCountWeight = val;};
+                Delegates["PriceWeight"] = (value) => { double val = Convert.ToDouble(value); PriceWeight = val;};
+                Delegates["ImportanceWeight"] = (value) => { double val = Convert.ToDouble(value); ImportanceWeight = val; };
             }
         }
     }

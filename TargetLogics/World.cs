@@ -16,6 +16,7 @@ namespace TargetLogics
 
         public int TotalAttackPrice { get; set; }
         public int DeadCount { get; set; }
+        public int TotalAttackImportance { get; set; }
 
         public CWorld(TargetingStrategy Strategy)
             : base(Strategy.GetFriendlyCount())
@@ -23,6 +24,7 @@ namespace TargetLogics
             this.Strategy = Strategy;
             this.TotalAttackPrice = 0;
             this.DeadCount = 0;
+            this.TotalAttackImportance = 0;
 
             for (int i = 0; i < this.Genes.Length; i++)
             {
@@ -54,7 +56,7 @@ namespace TargetLogics
                 blnEndIndicator = true;
                 foreach (CSimpleArtillary Cannon in this.Genes)
                 {
-                    this.DeadCount += Cannon.Shoot(this.Enemies);
+                    this.DeadCount += Cannon.Fire(this.Enemies);
                     blnEndIndicator &= Cannon.ShotsTaken == Cannon.Ammunition;
                 }
             }
@@ -63,14 +65,24 @@ namespace TargetLogics
 
             foreach (CSimpleArtillary EnemyCannon in this.Enemies)
             {
-                foreach (CSimpleArtillary HittedBy in EnemyCannon.HittedBy)
+                if (EnemyCannon.HittedBy.Count > 0)
                 {
-                    this.TotalAttackPrice += HittedBy.PriceForShot;
+                    foreach (CSimpleArtillary HittedBy in EnemyCannon.HittedBy)
+                    {
+                        this.TotalAttackPrice += HittedBy.PriceForShot;
+                    }
+
+                    this.TotalAttackImportance += EnemyCannon.Importance;
                 }
             }
 
             double PriceFactor = 1 - ((double)this.TotalAttackPrice / GlobalConfiguration.GameData.MaxAttackPrice);
-            this.Fitness = (float)(PriceFactor * GlobalConfiguration.GameSettings.PriceWeight + DeadFactor * GlobalConfiguration.GameSettings.DeadCountWeight) / 2;
+            double ImportanceFactor = ((double)this.TotalAttackImportance / GlobalConfiguration.GameData.MaxAttackImportance);
+
+            this.Fitness = (float)
+                (PriceFactor * GlobalConfiguration.GameSettings.PriceWeight + 
+                DeadFactor * GlobalConfiguration.GameSettings.DeadCountWeight +
+                ImportanceFactor * GlobalConfiguration.GameSettings.ImportanceWeight);
         }
 
         protected override void Mutate()
