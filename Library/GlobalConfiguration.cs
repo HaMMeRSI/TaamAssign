@@ -13,7 +13,8 @@ namespace Library
         public static int PopulationCount = 500;
         public static float MutationChance = 7f;
         public static float ParentChance = 10f;
-        public static bool ApplyElitist = true;
+        public static bool ApplyElitist = true; 
+        public static bool ApplyNaturalSelection = true; 
         private static Dictionary<string, Action<object>> Delegates = new Dictionary<string, Action<object>>();
 
         static GlobalConfiguration()
@@ -22,6 +23,7 @@ namespace Library
             Delegates["MutationChance"] = (value) => MutationChance = (float)Convert.ToDouble(value);
             Delegates["ParentChance"] = (value) => ParentChance = (float)Convert.ToDouble(value);
             Delegates["ApplyElitist"] = (value) => ApplyElitist = Convert.ToBoolean(value);
+            Delegates["ApplyNaturalSelection"] = (value) => ApplyNaturalSelection = Convert.ToBoolean(value);
         }
 
         public static Action<object> GetDelegate(string Name)

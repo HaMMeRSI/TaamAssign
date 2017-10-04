@@ -23,5 +23,19 @@ namespace EvolutionaryLogic
 
             Population.RemoveRange(0, Population.Count / 2);
         }
+
+        public List<IDNA> AverageSelection(List<IDNA> Population, float Average)
+        {
+            List<IDNA> NewPop = new List<IDNA>();
+            foreach (IDNA dna in Population)
+            {
+                if(dna.GetFitnesss() > Average)
+                {
+                    NewPop.Add(dna.Clone());
+                }
+            }
+
+            return NewPop;
+        }
     }
 }

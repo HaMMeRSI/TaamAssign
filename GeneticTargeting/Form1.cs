@@ -56,6 +56,9 @@ namespace GeneticTargeting
             this.cbApplyElitist.Tag = GlobalConfiguration.GetDelegate("ApplyElitist");
             this.cbApplyElitist.CheckState = GlobalConfiguration.ApplyElitist ? CheckState.Checked : CheckState.Unchecked;
 
+            this.cbApplyNaturalSelection.Tag = GlobalConfiguration.GetDelegate("ApplyNaturalSelection");
+            this.cbApplyNaturalSelection.CheckState = GlobalConfiguration.ApplyNaturalSelection ? CheckState.Checked : CheckState.Unchecked;
+            
             #endregion
 
             #region Game Settings

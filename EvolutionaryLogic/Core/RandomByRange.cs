@@ -9,40 +9,28 @@ namespace EvolutionaryLogic
 {
     public class RandomByRange<T> where T: class
     {
-        private List<Tuple<int, T>> MyRange { get; set; }
+        private List<Tuple<double, T>> MyRange { get; set; }
 
         public RandomByRange()
         {
-            this.MyRange = new List<Tuple<int, T>>();
+            this.MyRange = new List<Tuple<double, T>>();
         }
 
-        public void AddToRange(int fValue, T Entity)
+        public void AddToRange(double fValue, T Entity, Func<double, double> funcOptimaizer)
         {
-            int nLastCount = 0;
+            double dLastItem = 0;
             if (this.MyRange.Count > 0)
             {
-                nLastCount = this.MyRange[this.MyRange.Count - 1].Item1;
+                dLastItem = this.MyRange[this.MyRange.Count - 1].Item1;
             }
 
-            Tuple<int, T> item = new Tuple<int, T>(nLastCount + fValue, Entity);
-            this.MyRange.Add(item);
-        }
-
-        public void AddToRange(int fValue, T Entity, Func<int, int> funcOptimaizer)
-        {
-            int nLastCount = 0;
-            if (this.MyRange.Count > 0)
-            {
-                nLastCount = this.MyRange[this.MyRange.Count - 1].Item1;
-            }
-
-            Tuple<int, T> item = new Tuple<int, T>(nLastCount + funcOptimaizer(fValue), Entity);
+            Tuple<double, T> item = new Tuple<double, T>(dLastItem + funcOptimaizer(fValue), Entity);
             this.MyRange.Add(item);
         }
 
         public T PickFromRange()
         {
-            int nSelectend = Shared.Next(this.MyRange[this.MyRange.Count - 1].Item1);
+            int nSelectend = Shared.Next((int)this.MyRange[this.MyRange.Count - 1].Item1);
             for (int i = 0; i < this.MyRange.Count; i++)
             {
                 if(nSelectend <= this.MyRange[i].Item1)

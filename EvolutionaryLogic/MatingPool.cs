@@ -12,14 +12,14 @@ namespace EvolutionaryLogic
         public RandomByRange<IDNA> MyMatingPool { get; set; }
         public float AverageFitness { get; set; }
 
-        public MatingPool(List<IDNA> Population, float AverageFitness, Func<int, int> funcOptimaizer)
+        public MatingPool(List<IDNA> Population, float AverageFitness, Func<double, double> funcOptimaizer)
         {
             this.AverageFitness = AverageFitness;
             this.MyMatingPool = new RandomByRange<IDNA>();
 
             for (int i = Population.Count - 1; i >= 0; i--)
             {
-                int n = (int)(Population[i].GetFitnesss());
+                double n = Population[i].GetFitnesss();
                 if (n == 0)
                 {
                     n = Shared.Next(1);

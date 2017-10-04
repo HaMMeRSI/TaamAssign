@@ -38,6 +38,7 @@
             this.btnStart = new System.Windows.Forms.Button();
             this.lblBestFitness = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lblTotalImportance = new System.Windows.Forms.Label();
             this.lblBestTotalPrice = new System.Windows.Forms.Label();
             this.lblBestDeadCount = new System.Windows.Forms.Label();
             this.btnRestrategize = new System.Windows.Forms.Button();
@@ -85,7 +86,7 @@
             this.nmMinImportance = new System.Windows.Forms.NumericUpDown();
             this.nmMaxPricePerShot = new System.Windows.Forms.NumericUpDown();
             this.nmMinPricePerShot = new System.Windows.Forms.NumericUpDown();
-            this.lblTotalImportance = new System.Windows.Forms.Label();
+            this.cbApplyNaturalSelection = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.tbScale)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numCycles)).BeginInit();
             this.panel1.SuspendLayout();
@@ -251,6 +252,15 @@
             this.panel1.Size = new System.Drawing.Size(433, 426);
             this.panel1.TabIndex = 8;
             // 
+            // lblTotalImportance
+            // 
+            this.lblTotalImportance.AutoSize = true;
+            this.lblTotalImportance.Location = new System.Drawing.Point(4, 386);
+            this.lblTotalImportance.Name = "lblTotalImportance";
+            this.lblTotalImportance.Size = new System.Drawing.Size(157, 17);
+            this.lblTotalImportance.TabIndex = 10;
+            this.lblTotalImportance.Text = "Best total importance: 0";
+            // 
             // lblBestTotalPrice
             // 
             this.lblBestTotalPrice.AutoSize = true;
@@ -341,6 +351,7 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage1.Controls.Add(this.cbApplyNaturalSelection);
             this.tabPage1.Controls.Add(this.cbApplyElitist);
             this.tabPage1.Controls.Add(this.tbParentChance);
             this.tabPage1.Controls.Add(this.tbMutationChance);
@@ -832,14 +843,16 @@
             this.nmMinPricePerShot.TabIndex = 7;
             this.nmMinPricePerShot.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
             // 
-            // lblTotalImportance
+            // cbApplyNaturalSelection
             // 
-            this.lblTotalImportance.AutoSize = true;
-            this.lblTotalImportance.Location = new System.Drawing.Point(4, 386);
-            this.lblTotalImportance.Name = "lblTotalImportance";
-            this.lblTotalImportance.Size = new System.Drawing.Size(157, 17);
-            this.lblTotalImportance.TabIndex = 10;
-            this.lblTotalImportance.Text = "Best total importance: 0";
+            this.cbApplyNaturalSelection.AutoSize = true;
+            this.cbApplyNaturalSelection.Location = new System.Drawing.Point(169, 127);
+            this.cbApplyNaturalSelection.Name = "cbApplyNaturalSelection";
+            this.cbApplyNaturalSelection.Size = new System.Drawing.Size(173, 21);
+            this.cbApplyNaturalSelection.TabIndex = 3;
+            this.cbApplyNaturalSelection.Text = "Apply natural selection";
+            this.cbApplyNaturalSelection.UseVisualStyleBackColor = true;
+            this.cbApplyNaturalSelection.CheckedChanged += new System.EventHandler(this.cbConfig_TextChanged);
             // 
             // Form1
             // 
@@ -952,6 +965,7 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.NumericUpDown nmImportanceWeight;
         private System.Windows.Forms.Label lblTotalImportance;
+        private System.Windows.Forms.CheckBox cbApplyNaturalSelection;
     }
 }
 

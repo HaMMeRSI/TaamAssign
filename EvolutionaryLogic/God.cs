@@ -42,14 +42,45 @@ namespace EvolutionaryLogic
             int nElitilst = (int)(GlobalConfiguration.ApplyElitist ? Math.Max(this.Population.Count * .01f, 1) : 0);
             for (int i = 0; i < Generations; i++)
             {
-                this.MySelector.NaturalSelection(this.Population);
-                MatingPool pool = new MatingPool(this.Population, this.AvreageFitness, item => (int)((float)item / this.AvreageFitness * Math.Pow(item, 2)));
                 List<IDNA> NewPop = new List<IDNA>();
-
-                for (int j = 0; j < nElitilst; j++)
+                if (GlobalConfiguration.ApplyNaturalSelection)
                 {
-                    NewPop.Add(this.Population[this.Population.Count - 1 - j].Clone());
+                    this.MySelector.NaturalSelection(this.Population);
+                    for (int j = 0; j < nElitilst; j++)
+                    {
+                        NewPop.Add(this.Population[this.Population.Count - 1 - j].Clone());
+                    }
                 }
+                else if(GlobalConfiguration.ApplyElitist)
+                {
+                    IDNA[] Elitists = new IDNA[nElitilst];
+                    for (int j = 0; j < nElitilst; j++)
+                    {
+                        Elitists[j] = this.Population[j];
+                    }
+
+                    for (int j = nElitilst; j < this.Population.Count; j++)
+                    {
+                        for (int k = 0; k < nElitilst; k++)
+                        {
+                            if(this.Population[j].GetFitnesss() > Elitists[k].GetFitnesss())
+                            {
+                                Elitists[k] = this.Population[j];
+                                break;
+                            }
+                        }
+                    }
+
+                    for (int j = 0; j < nElitilst; j++)
+                    {
+                        NewPop.Add(Elitists[j].Clone());
+                    }
+                }
+
+
+                //List<IDNA> NewPop = this.MySelector.AverageSelection(this.Population, this.AvreageFitness);
+                //NewPop.Add(this.BestFitness.Clone());
+                MatingPool pool = new MatingPool(this.Population, this.AvreageFitness, item => (Math.Pow(item * 1000, 2)));
 
                 for (int j = 0; j < GlobalConfiguration.PopulationCount - nElitilst; j++)
                 {
