@@ -48,6 +48,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.tbcSettings = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.cbApplyNaturalSelection = new System.Windows.Forms.CheckBox();
             this.cbApplyElitist = new System.Windows.Forms.CheckBox();
             this.tbParentChance = new System.Windows.Forms.NumericUpDown();
             this.label10 = new System.Windows.Forms.Label();
@@ -86,7 +87,6 @@
             this.nmMinImportance = new System.Windows.Forms.NumericUpDown();
             this.nmMaxPricePerShot = new System.Windows.Forms.NumericUpDown();
             this.nmMinPricePerShot = new System.Windows.Forms.NumericUpDown();
-            this.cbApplyNaturalSelection = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.tbScale)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numCycles)).BeginInit();
             this.panel1.SuspendLayout();
@@ -281,6 +281,7 @@
             // 
             // btnRestrategize
             // 
+            this.btnRestrategize.Enabled = false;
             this.btnRestrategize.Location = new System.Drawing.Point(7, 189);
             this.btnRestrategize.Name = "btnRestrategize";
             this.btnRestrategize.Size = new System.Drawing.Size(422, 45);
@@ -365,6 +366,17 @@
             this.tabPage1.Size = new System.Drawing.Size(425, 314);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Configuration";
+            // 
+            // cbApplyNaturalSelection
+            // 
+            this.cbApplyNaturalSelection.AutoSize = true;
+            this.cbApplyNaturalSelection.Location = new System.Drawing.Point(169, 127);
+            this.cbApplyNaturalSelection.Name = "cbApplyNaturalSelection";
+            this.cbApplyNaturalSelection.Size = new System.Drawing.Size(173, 21);
+            this.cbApplyNaturalSelection.TabIndex = 3;
+            this.cbApplyNaturalSelection.Text = "Apply natural selection";
+            this.cbApplyNaturalSelection.UseVisualStyleBackColor = true;
+            this.cbApplyNaturalSelection.CheckedChanged += new System.EventHandler(this.cbConfig_TextChanged);
             // 
             // cbApplyElitist
             // 
@@ -465,6 +477,7 @@
             0,
             0,
             0});
+            this.nmImportanceWeight.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
             // 
             // label15
             // 
@@ -842,17 +855,6 @@
             this.nmMinPricePerShot.Size = new System.Drawing.Size(80, 22);
             this.nmMinPricePerShot.TabIndex = 7;
             this.nmMinPricePerShot.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
-            // 
-            // cbApplyNaturalSelection
-            // 
-            this.cbApplyNaturalSelection.AutoSize = true;
-            this.cbApplyNaturalSelection.Location = new System.Drawing.Point(169, 127);
-            this.cbApplyNaturalSelection.Name = "cbApplyNaturalSelection";
-            this.cbApplyNaturalSelection.Size = new System.Drawing.Size(173, 21);
-            this.cbApplyNaturalSelection.TabIndex = 3;
-            this.cbApplyNaturalSelection.Text = "Apply natural selection";
-            this.cbApplyNaturalSelection.UseVisualStyleBackColor = true;
-            this.cbApplyNaturalSelection.CheckedChanged += new System.EventHandler(this.cbConfig_TextChanged);
             // 
             // Form1
             // 

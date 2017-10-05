@@ -9,9 +9,14 @@ namespace EvolutionaryLogic
 {
     public class PopulationSelector
     {
+        MergeSort helper;
+        public PopulationSelector()
+        {
+            helper = new MergeSort();
+        }
         public void NaturalSelection(List<IDNA> Population)
         {
-            MergeSort.Sort(Population);
+            helper.Sort(Population);
 
             //for (int i = 0; i < Population.Count; i++)
             //{

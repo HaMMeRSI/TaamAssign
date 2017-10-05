@@ -18,6 +18,7 @@ namespace GeneticTargeting
     {
         public static God PopGen { get; set; }
         public TargetingStrategy Strategy { get; set; }
+        public bool IsStarted { get; set; }
 
         public float TScale { get; set; }
         public bool IsLeftMouseDown { get; set; }
@@ -236,7 +237,15 @@ namespace GeneticTargeting
             this.btnRestrategize.Enabled = false;
             this.btnStart.Enabled = false;
 
-            await Task.Factory.StartNew(() => PopGen.GeneratePopulation(cycles, progress),TaskCreationOptions.LongRunning);
+            //int n = 3;
+            //Task[] tasks = new Task[n];
+            //for (int i = 0; i < n; i++)
+            //{
+            //    tasks[i] = Task.Factory.StartNew(() => PopGen.GeneratePopulation(cycles, progress), TaskCreationOptions.LongRunning);
+            //}
+
+            //await Task.WhenAll(tasks);
+            await Task.Factory.StartNew(() => PopGen.GeneratePopulation(cycles, progress), TaskCreationOptions.LongRunning);
 
             this.btnGeneratePopulation.Enabled = true;
             this.btnRestrategize.Enabled = true;
@@ -248,6 +257,7 @@ namespace GeneticTargeting
 
         private void btnStart_Click(object sender, EventArgs e)
         {
+            this.IsStarted = true;
             PopGen = new God(() => new CWorld(Strategy));
             this.btnGeneratePopulation.Enabled = true;
             this.btnRestrategize.Enabled = true;
@@ -309,7 +319,10 @@ namespace GeneticTargeting
         private void nmGridSize_ValueChanged(object sender, EventArgs e)
         {
             GlobalConfiguration.GameSettings.GridSize = (int)((NumericUpDown)sender).Value;
-            this.Restrategize();
+            if (IsStarted)
+            {
+                this.Restrategize();
+            }
         }
     }
 }

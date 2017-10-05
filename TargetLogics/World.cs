@@ -121,17 +121,7 @@ namespace TargetLogics
 
         public override IDNA Crossover(IDNA objPartner)
         {
-            CWorld child = new CWorld(this.Strategy);
-            CWorld partner = (CWorld)objPartner;
-
-            for (int i = 0; i < partner.Genes.Length; i++)
-            {
-                child[i] = Shared.Coin() ? this[i].Clone() : partner[i].Clone();
-            }
-
-            child.Mutate();
-
-            return child;
+            return CoinCrossover(objPartner);
         }
 
         public override IDNA Clone()
@@ -173,6 +163,55 @@ namespace TargetLogics
             {
                 MyCannon.Update();
             }
+        }
+
+        #endregion
+
+        #region Genetic Methods
+
+        public IDNA CoinCrossover(IDNA objPartner)
+        {
+            CWorld child = new CWorld(this.Strategy);
+            CWorld partner = (CWorld)objPartner;
+
+            for (int i = 0; i < partner.Genes.Length; i++)
+            {
+                child[i] = Shared.Coin() ? this[i].Clone() : partner[i].Clone();
+            }
+
+            child.Mutate();
+
+            return child;
+        }
+
+        public IDNA PartialGenomeCrossover (IDNA objPartner)
+        {
+            CWorld child = new CWorld(this.Strategy);
+            CWorld partner = (CWorld)objPartner;
+
+            int nStart = Shared.Next(this.Genes.Length / 2);
+            int nEnd = nStart + Shared.Next(this.Genes.Length / 2);
+            int nGenesPassed = 0;
+            List<int> colPassedGenesUIDs = new List<int>();
+
+            for (int i = nStart; i < nEnd; i++)
+            {
+                child[nGenesPassed] = partner[i].Clone();
+                colPassedGenesUIDs.Add(partner[i].UID);
+                nGenesPassed++;
+            }
+
+            for (int i = nGenesPassed; i < this.Genes.Length; i++)
+            {
+                if(!colPassedGenesUIDs.Contains(this[i].UID))
+                {
+                    child[i] = this[i].Clone();
+                }
+            }
+
+            child.Mutate();
+
+            return child;
         }
 
         #endregion

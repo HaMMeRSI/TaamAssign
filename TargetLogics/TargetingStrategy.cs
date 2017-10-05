@@ -24,7 +24,7 @@ namespace TargetLogics
             GlobalConfiguration.GameData.MaxAttackPrice = 0;
             GlobalConfiguration.GameData.MaxAttackImportance = 0;
             // SHOULD Be replaced by dataSource
-            for (int i = 0; i < nFriendlyCount; i++)
+            for (int UIDCoutner = 0; UIDCoutner < nFriendlyCount; UIDCoutner++)
             {
                 Point2D point = null;
 
@@ -48,9 +48,11 @@ namespace TargetLogics
                 ForceConstraints |= Shared.HitChance(.6) ? (int)ENUMForces.Sea : 0;
                 GlobalConfiguration.GameData.MaxAttackPrice += PricePerShot * Ammo;
                 CSimpleArtillary objCannon = new CSimpleArtillary(Range, Ammo, Damage, PricePerShot, ForceConstraints, Accuracy, MinAccuracy, 1);
-                objCannon.SetLocation(point);
+                objCannon
+                    .SetLocation(point).
+                    SetUID(UIDCoutner);
 
-                this.FriendliesData[i] = objCannon;
+                this.FriendliesData[UIDCoutner] = objCannon;
             }
 
             // SHOULD Be replaced by dataSource
@@ -112,6 +114,14 @@ namespace TargetLogics
             }
 
             return EnemyArtillary;
+        }
+
+        public void ResetEnemyStatus()
+        {
+            foreach (CSimpleArtillary Cannon in this.EnemiesData)
+            {
+                Cannon.ResetStatus();
+            }
         }
 
         public int GetFriendlyCount()

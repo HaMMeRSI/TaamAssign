@@ -18,6 +18,12 @@ namespace Library
             this.Y = dY;
         }
 
+        public Point2D()
+        {
+            this.X = 0;
+            this.Y = 0;
+        }
+
         public Point2D Clone()
         {
             return new Point2D(this.X, this.Y);

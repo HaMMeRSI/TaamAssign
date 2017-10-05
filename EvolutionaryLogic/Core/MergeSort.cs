@@ -8,7 +8,7 @@ namespace EvolutionaryLogic
 {
     public class MergeSort
     {
-        public static void Sort(List<IDNA> input, int low, int high)
+        public void Sort(List<IDNA> input, int low, int high)
         {
             if (low < high)
             {
@@ -19,12 +19,12 @@ namespace EvolutionaryLogic
             }
         }
 
-        public static void Sort(List<IDNA> input)
+        public void Sort(List<IDNA> input)
         {
             Sort(input, 0, input.Count - 1);
         }
 
-        private static void Merge(List<IDNA> input, int low, int middle, int high)
+        private void Merge(List<IDNA> input, int low, int middle, int high)
         {
             int left = low;
             int right = middle + 1;
@@ -67,7 +67,7 @@ namespace EvolutionaryLogic
 
         }
 
-        public static string PrintArray(List<IDNA> input)
+        public string PrintArray(List<IDNA> input)
         {
             string result = String.Empty;
 

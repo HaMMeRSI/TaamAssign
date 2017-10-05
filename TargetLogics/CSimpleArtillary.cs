@@ -9,18 +9,23 @@ namespace TargetLogics
     public class CSimpleArtillary: ILive
     {
         public const int ArtilSize = 50;
-        public Point2D Location { get; set; }
+        public int UID { get; set; }
+        #region Stats
 
         public float Range { get; set; }
         public float Damage { get; set; }
-        public float Health { get; set; }
         public int PriceForShot { get; set; }
         public int Ammunition { get; set; }
-        public int ShotsTaken { get; set; }
         public int ForceConstraint { get; set; }
         public int Accuracy { get; set; }
         public int MaxAccuracyRequired { get; set; }
         public int Importance { get; set; }
+
+        #endregion
+
+        public Point2D Location { get; set; }
+        public float Health { get; set; }
+        public int ShotsTaken { get; set; }
         public List<CSimpleArtillary> HittedBy { get; set; }
         public List<int> Targets { get; set; }
 
@@ -30,9 +35,10 @@ namespace TargetLogics
 
         #region Builder
 
-        public CSimpleArtillary SetLocation(float nX, float nY)
+        public CSimpleArtillary SetLocation(double nX, double nY)
         {
-            this.Location = new Point2D(nX, nY);
+            this.Location.X = nX;
+            this.Location.Y = nY;
             this.RenderLoc = new Point2D(nX - ArtilSize / 2, nY - ArtilSize / 2);
             return this;
         }
@@ -47,6 +53,12 @@ namespace TargetLogics
         public CSimpleArtillary SetTargets(List<int> colTargets)
         {
             this.Targets = colTargets;
+            return this;
+        }
+
+        public CSimpleArtillary SetUID(int UID)
+        {
+            this.UID = UID;
             return this;
         }
 
@@ -71,6 +83,7 @@ namespace TargetLogics
             this.Accuracy = nAccuracy;
             this.MaxAccuracyRequired = MaxAccuracyRequired;
             this.Importance = nImportance;
+            this.Location = new Point2D();
 
             this.AttackColor = cColor;
             this.MyColor = Color.FromArgb(
@@ -134,10 +147,18 @@ namespace TargetLogics
         public CSimpleArtillary Clone()
         {
             return (new CSimpleArtillary(this.Range, this.Ammunition, this.Damage, this.PriceForShot, this.ForceConstraint, this.Accuracy, this.MaxAccuracyRequired, this.Importance, this.MyColor))
-                .SetLocation(this.Location.Clone())
+                .SetLocation(this.Location.X, this.Location.Y)
+                .SetUID(this.UID)
                 .SetTargets(new List<int>(this.Targets));
         }
 
+        public void ResetStatus()
+        {
+            this.Health = 1;
+            this.ShotsTaken = 0;
+            this.Targets.Clear();
+            this.HittedBy.Clear();
+        }
 
         #region ILive
 

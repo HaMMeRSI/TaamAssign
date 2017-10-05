@@ -51,7 +51,7 @@ namespace Library
             public static double MaxDamage = 1;
             public static double MinDamage = .3;
             public static int MaxRadius = 2500;
-            public static int MinRadius = 1250;
+            public static int MinRadius = 1500;
             public static int MaxAmmunition = 5;
             public static int MinAmmunition = 1;
             public static int MaxShotsToFire = 5;
@@ -69,9 +69,9 @@ namespace Library
             #endregion
 
             #region Weights
-            public static double DeadCountWeight = .7f;
-            public static double PriceWeight = .15f;
-            public static double ImportanceWeight = .15f;
+            public static float DeadCountWeight = .7f;
+            public static float PriceWeight = .15f;
+            public static float ImportanceWeight = .15f;
             #endregion
 
             static GameSettings()
@@ -93,9 +93,9 @@ namespace Library
 
                 Delegates["MaxPricePerShot"] = (value) => MaxPricePerShot = Convert.ToInt32(value);
                 Delegates["MinPricePerShot"] = (value) => MinPricePerShot = Convert.ToInt32(value);
-                Delegates["DeadCountWeight"] = (value) => { double val = Convert.ToDouble(value); DeadCountWeight = val;};
-                Delegates["PriceWeight"] = (value) => { double val = Convert.ToDouble(value); PriceWeight = val;};
-                Delegates["ImportanceWeight"] = (value) => { double val = Convert.ToDouble(value); ImportanceWeight = val; };
+                Delegates["DeadCountWeight"] = (value) => { float val = (float)Convert.ToDouble(value); DeadCountWeight = val;};
+                Delegates["PriceWeight"] = (value) => { float val = (float)Convert.ToDouble(value); PriceWeight = val;};
+                Delegates["ImportanceWeight"] = (value) => { float val = (float)Convert.ToDouble(value); ImportanceWeight = val; };
             }
         }
     }
