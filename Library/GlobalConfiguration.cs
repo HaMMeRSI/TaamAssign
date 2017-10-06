@@ -14,7 +14,9 @@ namespace Library
         public static float MutationChance = 7f;
         public static float ParentChance = 10f;
         public static bool ApplyElitist = true; 
-        public static bool ApplyNaturalSelection = true; 
+        public static bool ApplyNaturalSelection = true;
+        public static bool PartialGenomCrossover = false;
+        
         private static Dictionary<string, Action<object>> Delegates = new Dictionary<string, Action<object>>();
 
         static GlobalConfiguration()
@@ -24,6 +26,7 @@ namespace Library
             Delegates["ParentChance"] = (value) => ParentChance = (float)Convert.ToDouble(value);
             Delegates["ApplyElitist"] = (value) => ApplyElitist = Convert.ToBoolean(value);
             Delegates["ApplyNaturalSelection"] = (value) => ApplyNaturalSelection = Convert.ToBoolean(value);
+            Delegates["PartialGenomCrossover"] = (value) => PartialGenomCrossover = Convert.ToBoolean(value);
         }
 
         public static Action<object> GetDelegate(string Name)

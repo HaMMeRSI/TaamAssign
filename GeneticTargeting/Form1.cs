@@ -59,6 +59,9 @@ namespace GeneticTargeting
 
             this.cbApplyNaturalSelection.Tag = GlobalConfiguration.GetDelegate("ApplyNaturalSelection");
             this.cbApplyNaturalSelection.CheckState = GlobalConfiguration.ApplyNaturalSelection ? CheckState.Checked : CheckState.Unchecked;
+
+            this.cbPartialGenomCrossover.Tag = GlobalConfiguration.GetDelegate("PartialGenomCrossover");
+            this.cbPartialGenomCrossover.CheckState = GlobalConfiguration.PartialGenomCrossover ? CheckState.Checked : CheckState.Unchecked;
             
             #endregion
 
@@ -236,6 +239,7 @@ namespace GeneticTargeting
             this.btnGeneratePopulation.Enabled = false;
             this.btnRestrategize.Enabled = false;
             this.btnStart.Enabled = false;
+            this.btnReorder.Enabled = false;
 
             //int n = 3;
             //Task[] tasks = new Task[n];
@@ -250,6 +254,7 @@ namespace GeneticTargeting
             this.btnGeneratePopulation.Enabled = true;
             this.btnRestrategize.Enabled = true;
             this.btnStart.Enabled = true;
+            this.btnReorder.Enabled = true;
 
             this.UpdateBestFitnessLabels();
             this.pnlView.Refresh();
@@ -261,6 +266,7 @@ namespace GeneticTargeting
             PopGen = new God(() => new CWorld(Strategy));
             this.btnGeneratePopulation.Enabled = true;
             this.btnRestrategize.Enabled = true;
+            this.btnReorder.Enabled = true;
             this.btnStart.Text = "Restart!";
 
             this.UpdateBestFitnessLabels();
@@ -275,6 +281,15 @@ namespace GeneticTargeting
         private void btnRestrategize_Click(object sender, EventArgs e)
         {
             this.Restrategize();
+        }
+
+        private void btnReorder_Click(object sender, EventArgs e)
+        {
+            this.Strategy.Reorder();
+            PopGen = new God(() => new CWorld(Strategy));
+            this.UpdateBestFitnessLabels();
+            this.pnlView.Refresh();
+
         }
 
         private void Restrategize()

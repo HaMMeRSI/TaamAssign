@@ -38,6 +38,7 @@
             this.btnStart = new System.Windows.Forms.Button();
             this.lblBestFitness = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnReorder = new System.Windows.Forms.Button();
             this.lblTotalImportance = new System.Windows.Forms.Label();
             this.lblBestTotalPrice = new System.Windows.Forms.Label();
             this.lblBestDeadCount = new System.Windows.Forms.Label();
@@ -48,6 +49,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.tbcSettings = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.cbPartialGenomCrossover = new System.Windows.Forms.CheckBox();
             this.cbApplyNaturalSelection = new System.Windows.Forms.CheckBox();
             this.cbApplyElitist = new System.Windows.Forms.CheckBox();
             this.tbParentChance = new System.Windows.Forms.NumericUpDown();
@@ -129,7 +131,7 @@
             this.pnlView.Location = new System.Drawing.Point(17, 16);
             this.pnlView.Margin = new System.Windows.Forms.Padding(4);
             this.pnlView.Name = "pnlView";
-            this.pnlView.Size = new System.Drawing.Size(900, 775);
+            this.pnlView.Size = new System.Drawing.Size(449, 775);
             this.pnlView.TabIndex = 0;
             this.pnlView.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlView_Paint);
             this.pnlView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlView_MouseDown);
@@ -154,10 +156,10 @@
             // btnGeneratePopulation
             // 
             this.btnGeneratePopulation.Enabled = false;
-            this.btnGeneratePopulation.Location = new System.Drawing.Point(84, 98);
+            this.btnGeneratePopulation.Location = new System.Drawing.Point(117, 98);
             this.btnGeneratePopulation.Margin = new System.Windows.Forms.Padding(4);
             this.btnGeneratePopulation.Name = "btnGeneratePopulation";
-            this.btnGeneratePopulation.Size = new System.Drawing.Size(345, 84);
+            this.btnGeneratePopulation.Size = new System.Drawing.Size(312, 84);
             this.btnGeneratePopulation.TabIndex = 2;
             this.btnGeneratePopulation.Text = "Generate Population";
             this.btnGeneratePopulation.UseVisualStyleBackColor = true;
@@ -216,7 +218,7 @@
             this.btnStart.Location = new System.Drawing.Point(7, 98);
             this.btnStart.Margin = new System.Windows.Forms.Padding(4);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(69, 84);
+            this.btnStart.Size = new System.Drawing.Size(102, 84);
             this.btnStart.TabIndex = 6;
             this.btnStart.Text = "Start!";
             this.btnStart.UseVisualStyleBackColor = true;
@@ -235,6 +237,7 @@
             // panel1
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.btnReorder);
             this.panel1.Controls.Add(this.lblTotalImportance);
             this.panel1.Controls.Add(this.lblBestTotalPrice);
             this.panel1.Controls.Add(this.lblBestDeadCount);
@@ -251,6 +254,17 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(433, 426);
             this.panel1.TabIndex = 8;
+            // 
+            // btnReorder
+            // 
+            this.btnReorder.Enabled = false;
+            this.btnReorder.Location = new System.Drawing.Point(7, 190);
+            this.btnReorder.Name = "btnReorder";
+            this.btnReorder.Size = new System.Drawing.Size(102, 44);
+            this.btnReorder.TabIndex = 11;
+            this.btnReorder.Text = "Reorder";
+            this.btnReorder.UseVisualStyleBackColor = true;
+            this.btnReorder.Click += new System.EventHandler(this.btnReorder_Click);
             // 
             // lblTotalImportance
             // 
@@ -282,9 +296,9 @@
             // btnRestrategize
             // 
             this.btnRestrategize.Enabled = false;
-            this.btnRestrategize.Location = new System.Drawing.Point(7, 189);
+            this.btnRestrategize.Location = new System.Drawing.Point(117, 189);
             this.btnRestrategize.Name = "btnRestrategize";
-            this.btnRestrategize.Size = new System.Drawing.Size(422, 45);
+            this.btnRestrategize.Size = new System.Drawing.Size(312, 45);
             this.btnRestrategize.TabIndex = 9;
             this.btnRestrategize.Text = "New Formation";
             this.btnRestrategize.UseVisualStyleBackColor = true;
@@ -352,6 +366,7 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage1.Controls.Add(this.cbPartialGenomCrossover);
             this.tabPage1.Controls.Add(this.cbApplyNaturalSelection);
             this.tabPage1.Controls.Add(this.cbApplyElitist);
             this.tabPage1.Controls.Add(this.tbParentChance);
@@ -366,6 +381,17 @@
             this.tabPage1.Size = new System.Drawing.Size(425, 314);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Configuration";
+            // 
+            // cbPartialGenomCrossover
+            // 
+            this.cbPartialGenomCrossover.AutoSize = true;
+            this.cbPartialGenomCrossover.Location = new System.Drawing.Point(169, 155);
+            this.cbPartialGenomCrossover.Name = "cbPartialGenomCrossover";
+            this.cbPartialGenomCrossover.Size = new System.Drawing.Size(183, 21);
+            this.cbPartialGenomCrossover.TabIndex = 4;
+            this.cbPartialGenomCrossover.Text = "Partial genome insertion";
+            this.cbPartialGenomCrossover.UseVisualStyleBackColor = true;
+            this.cbPartialGenomCrossover.CheckedChanged += new System.EventHandler(this.cbConfig_TextChanged);
             // 
             // cbApplyNaturalSelection
             // 
@@ -968,6 +994,8 @@
         private System.Windows.Forms.NumericUpDown nmImportanceWeight;
         private System.Windows.Forms.Label lblTotalImportance;
         private System.Windows.Forms.CheckBox cbApplyNaturalSelection;
+        private System.Windows.Forms.Button btnReorder;
+        private System.Windows.Forms.CheckBox cbPartialGenomCrossover;
     }
 }
 

@@ -227,7 +227,7 @@ HP: {1}
 
         public override string ToString()
         {
-            return string.Format("X: {0}, Y: {1}", this.Location.X, this.Location.Y);
+            return string.Format("UID: {2}, X: {0}, Y: {1}", this.Location.X, this.Location.Y, this.UID);
         }
     }
 }

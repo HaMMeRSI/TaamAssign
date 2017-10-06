@@ -97,21 +97,21 @@ namespace TargetLogics
                 }
             }
 
-            //if (Shared.HitChance(.05))
-            //{
-            //    int nReplaceWith;
-            //    CSimpleArtillary Temp;
-            //    for (int i = 0; i < this.Genes.Length; i++)
-            //    {
-            //        if (Shared.HitChance(.6))
-            //        {
-            //            nReplaceWith = Shared.Next(this.Genes.Length);
-            //            Temp = this[nReplaceWith];
-            //            this[nReplaceWith] = this[i];
-            //            this[i] = Temp;
-            //        }
-            //    }
-            //}
+            if (GlobalConfiguration.PartialGenomCrossover && Shared.HitChance(GlobalConfiguration.MutationChance / 100))
+            {
+                int nReplaceWith;
+                CSimpleArtillary Temp;
+                for (int i = 0; i < this.Genes.Length; i++)
+                {
+                    if (Shared.HitChance(.6))
+                    {
+                        nReplaceWith = Shared.Next(this.Genes.Length);
+                        Temp = this[nReplaceWith];
+                        this[nReplaceWith] = this[i];
+                        this[i] = Temp;
+                    }
+                }
+            }
 
             if (Mutated)
             {
@@ -121,7 +121,8 @@ namespace TargetLogics
 
         public override IDNA Crossover(IDNA objPartner)
         {
-            return CoinCrossover(objPartner);
+            IDNA Child = GlobalConfiguration.PartialGenomCrossover ? this.PartialGenomeCrossover(objPartner) : this.CoinCrossover(objPartner);
+            return this.PartialGenomeCrossover(objPartner);
         }
 
         public override IDNA Clone()
@@ -184,29 +185,38 @@ namespace TargetLogics
             return child;
         }
 
-        public IDNA PartialGenomeCrossover (IDNA objPartner)
+        public IDNA PartialGenomeCrossover(IDNA objPartner)
         {
             CWorld child = new CWorld(this.Strategy);
             CWorld partner = (CWorld)objPartner;
 
-            int nStart = Shared.Next(this.Genes.Length / 2);
+            int nStart = Shared.Next(this.Genes.Length / 2 + 1);
             int nEnd = nStart + Shared.Next(this.Genes.Length / 2);
             int nGenesPassed = 0;
             List<int> colPassedGenesUIDs = new List<int>();
 
             for (int i = nStart; i < nEnd; i++)
             {
-                child[nGenesPassed] = partner[i].Clone();
+                child[i] = partner[i].Clone();
                 colPassedGenesUIDs.Add(partner[i].UID);
                 nGenesPassed++;
             }
 
-            for (int i = nGenesPassed; i < this.Genes.Length; i++)
+            int nGeneInsertionPos = 0;
+            for (int i = 0; i < this.Genes.Length && nGeneInsertionPos < this.Genes.Length; i++)
             {
-                if(!colPassedGenesUIDs.Contains(this[i].UID))
+                if (nGeneInsertionPos == nStart)
                 {
-                    child[i] = this[i].Clone();
+                    nGeneInsertionPos = nEnd;
                 }
+
+                if (colPassedGenesUIDs.Contains(this.Genes[i].UID))
+                {
+                    continue;
+                }
+
+                child[nGeneInsertionPos] = this.Genes[i].Clone();
+                nGeneInsertionPos++;
             }
 
             child.Mutate();

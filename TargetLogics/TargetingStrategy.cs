@@ -116,6 +116,25 @@ namespace TargetLogics
             return EnemyArtillary;
         }
 
+        public void Reorder()
+        {
+            if (Shared.HitChance(.05))
+            {
+                int nReplaceWith;
+                CSimpleArtillary Temp;
+                for (int i = 0; i < this.FriendliesData.Length; i++)
+                {
+                    if (Shared.HitChance(.6))
+                    {
+                        nReplaceWith = Shared.Next(this.FriendliesData.Length);
+                        Temp = this.FriendliesData[nReplaceWith];
+                        this.FriendliesData[nReplaceWith] = this.FriendliesData[i];
+                        this.FriendliesData[i] = Temp;
+                    }
+                }
+            }
+        }
+
         public void ResetEnemyStatus()
         {
             foreach (CSimpleArtillary Cannon in this.EnemiesData)
