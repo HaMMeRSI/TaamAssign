@@ -31,6 +31,7 @@ namespace GeneticTargeting
         {
             InitializeComponent();
             typeof(Panel).InvokeMember("DoubleBuffered", BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic, null, this.pnlView, new object[] { true });
+            typeof(Panel).InvokeMember("DoubleBuffered", BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic, null, this.pnlStatusGraph, new object[] { true });
 
             this.DoubleBuffered = true;
             this.TScale = ((float)this.tbScale.Value) / 25;
@@ -338,6 +339,11 @@ namespace GeneticTargeting
             {
                 this.Restrategize();
             }
+        }
+
+        private void pnlStatusGraph_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

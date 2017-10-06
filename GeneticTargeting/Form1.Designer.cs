@@ -131,7 +131,7 @@
             this.pnlView.Location = new System.Drawing.Point(17, 16);
             this.pnlView.Margin = new System.Windows.Forms.Padding(4);
             this.pnlView.Name = "pnlView";
-            this.pnlView.Size = new System.Drawing.Size(449, 775);
+            this.pnlView.Size = new System.Drawing.Size(900, 775);
             this.pnlView.TabIndex = 0;
             this.pnlView.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlView_Paint);
             this.pnlView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlView_MouseDown);
