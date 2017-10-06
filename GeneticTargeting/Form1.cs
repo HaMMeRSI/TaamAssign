@@ -20,24 +20,29 @@ namespace GeneticTargeting
         public TargetingStrategy Strategy { get; set; }
         public bool IsStarted { get; set; }
 
-        public float TScale { get; set; }
-        public bool IsLeftMouseDown { get; set; }
-        public bool IsRightMouseDown { get; set; }
-        public Point2D MouseDownLocation { get; set; }
-        public Point2D TransformOrigin { get; set; }
-        public float Angle { get; set; }
-
         public Form1()
         {
             InitializeComponent();
-            typeof(Panel).InvokeMember("DoubleBuffered", BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic, null, this.pnlView, new object[] { true });
-            typeof(Panel).InvokeMember("DoubleBuffered", BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic, null, this.pnlStatusGraph, new object[] { true });
 
             this.DoubleBuffered = true;
-            this.TScale = ((float)this.tbScale.Value) / 25;
-            this.Angle = 0;
             this.Strategy = new TargetingStrategy(GlobalConfiguration.GameSettings.FriendlyCount, GlobalConfiguration.GameSettings.EnemyCount);
-            this.TransformOrigin = new Point2D(-this.Strategy.Terrain.GetWidth() / 2, -this.Strategy.Terrain.GetHeight() / 2);
+
+            this.ipStrategy.TransformOrigin = new Point2D(-this.Strategy.Terrain.GetWidth() / 2, -this.Strategy.Terrain.GetHeight() / 2);
+            this.ipStrategy.DrawFunction = (g) =>
+            {
+                if (PopGen?.BestFitness != null)
+                {
+                    this.Strategy.Draw(g);
+                    ((CWorld)PopGen.BestFitness).Draw(g);
+                }
+            };
+
+            this.ipStrategy.UpdateFunction = () => ((CWorld)PopGen.BestFitness).Update();
+
+            this.ipStatus.DrawFunction = (g) =>
+            {
+                PopGen?.StatusGraph.Draw(g);
+            };
 
             this.initConfigDelegation();
         }
@@ -142,99 +147,14 @@ namespace GeneticTargeting
             #endregion
         }
 
-        private void pnlView_Paint(object sender, PaintEventArgs e)
-        {
-            e.Graphics.Clear(Color.Silver);
-            if (PopGen?.BestFitness != null)
-            {
-                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                e.Graphics.TranslateTransform(pnlView.Width / 2, pnlView.Height / 2);
-                e.Graphics.ScaleTransform(this.TScale, this.TScale);
-                e.Graphics.RotateTransform(this.Angle);
-                e.Graphics.TranslateTransform((float)this.TransformOrigin.X, (float)this.TransformOrigin.Y);
-
-                this.Strategy.Draw(e.Graphics);
-                ((CWorld)PopGen.BestFitness).Draw(e.Graphics);
-                e.Graphics.FillEllipse(new SolidBrush(Color.Red), new Rectangle(Shared.MouseLocation, new Size(3, 3)));
-                e.Graphics.RotateTransform(0);
-            }
-
-            e.Graphics.ResetTransform();
-        }
-
-        #region Annoying events
-
-        private void tbScale_Scroll(object sender, EventArgs e)
-        {
-            this.TScale = ((float)this.tbScale.Value) / 25;
-            this.pnlView.Refresh();
-        }
-
-        private void pnlView_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                this.IsLeftMouseDown = true;
-                this.MouseDownLocation = (Point2D)e.Location;
-            }
-            else if (e.Button == MouseButtons.Right)
-            {
-                this.IsRightMouseDown = true;
-                this.MouseDownLocation = (Point2D)e.Location;
-            }
-            else if (e.Button == MouseButtons.Middle)
-            {
-                ((CWorld)PopGen.BestFitness).Update();
-                this.pnlView.Refresh();
-            }
-        }
-
-        private void pnlView_MouseMove(object sender, MouseEventArgs e)
-        {
-            Shared.MouseLocation.X = e.Location.X / this.TScale - (this.TransformOrigin.X + this.pnlView.Width / this.TScale / 2);
-            Shared.MouseLocation.Y = e.Location.Y / this.TScale - (this.TransformOrigin.Y + this.pnlView.Height / this.TScale / 2);
-
-            if (this.IsLeftMouseDown)
-            {
-                this.TransformOrigin.X += (e.X - this.MouseDownLocation.X) / this.TScale;
-                this.TransformOrigin.Y += (e.Y - this.MouseDownLocation.Y) / this.TScale;
-                this.MouseDownLocation = (Point2D)e.Location;
-                this.pnlView.Refresh();
-            }
-            else if (this.IsRightMouseDown)
-            {
-                if (e.Location.Y > this.MouseDownLocation.Y)
-                {
-                    this.Angle += 10;
-                }
-                else
-                {
-                    this.Angle -= 10;
-                }
-                this.pnlView.Refresh();
-            }
-        }
-
-        private void pnlView_MouseUp(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                this.IsLeftMouseDown = false;
-            }
-            else if (e.Button == MouseButtons.Right)
-            {
-                this.IsRightMouseDown = false;
-            }
-        }
-
-        #endregion
-
         private async void btnGeneratePopulation_Click(object sender, EventArgs e)
         {
             int cycles = Convert.ToInt32(this.numCycles.Value);
 
             Progress<string> progress = new Progress<string>(s => {
                 this.UpdateBestFitnessLabels();
+                this.ipStatus.TransformOrigin.X = -PopGen.StatusGraph.GetWidth();
+                this.ipStatus.TransformOrigin.Y = -PopGen.StatusGraph.GetHeight();
             });
 
             this.btnGeneratePopulation.Enabled = false;
@@ -258,7 +178,7 @@ namespace GeneticTargeting
             this.btnReorder.Enabled = true;
 
             this.UpdateBestFitnessLabels();
-            this.pnlView.Refresh();
+            this.ipStrategy.Refresh();
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -271,12 +191,7 @@ namespace GeneticTargeting
             this.btnStart.Text = "Restart!";
 
             this.UpdateBestFitnessLabels();
-            this.pnlView.Refresh();
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            this.pnlView.Refresh();
+            this.ipStrategy.Refresh();
         }
 
         private void btnRestrategize_Click(object sender, EventArgs e)
@@ -289,8 +204,7 @@ namespace GeneticTargeting
             this.Strategy.Reorder();
             PopGen = new God(() => new CWorld(Strategy));
             this.UpdateBestFitnessLabels();
-            this.pnlView.Refresh();
-
+            this.ipStrategy.Refresh();
         }
 
         private void Restrategize()
@@ -301,7 +215,7 @@ namespace GeneticTargeting
             this.btnStart.Text = "Restart!";
 
             this.UpdateBestFitnessLabels();
-            this.pnlView.Refresh();
+            this.ipStrategy.Refresh();
         }
 
         private void UpdateBestFitnessLabels()
@@ -343,7 +257,14 @@ namespace GeneticTargeting
 
         private void pnlStatusGraph_Paint(object sender, PaintEventArgs e)
         {
+            e.Graphics.Clear(Color.Silver);
+            if (PopGen?.BestFitness != null)
+                PopGen.StatusGraph.Draw(e.Graphics);
+        }
 
+        private void timer1_Tick_1(object sender, EventArgs e)
+        {
+            this.ipStatus.Refresh();
         }
     }
 }

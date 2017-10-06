@@ -18,6 +18,7 @@ namespace EvolutionaryLogic
         public IDNA BestFitness { get; set; }
         public int GenerationCount { get; set; }
         public float AvreageFitness { get; set; }
+        public CStatutsGraph StatusGraph { get; set; }
 
         #endregion
 
@@ -26,6 +27,7 @@ namespace EvolutionaryLogic
             this.Population = new List<IDNA>();
             this.MySelector = new PopulationSelector();
             this.GenerationCount = 0;
+            this.StatusGraph = new CStatutsGraph();
 
             for (int i = 0; i < GlobalConfiguration.PopulationCount; i++)
             {
@@ -39,10 +41,10 @@ namespace EvolutionaryLogic
 
         public void GeneratePopulation(int Generations, IProgress<string> progress)
         {
-            int nElitilst = (int)(GlobalConfiguration.ApplyElitist ? Math.Max(this.Population.Count * .01f, 1) : 0);
             for (int i = 0; i < Generations; i++)
             {
                 List<IDNA> NewPop = new List<IDNA>();
+                int nElitilst = (int)(GlobalConfiguration.ApplyElitist ? Math.Max(this.Population.Count * .01f, 1) : 0);
                 this.ChooseElitist(NewPop, nElitilst);
 
                 //List<IDNA> NewPop = this.MySelector.AverageSelection(this.Population, this.AvreageFitness);
@@ -118,6 +120,9 @@ namespace EvolutionaryLogic
             }
 
             this.AvreageFitness = TotalFintess / GlobalConfiguration.PopulationCount;
+
+            this.StatusGraph.AddToHistory(BestDNAFitness);
+            this.StatusGraph.Average = this.AvreageFitness;
         }
 
         public string PrintAll()

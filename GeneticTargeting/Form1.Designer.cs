@@ -28,8 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.pnlView = new System.Windows.Forms.Panel();
-            this.tbScale = new System.Windows.Forms.TrackBar();
+            this.components = new System.ComponentModel.Container();
+            Library.Point2D point2D3 = new Library.Point2D();
+            Library.Point2D point2D4 = new Library.Point2D();
             this.btnGeneratePopulation = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.numCycles = new System.Windows.Forms.NumericUpDown();
@@ -89,7 +90,9 @@
             this.nmMinImportance = new System.Windows.Forms.NumericUpDown();
             this.nmMaxPricePerShot = new System.Windows.Forms.NumericUpDown();
             this.nmMinPricePerShot = new System.Windows.Forms.NumericUpDown();
-            ((System.ComponentModel.ISupportInitialize)(this.tbScale)).BeginInit();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.ipStrategy = new GeneticTargeting.InteractivePanel();
+            this.ipStatus = new GeneticTargeting.InteractivePanel();
             ((System.ComponentModel.ISupportInitialize)(this.numCycles)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbMutationChance)).BeginInit();
@@ -122,41 +125,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.nmMinPricePerShot)).BeginInit();
             this.SuspendLayout();
             // 
-            // pnlView
-            // 
-            this.pnlView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlView.BackColor = System.Drawing.Color.Silver;
-            this.pnlView.Location = new System.Drawing.Point(17, 16);
-            this.pnlView.Margin = new System.Windows.Forms.Padding(4);
-            this.pnlView.Name = "pnlView";
-            this.pnlView.Size = new System.Drawing.Size(900, 775);
-            this.pnlView.TabIndex = 0;
-            this.pnlView.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlView_Paint);
-            this.pnlView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlView_MouseDown);
-            this.pnlView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlView_MouseMove);
-            this.pnlView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnlView_MouseUp);
-            // 
-            // tbScale
-            // 
-            this.tbScale.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbScale.BackColor = System.Drawing.SystemColors.Control;
-            this.tbScale.Location = new System.Drawing.Point(4, 4);
-            this.tbScale.Margin = new System.Windows.Forms.Padding(4);
-            this.tbScale.Maximum = 100;
-            this.tbScale.Minimum = 1;
-            this.tbScale.Name = "tbScale";
-            this.tbScale.Size = new System.Drawing.Size(425, 56);
-            this.tbScale.TabIndex = 1;
-            this.tbScale.TickFrequency = 0;
-            this.tbScale.Value = 25;
-            this.tbScale.Scroll += new System.EventHandler(this.tbScale_Scroll);
-            // 
             // btnGeneratePopulation
             // 
             this.btnGeneratePopulation.Enabled = false;
-            this.btnGeneratePopulation.Location = new System.Drawing.Point(117, 98);
+            this.btnGeneratePopulation.Location = new System.Drawing.Point(117, 35);
             this.btnGeneratePopulation.Margin = new System.Windows.Forms.Padding(4);
             this.btnGeneratePopulation.Name = "btnGeneratePopulation";
             this.btnGeneratePopulation.Size = new System.Drawing.Size(312, 84);
@@ -168,7 +140,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 70);
+            this.label1.Location = new System.Drawing.Point(4, 7);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(157, 17);
@@ -177,7 +149,7 @@
             // 
             // numCycles
             // 
-            this.numCycles.Location = new System.Drawing.Point(169, 68);
+            this.numCycles.Location = new System.Drawing.Point(169, 5);
             this.numCycles.Margin = new System.Windows.Forms.Padding(4);
             this.numCycles.Maximum = new decimal(new int[] {
             1000000,
@@ -196,7 +168,7 @@
             // lblGenerationCount
             // 
             this.lblGenerationCount.AutoSize = true;
-            this.lblGenerationCount.Location = new System.Drawing.Point(4, 238);
+            this.lblGenerationCount.Location = new System.Drawing.Point(4, 175);
             this.lblGenerationCount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblGenerationCount.Name = "lblGenerationCount";
             this.lblGenerationCount.Size = new System.Drawing.Size(143, 17);
@@ -206,7 +178,7 @@
             // lblAverageFitness
             // 
             this.lblAverageFitness.AutoSize = true;
-            this.lblAverageFitness.Location = new System.Drawing.Point(4, 269);
+            this.lblAverageFitness.Location = new System.Drawing.Point(4, 206);
             this.lblAverageFitness.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblAverageFitness.Name = "lblAverageFitness";
             this.lblAverageFitness.Size = new System.Drawing.Size(122, 17);
@@ -215,7 +187,7 @@
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(7, 98);
+            this.btnStart.Location = new System.Drawing.Point(7, 35);
             this.btnStart.Margin = new System.Windows.Forms.Padding(4);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(102, 84);
@@ -227,7 +199,7 @@
             // lblBestFitness
             // 
             this.lblBestFitness.AutoSize = true;
-            this.lblBestFitness.Location = new System.Drawing.Point(4, 304);
+            this.lblBestFitness.Location = new System.Drawing.Point(4, 241);
             this.lblBestFitness.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblBestFitness.Name = "lblBestFitness";
             this.lblBestFitness.Size = new System.Drawing.Size(97, 17);
@@ -242,7 +214,6 @@
             this.panel1.Controls.Add(this.lblBestTotalPrice);
             this.panel1.Controls.Add(this.lblBestDeadCount);
             this.panel1.Controls.Add(this.btnRestrategize);
-            this.panel1.Controls.Add(this.tbScale);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.lblBestFitness);
             this.panel1.Controls.Add(this.lblAverageFitness);
@@ -258,7 +229,7 @@
             // btnReorder
             // 
             this.btnReorder.Enabled = false;
-            this.btnReorder.Location = new System.Drawing.Point(7, 190);
+            this.btnReorder.Location = new System.Drawing.Point(7, 127);
             this.btnReorder.Name = "btnReorder";
             this.btnReorder.Size = new System.Drawing.Size(102, 44);
             this.btnReorder.TabIndex = 11;
@@ -269,7 +240,7 @@
             // lblTotalImportance
             // 
             this.lblTotalImportance.AutoSize = true;
-            this.lblTotalImportance.Location = new System.Drawing.Point(4, 386);
+            this.lblTotalImportance.Location = new System.Drawing.Point(4, 323);
             this.lblTotalImportance.Name = "lblTotalImportance";
             this.lblTotalImportance.Size = new System.Drawing.Size(157, 17);
             this.lblTotalImportance.TabIndex = 10;
@@ -278,7 +249,7 @@
             // lblBestTotalPrice
             // 
             this.lblBestTotalPrice.AutoSize = true;
-            this.lblBestTotalPrice.Location = new System.Drawing.Point(4, 360);
+            this.lblBestTotalPrice.Location = new System.Drawing.Point(4, 297);
             this.lblBestTotalPrice.Name = "lblBestTotalPrice";
             this.lblBestTotalPrice.Size = new System.Drawing.Size(118, 17);
             this.lblBestTotalPrice.TabIndex = 10;
@@ -287,7 +258,7 @@
             // lblBestDeadCount
             // 
             this.lblBestDeadCount.AutoSize = true;
-            this.lblBestDeadCount.Location = new System.Drawing.Point(4, 332);
+            this.lblBestDeadCount.Location = new System.Drawing.Point(4, 269);
             this.lblBestDeadCount.Name = "lblBestDeadCount";
             this.lblBestDeadCount.Size = new System.Drawing.Size(131, 17);
             this.lblBestDeadCount.TabIndex = 10;
@@ -296,7 +267,7 @@
             // btnRestrategize
             // 
             this.btnRestrategize.Enabled = false;
-            this.btnRestrategize.Location = new System.Drawing.Point(117, 189);
+            this.btnRestrategize.Location = new System.Drawing.Point(117, 126);
             this.btnRestrategize.Name = "btnRestrategize";
             this.btnRestrategize.Size = new System.Drawing.Size(312, 45);
             this.btnRestrategize.TabIndex = 9;
@@ -387,9 +358,9 @@
             this.cbPartialGenomCrossover.AutoSize = true;
             this.cbPartialGenomCrossover.Location = new System.Drawing.Point(169, 155);
             this.cbPartialGenomCrossover.Name = "cbPartialGenomCrossover";
-            this.cbPartialGenomCrossover.Size = new System.Drawing.Size(183, 21);
+            this.cbPartialGenomCrossover.Size = new System.Drawing.Size(191, 21);
             this.cbPartialGenomCrossover.TabIndex = 4;
-            this.cbPartialGenomCrossover.Text = "Partial genome insertion";
+            this.cbPartialGenomCrossover.Text = "Partial genome crossover";
             this.cbPartialGenomCrossover.UseVisualStyleBackColor = true;
             this.cbPartialGenomCrossover.CheckedChanged += new System.EventHandler(this.cbConfig_TextChanged);
             // 
@@ -882,18 +853,53 @@
             this.nmMinPricePerShot.TabIndex = 7;
             this.nmMinPricePerShot.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
             // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick_1);
+            // 
+            // ipStrategy
+            // 
+            this.ipStrategy.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ipStrategy.DrawFunction = null;
+            this.ipStrategy.Location = new System.Drawing.Point(13, 16);
+            this.ipStrategy.Name = "ipStrategy";
+            this.ipStrategy.ScaleFactor = 25;
+            this.ipStrategy.Size = new System.Drawing.Size(455, 778);
+            this.ipStrategy.TabIndex = 10;
+            point2D3.X = 0D;
+            point2D3.Y = 0D;
+            this.ipStrategy.TransformOrigin = point2D3;
+            this.ipStrategy.UpdateFunction = null;
+            // 
+            // ipStatus
+            // 
+            this.ipStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ipStatus.DrawFunction = null;
+            this.ipStatus.Location = new System.Drawing.Point(475, 16);
+            this.ipStatus.Name = "ipStatus";
+            this.ipStatus.ScaleFactor = 25;
+            this.ipStatus.Size = new System.Drawing.Size(447, 286);
+            this.ipStatus.TabIndex = 11;
+            point2D4.X = 0D;
+            point2D4.Y = 0D;
+            this.ipStatus.TransformOrigin = point2D4;
+            this.ipStatus.UpdateFunction = null;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1369, 806);
+            this.Controls.Add(this.ipStatus);
+            this.Controls.Add(this.ipStrategy);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.tbcSettings);
-            this.Controls.Add(this.pnlView);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "Form1";
-            ((System.ComponentModel.ISupportInitialize)(this.tbScale)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numCycles)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -934,9 +940,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Panel pnlView;
-        private System.Windows.Forms.TrackBar tbScale;
         private System.Windows.Forms.Button btnGeneratePopulation;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown numCycles;
@@ -996,6 +999,9 @@
         private System.Windows.Forms.CheckBox cbApplyNaturalSelection;
         private System.Windows.Forms.Button btnReorder;
         private System.Windows.Forms.CheckBox cbPartialGenomCrossover;
+        private System.Windows.Forms.Timer timer1;
+        private InteractivePanel ipStrategy;
+        private InteractivePanel ipStatus;
     }
 }
 
