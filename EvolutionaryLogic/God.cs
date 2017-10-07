@@ -73,7 +73,7 @@ namespace EvolutionaryLogic
                 this.MySelector.NaturalSelection(this.Population);
                 for (int j = 0; j < nElitistCount; j++)
                 {
-                    colNewPopulation.Add(this.Population[this.Population.Count - 1 - j].Clone());
+                    colNewPopulation.Add(this.Population[this.Population.Count - 1 - j].Revive());
                 }
             }
             else if (GlobalConfiguration.ApplyElitist)
@@ -98,7 +98,7 @@ namespace EvolutionaryLogic
 
                 for (int j = 0; j < nElitistCount; j++)
                 {
-                    colNewPopulation.Add(Elitists[j].Clone());
+                    colNewPopulation.Add(Elitists[j].Revive());
                 }
             }
         }
@@ -115,7 +115,7 @@ namespace EvolutionaryLogic
                 if (objDNA.GetFitnesss() > BestDNAFitness)
                 {
                     BestDNAFitness = objDNA.GetFitnesss();
-                    this.BestFitness = objDNA;
+                    this.BestFitness = objDNA.Clone();
                 }
             }
 

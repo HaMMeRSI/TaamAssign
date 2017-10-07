@@ -6,11 +6,12 @@ using System.Drawing;
 
 namespace TargetLogics
 {
-    public class CSimpleArtillary: ILive
+    public class CSimpleArtillary: ILive, INextGeneration<CSimpleArtillary>
     {
         public const int ArtilSize = 50;
         public int UID { get; set; }
-        #region Stats
+
+        #region Stats / Static data
 
         public float Range { get; set; }
         public float Damage { get; set; }
@@ -20,17 +21,16 @@ namespace TargetLogics
         public int Accuracy { get; set; }
         public int MaxAccuracyRequired { get; set; }
         public int Importance { get; set; }
+        public Point2D Location { get; set; }
+        public Color MyColor { get; set; }
 
         #endregion
 
-        public Point2D Location { get; set; }
         public float Health { get; set; }
         public int ShotsTaken { get; set; }
         public List<CSimpleArtillary> HittedBy { get; set; }
         public List<int> Targets { get; set; }
 
-        public Color MyColor { get; set; }
-        public Color AttackColor { get; set; }
         private Point2D RenderLoc { get; set; }
 
         #region Builder
@@ -56,6 +56,12 @@ namespace TargetLogics
             return this;
         }
 
+        public CSimpleArtillary SetHittedBy(List<CSimpleArtillary> colCannons)
+        {
+            this.HittedBy = colCannons;
+            return this;
+        }
+
         public CSimpleArtillary SetUID(int UID)
         {
             this.UID = UID;
@@ -64,32 +70,30 @@ namespace TargetLogics
 
         #endregion
 
-        public CSimpleArtillary(float nRange, int nAmmunition, float fDamage, int nPriceForShot, int ForceConstraint, int nAccuracy, int MinAccuracyRequired, int nImportance) :
-            this(nRange, nAmmunition, fDamage, nPriceForShot, ForceConstraint, nAccuracy, MinAccuracyRequired, nImportance, Color.FromArgb(Shared.Next(256), Shared.Next(256), Shared.Next(256)))
+        public CSimpleArtillary(float fRange, int nAmmunition, float fDamage, int nPriceForShot, int ForceConstraint, int nAccuracy, int MaxAccuracyRequired, int nImportance)
+            :this(1, fRange, nAmmunition, 0, fDamage, nPriceForShot, ForceConstraint, nAccuracy, MaxAccuracyRequired, nImportance)
         {
         }
 
-        public CSimpleArtillary(float nRange, int nAmmunition, float fDamage, int nPriceForShot, int ForceConstraint, int nAccuracy, int MaxAccuracyRequired, int nImportance, Color cColor)
+        protected CSimpleArtillary(float fHealth, float fRange, int nAmmunition, int nShotsTaken, float fDamage, int nPriceForShot, int ForceConstraint, int nAccuracy, int MaxAccuracyRequired, int nImportance)
         {
             this.Targets = new List<int>();
             this.HittedBy = new List<CSimpleArtillary>();
-            this.Health = 1;
+            this.Health = fHealth;
             this.Damage = fDamage;
-            this.Range = nRange;
+            this.Range = fRange;
             this.Ammunition = nAmmunition;
-            this.ShotsTaken = 0;
+            this.ShotsTaken = nShotsTaken;
             this.PriceForShot = nPriceForShot;
             this.ForceConstraint = ForceConstraint;
             this.Accuracy = nAccuracy;
             this.MaxAccuracyRequired = MaxAccuracyRequired;
             this.Importance = nImportance;
             this.Location = new Point2D();
-
-            this.AttackColor = cColor;
             this.MyColor = Color.FromArgb(
-                255, 
-                (ForceConstraint & (int)ENUMForces.Air) / (int)ENUMForces.Air * 255, 
-                (ForceConstraint & (int)ENUMForces.Land) / (int)ENUMForces.Land * 255, 
+                255,
+                (ForceConstraint & (int)ENUMForces.Air) / (int)ENUMForces.Air * 255,
+                (ForceConstraint & (int)ENUMForces.Land) / (int)ENUMForces.Land * 255,
                 (ForceConstraint & (int)ENUMForces.Sea) / (int)ENUMForces.Sea * 255);
         }
 
@@ -146,7 +150,16 @@ namespace TargetLogics
 
         public CSimpleArtillary Clone()
         {
-            return (new CSimpleArtillary(this.Range, this.Ammunition, this.Damage, this.PriceForShot, this.ForceConstraint, this.Accuracy, this.MaxAccuracyRequired, this.Importance, this.MyColor))
+            return (new CSimpleArtillary(this.Health, this.Range, this.Ammunition, this.ShotsTaken, this.Damage, this.PriceForShot, this.ForceConstraint, this.Accuracy, this.MaxAccuracyRequired, this.Importance))
+                .SetLocation(this.Location.X, this.Location.Y)
+                .SetUID(this.UID)
+                .SetTargets(new List<int>(this.Targets))
+                .SetHittedBy(new List<CSimpleArtillary>(this.HittedBy));
+        }
+
+        public CSimpleArtillary Revive()
+        {
+            return (new CSimpleArtillary(this.Range, this.Ammunition, this.Damage, this.PriceForShot, this.ForceConstraint, this.Accuracy, this.MaxAccuracyRequired, this.Importance))
                 .SetLocation(this.Location.X, this.Location.Y)
                 .SetUID(this.UID)
                 .SetTargets(new List<int>(this.Targets));
@@ -184,7 +197,7 @@ namespace TargetLogics
             {
                 foreach (CSimpleArtillary Cannon in this.HittedBy)
                 {
-                    Pen pp = new Pen(Cannon.AttackColor, 2);
+                    Pen pp = new Pen(Cannon.MyColor, 2);
                     g.DrawLine(pp, this.CentralizeShoot(this.Location, this.HittedBy.Count > 1), CentralizeShoot(Cannon.Location, false));
                 }
             }
@@ -227,7 +240,8 @@ HP: {1}
 
         public override string ToString()
         {
-            return string.Format("UID: {2}, X: {0}, Y: {1}", this.Location.X, this.Location.Y, this.UID);
+            return string.Format("UID: {0}, HP: {1}, HitBy: {2}, Targets:{3}", this.UID, Health, HittedBy.Count, Targets.Count);
         }
+
     }
 }

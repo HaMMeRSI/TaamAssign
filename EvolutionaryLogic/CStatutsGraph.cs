@@ -11,7 +11,7 @@ namespace EvolutionaryLogic
 {
     public class CStatutsGraph : IDrawable
     {
-        const int X_JUMP = 2;
+        const int X_JUMP = 4;
         const int Y_JUMP = 1000;
         private List<float> BestFitnessHistory { get; set; }
         public float Average { get; set; }

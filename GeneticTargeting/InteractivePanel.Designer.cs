@@ -41,7 +41,7 @@
             this.tbScale.Maximum = 100;
             this.tbScale.Minimum = 1;
             this.tbScale.Name = "tbScale";
-            this.tbScale.Size = new System.Drawing.Size(189, 56);
+            this.tbScale.Size = new System.Drawing.Size(186, 56);
             this.tbScale.TabIndex = 0;
             this.tbScale.TickStyle = System.Windows.Forms.TickStyle.None;
             this.tbScale.Value = 25;

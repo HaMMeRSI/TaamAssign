@@ -107,13 +107,14 @@ namespace TargetLogics
 
         public CSimpleArtillary[] GetEnemyArtillary()
         {
-            CSimpleArtillary[] EnemyArtillary = new CSimpleArtillary[this.EnemiesData.Length];
-            for (int i = 0; i < this.EnemiesData.Length; i++)
-            {
-                EnemyArtillary[i] = this.EnemiesData[i].Clone();
-            }
+            throw new NotImplementedException();
+            //CSimpleArtillary[] EnemyArtillary = new CSimpleArtillary[this.EnemiesData.Length];
+            //for (int i = 0; i < this.EnemiesData.Length; i++)
+            //{
+            //    EnemyArtillary[i] = this.EnemiesData[i].Clone();
+            //}
 
-            return EnemyArtillary;
+            //return EnemyArtillary;
         }
 
         public void Reorder()

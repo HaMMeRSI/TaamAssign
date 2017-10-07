@@ -36,7 +36,7 @@ namespace EvolutionaryLogic
             {
                 if(dna.GetFitnesss() > Average)
                 {
-                    NewPop.Add(dna.Clone());
+                    NewPop.Add(dna.Revive());
                 }
             }
 

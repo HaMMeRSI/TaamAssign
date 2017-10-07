@@ -35,7 +35,7 @@ namespace EvolutionaryLogic
 
             if (Shared.HitChance(GlobalConfiguration.ParentChance / 100))
             {
-                child = Shared.Coin() ? arrParents[0].Clone() : arrParents[1].Clone();
+                child = Shared.Coin() ? arrParents[0].Revive() : arrParents[1].Revive();
             } 
             else
             {

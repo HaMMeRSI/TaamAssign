@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Library;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -54,5 +55,6 @@ namespace EvolutionaryLogic
         public abstract void CalculateFitness();
         protected abstract void Mutate();
         public abstract IDNA Clone();
+        public abstract IDNA Revive();
     }
 }

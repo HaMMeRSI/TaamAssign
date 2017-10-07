@@ -28,10 +28,22 @@ namespace TargetLogics
 
             for (int i = 0; i < this.Genes.Length; i++)
             {
-                this.Genes[i] = Strategy.FriendliesData[i].Clone().Mutate();
+                this.Genes[i] = Strategy.FriendliesData[i].Clone();
             }
 
-            this.Enemies = Strategy.GetEnemyArtillary();
+            //this.Enemies = Strategy.GetEnemyArtillary();
+
+            this.Enemies = Strategy.EnemiesData;
+        }
+
+        private CWorld(TargetingStrategy Strategy, bool isSimple)
+            : base(Strategy.GetFriendlyCount())
+        {
+            this.Strategy = Strategy;
+            this.TotalAttackPrice = 0;
+            this.DeadCount = 0;
+            this.TotalAttackImportance = 0;
+            this.Enemies = new CSimpleArtillary[Strategy.GetEnemyCount()];
         }
 
         #region DNA
@@ -50,6 +62,7 @@ namespace TargetLogics
         public override void CalculateFitness()
         {
             bool blnEndIndicator = false;
+            Strategy.ResetEnemyStatus();
 
             while (!blnEndIndicator)
             {
@@ -65,7 +78,7 @@ namespace TargetLogics
 
             foreach (CSimpleArtillary EnemyCannon in this.Enemies)
             {
-                if (EnemyCannon.HittedBy.Count > 0)
+                if (EnemyCannon.Health <= 0)
                 {
                     foreach (CSimpleArtillary HittedBy in EnemyCannon.HittedBy)
                     {
@@ -121,16 +134,42 @@ namespace TargetLogics
 
         public override IDNA Crossover(IDNA objPartner)
         {
-            IDNA Child = GlobalConfiguration.PartialGenomCrossover ? this.PartialGenomeCrossover(objPartner) : this.CoinCrossover(objPartner);
-            return this.PartialGenomeCrossover(objPartner);
+            return GlobalConfiguration.PartialGenomCrossover ? this.PartialGenomeCrossover(objPartner) : this.CoinCrossover(objPartner);
         }
 
         public override IDNA Clone()
         {
-            CWorld world = new CWorld(this.Strategy);
+            CWorld world = new CWorld(this.Strategy, true);
+            world.TotalAttackImportance = this.TotalAttackImportance;
+            world.TotalAttackPrice = this.TotalAttackPrice;
+            world.DeadCount = this.DeadCount;
+            world.Fitness = this.Fitness;
+
             for (int i = 0; i < this.Genes.Length; i++)
             {
                 world[i] = this[i].Clone();
+            }
+
+            for (int i = 0; i < this.Enemies.Length; i++)
+            {
+                world.Enemies[i] = this.Enemies[i].Clone();
+            }
+
+            return world;
+        }
+
+        public override IDNA Revive()
+        {
+            CWorld world = new CWorld(this.Strategy, true);
+
+            for (int i = 0; i < this.Genes.Length; i++)
+            {
+                world[i] = this[i].Revive();
+            }
+
+            for (int i = 0; i < this.Enemies.Length; i++)
+            {
+                world.Enemies[i] = this.Enemies[i].Revive();
             }
 
             return world;
@@ -177,7 +216,7 @@ namespace TargetLogics
 
             for (int i = 0; i < partner.Genes.Length; i++)
             {
-                child[i] = Shared.Coin() ? this[i].Clone() : partner[i].Clone();
+                child[i] = Shared.Coin() ? this[i].Revive() : partner[i].Revive();
             }
 
             child.Mutate();
@@ -197,7 +236,7 @@ namespace TargetLogics
 
             for (int i = nStart; i < nEnd; i++)
             {
-                child[i] = partner[i].Clone();
+                child[i] = partner[i].Revive();
                 colPassedGenesUIDs.Add(partner[i].UID);
                 nGenesPassed++;
             }
@@ -215,7 +254,7 @@ namespace TargetLogics
                     continue;
                 }
 
-                child[nGeneInsertionPos] = this.Genes[i].Clone();
+                child[nGeneInsertionPos] = this.Genes[i].Revive();
                 nGeneInsertionPos++;
             }
 
