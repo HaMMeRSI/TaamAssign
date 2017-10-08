@@ -1,6 +1,7 @@
 ﻿using Library;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,10 +37,11 @@ namespace EvolutionaryLogic
             if (Shared.HitChance(GlobalConfiguration.ParentChance / 100))
             {
                 child = Shared.Coin() ? arrParents[0].Revive() : arrParents[1].Revive();
-            } 
+            }
             else
             {
                 child = arrParents[0].Crossover(arrParents[1]);
+
             }
 
             return child;

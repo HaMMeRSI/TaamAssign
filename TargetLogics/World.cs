@@ -167,11 +167,7 @@ namespace TargetLogics
                 world[i] = this[i].Revive();
             }
 
-            for (int i = 0; i < this.Enemies.Length; i++)
-            {
-                world.Enemies[i] = this.Enemies[i].Revive();
-            }
-
+            world.Enemies = this.Enemies;
             return world;
         }
 

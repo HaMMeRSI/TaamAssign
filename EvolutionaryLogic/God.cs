@@ -47,8 +47,6 @@ namespace EvolutionaryLogic
                 int nElitilst = (int)(GlobalConfiguration.ApplyElitist ? Math.Max(this.Population.Count * .01f, 1) : 0);
                 this.ChooseElitist(NewPop, nElitilst);
 
-                //List<IDNA> NewPop = this.MySelector.AverageSelection(this.Population, this.AvreageFitness);
-                //NewPop.Add(this.BestFitness.Clone());
                 MatingPool pool = new MatingPool(this.Population, this.AvreageFitness, item => (Math.Pow(item * 100, 3)));
 
                 for (int j = 0; j < GlobalConfiguration.PopulationCount - nElitilst; j++)
@@ -112,6 +110,7 @@ namespace EvolutionaryLogic
             {
                 objDNA.CalculateFitness();
                 TotalFintess += objDNA.GetFitnesss();
+
                 if (objDNA.GetFitnesss() > BestDNAFitness)
                 {
                     BestDNAFitness = objDNA.GetFitnesss();
