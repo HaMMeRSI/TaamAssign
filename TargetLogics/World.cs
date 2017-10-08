@@ -163,11 +163,6 @@ namespace TargetLogics
                 world.Enemies[i].Targets = new int[Strategy.EnemiesData[i].HittedBy.Count];
                 Strategy.EnemiesData[i].HittedBy.CopyTo(world.Enemies[i].Targets);
             }
-            // Attend best fitness
-            //for (int i = 0; i < this.Enemies.Length; i++)
-            //{
-            //    world.Enemies[i] = this.Enemies[i].Clone();
-            //}
 
             return world;
         }
@@ -240,18 +235,16 @@ namespace TargetLogics
 
             int nStart = Shared.Next(this.Genes.Length / 2 + 1);
             int nEnd = nStart + Shared.Next(this.Genes.Length / 2);
-            int nGenesPassed = 0;
             List<int> colPassedGenesUIDs = new List<int>();
 
             for (int i = nStart; i < nEnd; i++)
             {
                 child[i] = partner[i].Clone();
                 colPassedGenesUIDs.Add(partner[i].UID);
-                nGenesPassed++;
             }
 
             int nGeneInsertionPos = 0;
-            for (int i = 0; i < this.Genes.Length && nGeneInsertionPos < this.Genes.Length; i++)
+            for (int i = 0; i < this.Genes.Length; i++)
             {
                 if (nGeneInsertionPos == nStart)
                 {
