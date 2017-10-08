@@ -12,14 +12,12 @@ namespace TargetLogics
     {
         public CWorld BestFitness { get; set; }
         public CMap Terrain { get; set; }
-        public CStrategyManager StrategyManager { get; set; }
         public Dictionary<int, CSimpleArtillary> FriendliesData { get; set; }
         public CSimpleArtillary[] EnemiesData { get; set; }
 
         public TargetingStrategy(int nFriendlyCount, int nEnemyCount)
         {
             this.Terrain = new CMap(GlobalConfiguration.GameSettings.GridSize, 100);
-            this.StrategyManager = new CStrategyManager();
             //this.FriendliesData = new CSimpleArtillary[nFriendlyCount];
             this.EnemiesData = new CSimpleArtillary[nEnemyCount];
             this.FriendliesData = new Dictionary<int, CSimpleArtillary>();
