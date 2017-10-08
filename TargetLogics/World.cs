@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace TargetLogics
 {
-    public class CWorld : DNA<CSimpleArtillary>, ILive
+    public class CWorld : DNA<SlimCannon>, ILive
     {
-        public CSimpleArtillary[] Enemies { get; set; }
         private TargetingStrategy Strategy { get; set; }
+        public SlimCannon[] Enemies { get; set; }
 
         public int TotalAttackPrice { get; set; }
         public int DeadCount { get; set; }
@@ -26,14 +26,11 @@ namespace TargetLogics
             this.DeadCount = 0;
             this.TotalAttackImportance = 0;
 
-            for (int i = 0; i < this.Genes.Length; i++)
+            for (int i = 0; i < Strategy.GetFriendlyCount(); i++)
             {
-                this.Genes[i] = Strategy.FriendliesData[i].Clone();
+                this.Genes[i] = new SlimCannon(Strategy.FriendliesData[i].UID); ;
             }
 
-            //this.Enemies = Strategy.GetEnemyArtillary();
-
-            this.Enemies = Strategy.EnemiesData;
         }
 
         private CWorld(TargetingStrategy Strategy, bool isSimple)
@@ -43,46 +40,54 @@ namespace TargetLogics
             this.TotalAttackPrice = 0;
             this.DeadCount = 0;
             this.TotalAttackImportance = 0;
-            this.Enemies = new CSimpleArtillary[Strategy.GetEnemyCount()];
         }
 
         #region DNA
 
         public override void Execute()
         {
-            foreach (CSimpleArtillary Cannon in this.Genes)
+            foreach (SlimCannon Cannon in this.Genes)
             {
-                if(Cannon.Targets.Count < Cannon.Ammunition)
+                if (Cannon.Targets == null)
                 {
-                    Cannon.ChooseTargets(this.Enemies);
+                    int nAmmo = Strategy.FriendliesData[Cannon.UID].Ammunition;
+                    Cannon.Targets = new int[nAmmo];
+
+                    for (int i = 0; i < nAmmo; i++)
+                    {
+                        Cannon.Targets[i] = Shared.Next(Strategy.EnemiesData.Length);
+                    }
                 }
             }
         }
 
         public override void CalculateFitness()
         {
+            Strategy.ResetStrategyStatus();
+
             bool blnEndIndicator = false;
-            Strategy.ResetEnemyStatus();
+            CSimpleArtillary FCannon;
 
             while (!blnEndIndicator)
             {
                 blnEndIndicator = true;
-                foreach (CSimpleArtillary Cannon in this.Genes)
+                foreach (SlimCannon SCannon in this.Genes)
                 {
-                    this.DeadCount += Cannon.Fire(this.Enemies);
-                    blnEndIndicator &= Cannon.ShotsTaken == Cannon.Ammunition;
+                    FCannon = Strategy.FriendliesData[SCannon.UID];
+                    this.DeadCount += FCannon.Fire(Strategy.EnemiesData, SCannon.Targets);
+                    blnEndIndicator &= FCannon.ShotsTaken == FCannon.Ammunition;
                 }
             }
 
             float DeadFactor = (float)this.DeadCount / this.Strategy.GetEnemyCount();
 
-            foreach (CSimpleArtillary EnemyCannon in this.Enemies)
+            foreach (CSimpleArtillary EnemyCannon in Strategy.EnemiesData)
             {
                 if (EnemyCannon.Health <= 0)
                 {
-                    foreach (CSimpleArtillary HittedBy in EnemyCannon.HittedBy)
+                    foreach (int HittedBy in EnemyCannon.HittedBy)
                     {
-                        this.TotalAttackPrice += HittedBy.PriceForShot;
+                        this.TotalAttackPrice += Strategy.FriendliesData[HittedBy].PriceForShot;
                     }
 
                     this.TotalAttackImportance += EnemyCannon.Importance;
@@ -101,11 +106,11 @@ namespace TargetLogics
         protected override void Mutate()
         {
             bool Mutated = false;
-            foreach (CSimpleArtillary Cannon in this.Genes)
+            foreach (SlimCannon Cannon in this.Genes)
             {
                 if (Shared.HitChance(GlobalConfiguration.MutationChance / 100))
                 {
-                    Cannon.Mutate();
+                    Cannon.Targets = null;
                     Mutated = true;
                 }
             }
@@ -113,7 +118,7 @@ namespace TargetLogics
             if (GlobalConfiguration.PartialGenomCrossover && Shared.HitChance(GlobalConfiguration.MutationChance / 100))
             {
                 int nReplaceWith;
-                CSimpleArtillary Temp;
+                SlimCannon Temp;
                 for (int i = 0; i < this.Genes.Length; i++)
                 {
                     if (Shared.HitChance(.6))
@@ -150,10 +155,19 @@ namespace TargetLogics
                 world[i] = this[i].Clone();
             }
 
-            for (int i = 0; i < this.Enemies.Length; i++)
+            world.Enemies = new SlimCannon[Strategy.EnemiesData.Length];
+            for (int i = 0; i < Strategy.EnemiesData.Length; i++)
             {
-                world.Enemies[i] = this.Enemies[i].Clone();
+                world.Enemies[i] = new SlimCannon(i);
+                world.Enemies[i].Health = Strategy.EnemiesData[i].Health;
+                world.Enemies[i].Targets = new int[Strategy.EnemiesData[i].HittedBy.Count];
+                Strategy.EnemiesData[i].HittedBy.CopyTo(world.Enemies[i].Targets);
             }
+            // Attend best fitness
+            //for (int i = 0; i < this.Enemies.Length; i++)
+            //{
+            //    world.Enemies[i] = this.Enemies[i].Clone();
+            //}
 
             return world;
         }
@@ -164,10 +178,9 @@ namespace TargetLogics
 
             for (int i = 0; i < this.Genes.Length; i++)
             {
-                world[i] = this[i].Revive();
+                world[i] = this[i].Clone();
             }
 
-            world.Enemies = this.Enemies;
             return world;
         }
 
@@ -177,28 +190,28 @@ namespace TargetLogics
 
         public void Draw(Graphics g)
         {
-            foreach (CSimpleArtillary MyCannon in this.Enemies)
-            {
-                MyCannon.Draw(g);
-            }
+            //foreach (CSimpleArtillary MyCannon in this.Enemies)
+            //{
+            //    MyCannon.Draw(g);
+            //}
 
-            foreach (CSimpleArtillary MyCannon in this.Genes)
-            {
-                MyCannon.Draw(g);
-            }
+            //foreach (CSimpleArtillary MyCannon in this.Genes)
+            //{
+            //    MyCannon.Draw(g);
+            //}
         }
 
         public void Update()
         {
-            foreach (CSimpleArtillary MyCannon in this.Enemies)
-            {
-                MyCannon.Update();
-            }
+            //foreach (CSimpleArtillary MyCannon in this.Enemies)
+            //{
+            //    MyCannon.Update();
+            //}
 
-            foreach (CSimpleArtillary MyCannon in this.Genes)
-            {
-                MyCannon.Update();
-            }
+            //foreach (CSimpleArtillary MyCannon in this.Genes)
+            //{
+            //    MyCannon.Update();
+            //}
         }
 
         #endregion
@@ -212,7 +225,7 @@ namespace TargetLogics
 
             for (int i = 0; i < partner.Genes.Length; i++)
             {
-                child[i] = Shared.Coin() ? this[i].Revive() : partner[i].Revive();
+                child[i] = Shared.Coin() ? this[i].Clone() : partner[i].Clone();
             }
 
             child.Mutate();
@@ -232,7 +245,7 @@ namespace TargetLogics
 
             for (int i = nStart; i < nEnd; i++)
             {
-                child[i] = partner[i].Revive();
+                child[i] = partner[i].Clone();
                 colPassedGenesUIDs.Add(partner[i].UID);
                 nGenesPassed++;
             }
@@ -250,7 +263,7 @@ namespace TargetLogics
                     continue;
                 }
 
-                child[nGeneInsertionPos] = this.Genes[i].Revive();
+                child[nGeneInsertionPos] = this.Genes[i].Clone();
                 nGeneInsertionPos++;
             }
 

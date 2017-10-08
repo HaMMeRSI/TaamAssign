@@ -45,7 +45,9 @@
     <Compile Include="ENUMForces.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CSimpleArtillary.cs" />
-    <Compile Include="TargetingStrategy.cs" />
+    <Compile Include="SlimCannon.cs" />
+    <Compile Include="Strategy\StrategyManager.cs" />
+    <Compile Include="Strategy\TargetingStrategy.cs" />
     <Compile Include="World.cs" />
   </ItemGroup>
   <ItemGroup>

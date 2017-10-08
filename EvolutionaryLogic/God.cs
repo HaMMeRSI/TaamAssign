@@ -39,7 +39,7 @@ namespace EvolutionaryLogic
             this.AssessPopulation();
         }
 
-        public void GeneratePopulation(int Generations, IProgress<string> progress)
+        public void GeneratePopulation(int Generations, IProgress<IDNA> progress)
         {
             for (int i = 0; i < Generations; i++)
             {
@@ -60,7 +60,8 @@ namespace EvolutionaryLogic
                 this.GenerationCount++;
                 this.AssessPopulation();
 
-                progress.Report(this.GenerationCount.ToString());
+
+                progress.Report(this.BestFitness);
             }
         }
 

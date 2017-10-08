@@ -8,19 +8,21 @@ using System.Drawing;
 
 namespace TargetLogics
 {
-    public class TargetingStrategy : IDrawable
+    public class TargetingStrategy : ILive
     {
-        public CMap Terrain;
-        public CSimpleArtillary[] FriendliesData;
-        public CSimpleArtillary[] EnemiesData;
-
-        public int FriendliesTotalAmmunition { get; set; }
+        public CWorld BestFitness { get; set; }
+        public CMap Terrain { get; set; }
+        public CStrategyManager StrategyManager { get; set; }
+        public Dictionary<int, CSimpleArtillary> FriendliesData { get; set; }
+        public CSimpleArtillary[] EnemiesData { get; set; }
 
         public TargetingStrategy(int nFriendlyCount, int nEnemyCount)
         {
             this.Terrain = new CMap(GlobalConfiguration.GameSettings.GridSize, 100);
-            this.FriendliesData = new CSimpleArtillary[nFriendlyCount];
+            this.StrategyManager = new CStrategyManager();
+            //this.FriendliesData = new CSimpleArtillary[nFriendlyCount];
             this.EnemiesData = new CSimpleArtillary[nEnemyCount];
+            this.FriendliesData = new Dictionary<int, CSimpleArtillary>();
             GlobalConfiguration.GameData.MaxAttackPrice = 0;
             GlobalConfiguration.GameData.MaxAttackImportance = 0;
             // SHOULD Be replaced by dataSource
@@ -83,62 +85,18 @@ namespace TargetLogics
                 this.EnemiesData[i] = objCannon;
             }
 
-            this.FriendliesTotalAmmunition = 0;
-            foreach (CSimpleArtillary Cannon in this.FriendliesData)
-            {
-                this.FriendliesTotalAmmunition += Cannon.Ammunition;
-            }
-
             GlobalConfiguration.GameData.MaxAttackPrice = GlobalConfiguration.GameData.MaxAttackPrice == 0 ? 1 : GlobalConfiguration.GameData.MaxAttackPrice;
             GlobalConfiguration.GameData.MaxAttackImportance = GlobalConfiguration.GameData.MaxAttackImportance == 0 ? 1 : GlobalConfiguration.GameData.MaxAttackImportance;
         }
 
-        public CSimpleArtillary[] GetMutatedFriendlyArtillary()
-        {
-            CSimpleArtillary[] FriendlyArtillary = new CSimpleArtillary[this.FriendliesData.Length];
-            for (int i = 0; i < this.FriendliesData.Length; i++)
-            {
-                FriendlyArtillary[i] = this.FriendliesData[i].Clone();
-                FriendlyArtillary[i].Mutate();
-            }
-
-            return FriendlyArtillary;
-        }
-
-        public CSimpleArtillary[] GetEnemyArtillary()
-        {
-            throw new NotImplementedException();
-            //CSimpleArtillary[] EnemyArtillary = new CSimpleArtillary[this.EnemiesData.Length];
-            //for (int i = 0; i < this.EnemiesData.Length; i++)
-            //{
-            //    EnemyArtillary[i] = this.EnemiesData[i].Clone();
-            //}
-
-            //return EnemyArtillary;
-        }
-
-        public void Reorder()
-        {
-            if (Shared.HitChance(.05))
-            {
-                int nReplaceWith;
-                CSimpleArtillary Temp;
-                for (int i = 0; i < this.FriendliesData.Length; i++)
-                {
-                    if (Shared.HitChance(.6))
-                    {
-                        nReplaceWith = Shared.Next(this.FriendliesData.Length);
-                        Temp = this.FriendliesData[nReplaceWith];
-                        this.FriendliesData[nReplaceWith] = this.FriendliesData[i];
-                        this.FriendliesData[i] = Temp;
-                    }
-                }
-            }
-        }
-
-        public void ResetEnemyStatus()
+        public void ResetStrategyStatus()
         {
             foreach (CSimpleArtillary Cannon in this.EnemiesData)
+            {
+                Cannon.ResetStatus();
+            }
+
+            foreach (CSimpleArtillary Cannon in this.FriendliesData.Values)
             {
                 Cannon.ResetStatus();
             }
@@ -146,7 +104,7 @@ namespace TargetLogics
 
         public int GetFriendlyCount()
         {
-            return this.FriendliesData.Length;
+            return this.FriendliesData.Count;
         }
 
         public int GetEnemyCount()
@@ -154,32 +112,63 @@ namespace TargetLogics
             return this.EnemiesData.Length;
         }
 
-        public void Draw(Graphics g)
-        {
-            this.Terrain.Draw(g);
-        }
 
         private float CenterizeArtillaryInGrid(double nNum)
         {
             return (float)nNum * this.Terrain.CellSize + this.Terrain.CellSize / 2;
         }
 
-        private bool Contains(CSimpleArtillary[] list, Point2D Target)
+        private bool Contains(Dictionary<int, CSimpleArtillary> collection, Point2D Target)
         {
-            foreach (CSimpleArtillary item in list)
-            {
-                if(item == null)
-                {
-                    return false;
-                }
+            return collection.Values.FirstOrDefault(x => x.Location.Equals(Target)) != null;
+        }
 
-                if(item.Location.Equals(Target))
+        private bool Contains(CSimpleArtillary[] collection, Point2D Target)
+        {
+            return collection.FirstOrDefault(x => x != null && x.Location.Equals(Target)) != null;
+        }
+
+        #region ILive
+
+        public void Draw(Graphics g)
+        {
+            this.Terrain.Draw(g);
+            CSimpleArtillary Cannon;
+
+            foreach (SlimCannon ECannon in this.BestFitness.Enemies)
+            {
+                this.EnemiesData[ECannon.UID].Draw(g);
+                
+                if (ECannon.Targets != null && ECannon.Health <= 0)
                 {
-                    return true;
+                    foreach (int FCannon in ECannon.Targets)
+                    {
+                        Cannon = this.FriendliesData[FCannon];
+                        Pen pp = new Pen(Cannon.MyColor, 2);
+                        g.DrawLine(pp, CSimpleArtillary.CentralizeShoot(this.EnemiesData[ECannon.UID].Location, ECannon.Targets != null), CSimpleArtillary.CentralizeShoot(Cannon.Location, false));
+                    }
                 }
             }
 
-            return false;
+            foreach (CSimpleArtillary MyCannon in this.FriendliesData.Values)
+            {
+                MyCannon.Draw(g);
+            }
         }
+
+        public void Update()
+        {
+            foreach (CSimpleArtillary MyCannon in this.EnemiesData)
+            {
+                MyCannon.Update();
+            }
+
+            foreach (CSimpleArtillary MyCannon in this.FriendliesData.Values)
+            {
+                MyCannon.Update();
+            }
+        }
+
+        #endregion
     }
 }

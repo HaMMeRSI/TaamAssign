@@ -33,11 +33,11 @@ namespace GeneticTargeting
                 if (PopGen?.BestFitness != null)
                 {
                     this.Strategy.Draw(g);
-                    ((CWorld)PopGen.BestFitness).Draw(g);
+                    //((CWorld)PopGen.BestFitness).Draw(g);
                 }
             };
 
-            this.ipStrategy.UpdateFunction = () => ((CWorld)PopGen.BestFitness).Update();
+            this.ipStrategy.UpdateFunction = () => this.Strategy.Update();
 
             this.ipStatus.DrawFunction = (g) =>
             {
@@ -151,7 +151,8 @@ namespace GeneticTargeting
         {
             int cycles = Convert.ToInt32(this.numCycles.Value);
 
-            Progress<string> progress = new Progress<string>(s => {
+            Progress<IDNA> progress = new Progress<IDNA>(world => {
+                Strategy.BestFitness = (CWorld)world;
                 this.UpdateBestFitnessLabels();
                 this.ipStatus.TransformOrigin.X = -PopGen.StatusGraph.GetWidth();
                 this.ipStatus.TransformOrigin.Y = -PopGen.StatusGraph.GetHeight();
@@ -160,7 +161,6 @@ namespace GeneticTargeting
             this.btnGeneratePopulation.Enabled = false;
             this.btnRestrategize.Enabled = false;
             this.btnStart.Enabled = false;
-            this.btnReorder.Enabled = false;
 
             //int n = 3;
             //Task[] tasks = new Task[n];
@@ -175,7 +175,6 @@ namespace GeneticTargeting
             this.btnGeneratePopulation.Enabled = true;
             this.btnRestrategize.Enabled = true;
             this.btnStart.Enabled = true;
-            this.btnReorder.Enabled = true;
 
             this.UpdateBestFitnessLabels();
             this.ipStrategy.Refresh();
@@ -185,9 +184,9 @@ namespace GeneticTargeting
         {
             this.IsStarted = true;
             PopGen = new God(() => new CWorld(Strategy));
+            Strategy.BestFitness = (CWorld)PopGen.BestFitness;
             this.btnGeneratePopulation.Enabled = true;
             this.btnRestrategize.Enabled = true;
-            this.btnReorder.Enabled = true;
             this.btnStart.Text = "Restart!";
 
             this.UpdateBestFitnessLabels();
@@ -199,18 +198,12 @@ namespace GeneticTargeting
             this.Restrategize();
         }
 
-        private void btnReorder_Click(object sender, EventArgs e)
-        {
-            this.Strategy.Reorder();
-            PopGen = new God(() => new CWorld(Strategy));
-            this.UpdateBestFitnessLabels();
-            this.ipStrategy.Refresh();
-        }
 
         private void Restrategize()
         {
             this.Strategy = new TargetingStrategy(GlobalConfiguration.GameSettings.FriendlyCount, GlobalConfiguration.GameSettings.EnemyCount);
             PopGen = new God(() => new CWorld(Strategy));
+            Strategy.BestFitness = (CWorld)PopGen.BestFitness;
             this.btnGeneratePopulation.Enabled = true;
             this.btnStart.Text = "Restart!";
 
@@ -259,7 +252,9 @@ namespace GeneticTargeting
         {
             e.Graphics.Clear(Color.Silver);
             if (PopGen?.BestFitness != null)
+            {
                 PopGen.StatusGraph.Draw(e.Graphics);
+            }
         }
 
         private void timer1_Tick_1(object sender, EventArgs e)

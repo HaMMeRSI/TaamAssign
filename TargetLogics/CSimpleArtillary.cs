@@ -28,8 +28,7 @@ namespace TargetLogics
 
         public float Health { get; set; }
         public int ShotsTaken { get; set; }
-        public List<CSimpleArtillary> HittedBy { get; set; }
-        public List<int> Targets { get; set; }
+        public List<int> HittedBy { get; set; }
 
         private Point2D RenderLoc { get; set; }
 
@@ -50,13 +49,7 @@ namespace TargetLogics
             return this;
         }
 
-        public CSimpleArtillary SetTargets(List<int> colTargets)
-        {
-            this.Targets = colTargets;
-            return this;
-        }
-
-        public CSimpleArtillary SetHittedBy(List<CSimpleArtillary> colCannons)
+        public CSimpleArtillary SetHittedBy(List<int> colCannons)
         {
             this.HittedBy = colCannons;
             return this;
@@ -77,8 +70,7 @@ namespace TargetLogics
 
         protected CSimpleArtillary(float fHealth, float fRange, int nAmmunition, int nShotsTaken, float fDamage, int nPriceForShot, int ForceConstraint, int nAccuracy, int MaxAccuracyRequired, int nImportance)
         {
-            this.Targets = new List<int>();
-            this.HittedBy = new List<CSimpleArtillary>();
+            this.HittedBy = new List<int>();
             this.Health = fHealth;
             this.Damage = fDamage;
             this.Range = fRange;
@@ -98,25 +90,22 @@ namespace TargetLogics
         }
 
 
-        public int Fire(CSimpleArtillary[] colTargets)
+        public int Fire(CSimpleArtillary[] colActualTargets, int[] Targets)
         {
             int IsEnemyDead = 0;
 
-            if (this.Targets.Count > this.ShotsTaken)
+            if (Targets.Length > this.ShotsTaken)
             {
-                CSimpleArtillary currTarget = colTargets[this.Targets[this.ShotsTaken]];
+                CSimpleArtillary currTarget = colActualTargets[Targets[this.ShotsTaken]];
 
-                if (this.CheckFireConstraints(currTarget))
+                if (currTarget.Health > 0 && this.CheckFireConstraints(currTarget))
                 {
-                    if (currTarget.Health > 0)
-                    {
-                        currTarget.Health -= this.Damage;
-                        currTarget.HittedBy.Add(this);
+                    currTarget.Health -= this.Damage;
+                    currTarget.HittedBy.Add(this.UID);
 
-                        if (currTarget.Health <= 0)
-                        {
-                            IsEnemyDead = 1;
-                        }
+                    if (currTarget.Health <= 0)
+                    {
+                        IsEnemyDead = 1;
                     }
                 }
 
@@ -134,42 +123,28 @@ namespace TargetLogics
                 this.Accuracy <= Target.MaxAccuracyRequired;
         }
 
-        public void ChooseTargets(CSimpleArtillary[] colTargets)
-        {
-            for (int i = 0; i < this.Ammunition; i++)
-            {
-                this.Targets.Add(Shared.Next(colTargets.Length));
-            }
-        }
-
-        public CSimpleArtillary Mutate()
-        {
-            this.Targets.Clear();
-            return this;
-        }
-
         public CSimpleArtillary Clone()
         {
             return (new CSimpleArtillary(this.Health, this.Range, this.Ammunition, this.ShotsTaken, this.Damage, this.PriceForShot, this.ForceConstraint, this.Accuracy, this.MaxAccuracyRequired, this.Importance))
                 .SetLocation(this.Location.X, this.Location.Y)
                 .SetUID(this.UID)
-                .SetTargets(new List<int>(this.Targets))
-                .SetHittedBy(new List<CSimpleArtillary>(this.HittedBy));
+                //.SetTargets(new List<int>(this.Targets))
+                .SetHittedBy(new List<int>(this.HittedBy));
         }
 
         public CSimpleArtillary Revive()
         {
             return (new CSimpleArtillary(this.Range, this.Ammunition, this.Damage, this.PriceForShot, this.ForceConstraint, this.Accuracy, this.MaxAccuracyRequired, this.Importance))
                 .SetLocation(this.Location.X, this.Location.Y)
-                .SetUID(this.UID)
-                .SetTargets(new List<int>(this.Targets));
+                .SetUID(this.UID);
+                //.SetTargets(new List<int>(this.Targets));
         }
 
         public void ResetStatus()
         {
             this.Health = 1;
             this.ShotsTaken = 0;
-            this.Targets.Clear();
+            //this.Targets.Clear();
             this.HittedBy.Clear();
         }
 
@@ -193,14 +168,14 @@ namespace TargetLogics
         {
             g.FillEllipse(new SolidBrush(this.MyColor), (float)this.RenderLoc.X, (float)this.RenderLoc.Y, CSimpleArtillary.ArtilSize, CSimpleArtillary.ArtilSize);
 
-            if (this.HittedBy.Count > 0 && this.Health <= 0)
-            {
-                foreach (CSimpleArtillary Cannon in this.HittedBy)
-                {
-                    Pen pp = new Pen(Cannon.MyColor, 2);
-                    g.DrawLine(pp, this.CentralizeShoot(this.Location, this.HittedBy.Count > 1), CentralizeShoot(Cannon.Location, false));
-                }
-            }
+            //if (this.HittedBy.Count > 0 && this.Health <= 0)
+            //{
+            //    foreach (int Cannon in this.HittedBy)
+            //    {
+            //        Pen pp = new Pen(Cannon.MyColor, 2);
+            //        g.DrawLine(pp, this.CentralizeShoot(this.Location, this.HittedBy.Count > 1), CentralizeShoot(Cannon.Location, false));
+            //    }
+            //}
 
             if (this.DrawRange)
             {
@@ -224,7 +199,7 @@ HP: {1}
             }
         }
 
-        private Point2D CentralizeShoot(Point2D Original, bool Randomize)
+        public static Point2D CentralizeShoot(Point2D Original, bool Randomize)
         {
             if (!Randomize)
             {
@@ -240,7 +215,7 @@ HP: {1}
 
         public override string ToString()
         {
-            return string.Format("UID: {0}, HP: {1}, HitBy: {2}, Targets:{3}", this.UID, Health, HittedBy.Count, Targets.Count);
+            return string.Format("UID: {0}, HP: {1}, HitBy: {2}", this.UID, Health, HittedBy.Count);
         }
 
     }

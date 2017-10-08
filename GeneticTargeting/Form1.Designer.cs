@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Library.Point2D point2D3 = new Library.Point2D();
-            Library.Point2D point2D4 = new Library.Point2D();
+            Library.Point2D point2D1 = new Library.Point2D();
+            Library.Point2D point2D2 = new Library.Point2D();
             this.btnGeneratePopulation = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.numCycles = new System.Windows.Forms.NumericUpDown();
@@ -39,7 +39,6 @@
             this.btnStart = new System.Windows.Forms.Button();
             this.lblBestFitness = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.btnReorder = new System.Windows.Forms.Button();
             this.lblTotalImportance = new System.Windows.Forms.Label();
             this.lblBestTotalPrice = new System.Windows.Forms.Label();
             this.lblBestDeadCount = new System.Windows.Forms.Label();
@@ -209,7 +208,6 @@
             // panel1
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.Controls.Add(this.btnReorder);
             this.panel1.Controls.Add(this.lblTotalImportance);
             this.panel1.Controls.Add(this.lblBestTotalPrice);
             this.panel1.Controls.Add(this.lblBestDeadCount);
@@ -225,17 +223,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(433, 426);
             this.panel1.TabIndex = 8;
-            // 
-            // btnReorder
-            // 
-            this.btnReorder.Enabled = false;
-            this.btnReorder.Location = new System.Drawing.Point(7, 127);
-            this.btnReorder.Name = "btnReorder";
-            this.btnReorder.Size = new System.Drawing.Size(102, 44);
-            this.btnReorder.TabIndex = 11;
-            this.btnReorder.Text = "Reorder";
-            this.btnReorder.UseVisualStyleBackColor = true;
-            this.btnReorder.Click += new System.EventHandler(this.btnReorder_Click);
             // 
             // lblTotalImportance
             // 
@@ -267,9 +254,9 @@
             // btnRestrategize
             // 
             this.btnRestrategize.Enabled = false;
-            this.btnRestrategize.Location = new System.Drawing.Point(117, 126);
+            this.btnRestrategize.Location = new System.Drawing.Point(7, 126);
             this.btnRestrategize.Name = "btnRestrategize";
-            this.btnRestrategize.Size = new System.Drawing.Size(312, 45);
+            this.btnRestrategize.Size = new System.Drawing.Size(422, 45);
             this.btnRestrategize.TabIndex = 9;
             this.btnRestrategize.Text = "New Formation";
             this.btnRestrategize.UseVisualStyleBackColor = true;
@@ -869,9 +856,9 @@
             this.ipStrategy.ScaleFactor = 25;
             this.ipStrategy.Size = new System.Drawing.Size(455, 778);
             this.ipStrategy.TabIndex = 10;
-            point2D3.X = 0D;
-            point2D3.Y = 0D;
-            this.ipStrategy.TransformOrigin = point2D3;
+            point2D1.X = 0D;
+            point2D1.Y = 0D;
+            this.ipStrategy.TransformOrigin = point2D1;
             this.ipStrategy.UpdateFunction = null;
             // 
             // ipStatus
@@ -883,9 +870,9 @@
             this.ipStatus.ScaleFactor = 25;
             this.ipStatus.Size = new System.Drawing.Size(447, 286);
             this.ipStatus.TabIndex = 11;
-            point2D4.X = 0D;
-            point2D4.Y = 0D;
-            this.ipStatus.TransformOrigin = point2D4;
+            point2D2.X = 0D;
+            point2D2.Y = 0D;
+            this.ipStatus.TransformOrigin = point2D2;
             this.ipStatus.UpdateFunction = null;
             // 
             // Form1
@@ -997,7 +984,6 @@
         private System.Windows.Forms.NumericUpDown nmImportanceWeight;
         private System.Windows.Forms.Label lblTotalImportance;
         private System.Windows.Forms.CheckBox cbApplyNaturalSelection;
-        private System.Windows.Forms.Button btnReorder;
         private System.Windows.Forms.CheckBox cbPartialGenomCrossover;
         private System.Windows.Forms.Timer timer1;
         private InteractivePanel ipStrategy;
