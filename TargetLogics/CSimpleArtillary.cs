@@ -26,9 +26,6 @@ namespace TargetLogics
 
         #endregion
 
-        public float Health { get; set; }
-        public int ShotsTaken { get; set; }
-
         private Point2D RenderLoc { get; set; }
 
         #region Builder
@@ -57,17 +54,10 @@ namespace TargetLogics
         #endregion
 
         public CSimpleArtillary(float fRange, int nAmmunition, float fDamage, int nPriceForShot, int ForceConstraint, int nAccuracy, int MaxAccuracyRequired, int nImportance)
-            :this(1, fRange, nAmmunition, 0, fDamage, nPriceForShot, ForceConstraint, nAccuracy, MaxAccuracyRequired, nImportance)
         {
-        }
-
-        protected CSimpleArtillary(float fHealth, float fRange, int nAmmunition, int nShotsTaken, float fDamage, int nPriceForShot, int ForceConstraint, int nAccuracy, int MaxAccuracyRequired, int nImportance)
-        {
-            this.Health = fHealth;
             this.Damage = fDamage;
             this.Range = fRange;
             this.Ammunition = nAmmunition;
-            this.ShotsTaken = nShotsTaken;
             this.PriceForShot = nPriceForShot;
             this.ForceConstraint = ForceConstraint;
             this.Accuracy = nAccuracy;
@@ -82,15 +72,15 @@ namespace TargetLogics
         }
 
 
-        public int Fire(CSimpleArtillary[] colActualTargets, SlimEnemy[] SlimEnemies, int[] Targets)
+        public int Fire(CSimpleArtillary[] colActualTargets, SlimEnemy[] SlimEnemies, SlimFriendly Cannon)
         {
             int IsEnemyDead = 0;
 
-            if (Targets.Length > this.ShotsTaken)
+            if (Cannon.Targets.Length > Cannon.ShotsTaken)
             {
-                SlimEnemy currSTarget = SlimEnemies[Targets[this.ShotsTaken]];
+                SlimEnemy currSTarget = SlimEnemies[Cannon.Targets[Cannon.ShotsTaken]];
 
-                if (currSTarget.Health > 0 && this.CheckFireConstraints(colActualTargets[Targets[this.ShotsTaken]]))
+                if (currSTarget.Health > 0 && this.CheckFireConstraints(colActualTargets[Cannon.Targets[Cannon.ShotsTaken]]))
                 {
                     currSTarget.Health -= this.Damage;
                     currSTarget.HittedBy.Add(this.UID);
@@ -101,7 +91,7 @@ namespace TargetLogics
                     }
                 }
 
-                this.ShotsTaken++;
+                Cannon.ShotsTaken++;
             }
 
             return IsEnemyDead;
@@ -117,7 +107,7 @@ namespace TargetLogics
 
         public CSimpleArtillary Clone()
         {
-            return (new CSimpleArtillary(this.Health, this.Range, this.Ammunition, this.ShotsTaken, this.Damage, this.PriceForShot, this.ForceConstraint, this.Accuracy, this.MaxAccuracyRequired, this.Importance))
+            return (new CSimpleArtillary(this.Range, this.Ammunition, this.Damage, this.PriceForShot, this.ForceConstraint, this.Accuracy, this.MaxAccuracyRequired, this.Importance))
                 .SetLocation(this.Location.X, this.Location.Y)
                 .SetUID(this.UID);
                 //.SetTargets(new List<int>(this.Targets))
@@ -129,13 +119,6 @@ namespace TargetLogics
                 .SetLocation(this.Location.X, this.Location.Y)
                 .SetUID(this.UID);
                 //.SetTargets(new List<int>(this.Targets));
-        }
-
-        public void ResetStatus()
-        {
-            this.Health = 1;
-            this.ShotsTaken = 0;
-            //this.Targets.Clear();
         }
 
         #region ILive
@@ -171,14 +154,13 @@ namespace TargetLogics
             {
                 string DataOutput = string.Format(
 @"Damage: {0}
-Importance: {7}
-Ammo: {3}
-Accuracy: {5}
-Max accuracy: {6}
-Price: {4}
-Range: {2}
-HP: {1}
-", this.Damage, this.Health, this.Range, this.Ammunition, this.PriceForShot, this.Accuracy, this.MaxAccuracyRequired, this.Importance);
+Importance: {6}
+Ammo: {2}
+Accuracy: {4}
+Max accuracy: {5}
+Price: {3}
+Range: {1}
+", this.Damage, this.Range, this.Ammunition, this.PriceForShot, this.Accuracy, this.MaxAccuracyRequired, this.Importance);
                 g.FillEllipse(new SolidBrush(Color.FromArgb(127, 255, 0, 0)), new RectangleF((float)this.Location.X - this.Range / 2, (float)this.Location.Y - this.Range / 2, this.Range, this.Range));
                 g.DrawString(DataOutput, new Font("Microsoft Sans Serif", 12), new SolidBrush(Color.White), (float)this.RenderLoc.X-20, (float)this.RenderLoc.Y-45);
             }
@@ -205,7 +187,7 @@ HP: {1}
 
         public override string ToString()
         {
-            return string.Format("UID: {0}, HP: {1}", this.UID, Health);
+            return string.Format("UID: {0}", this.UID);
         }
 
     }

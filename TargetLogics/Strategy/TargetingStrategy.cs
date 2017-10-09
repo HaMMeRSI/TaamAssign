@@ -92,19 +92,6 @@ namespace TargetLogics
             this.FriendliesData = new Dictionary<int, CSimpleArtillary>();
         }
 
-        public void ResetStrategyStatus()
-        {
-            foreach (CSimpleArtillary Cannon in this.EnemiesData)
-            {
-                Cannon.ResetStatus();
-            }
-
-            foreach (CSimpleArtillary Cannon in this.FriendliesData.Values)
-            {
-                Cannon.ResetStatus();
-            }
-        }
-
         public int GetFriendlyCount()
         {
             return this.FriendliesData.Count;

@@ -11,10 +11,12 @@ namespace TargetLogics
     {
         public int UID { get; set; }
         public int[] Targets { get; set; }
+        public int ShotsTaken { get; set; }
 
         public SlimFriendly(int UID)
         {
             this.UID = UID;
+            this.ShotsTaken = 0;
         }
 
         public SlimFriendly Clone()

@@ -70,24 +70,46 @@ namespace TargetLogics
         public override void CalculateFitness()
         {
             TargetingStrategy ExecutedStrategy = CStrategyPool.GetFromPool();
-            ExecutedStrategy.ResetStrategyStatus();
 
-            bool blnEndIndicator = false;
-            CSimpleArtillary FCannon;
-
-            while (!blnEndIndicator)
-            {
-                blnEndIndicator = true;
-                foreach (SlimFriendly SCannon in this.Genes)
-                {
-                    FCannon = ExecutedStrategy.FriendliesData[SCannon.UID];
-                    this.DeadCount += FCannon.Fire(ExecutedStrategy.EnemiesData,this.Enemies, SCannon.Targets);
-                    blnEndIndicator &= FCannon.ShotsTaken == FCannon.Ammunition;
-                }
-            }
+            this.DeadFitness(ExecutedStrategy); 
+            this.OtherFitness(ExecutedStrategy); 
 
             float DeadFactor = (float)this.DeadCount / ExecutedStrategy.GetEnemyCount();
+            double PriceFactor = 1 - ((double)this.TotalAttackPrice / GlobalConfiguration.GameData.MaxAttackPrice);
+            double ImportanceFactor = ((double)this.TotalAttackImportance / GlobalConfiguration.GameData.MaxAttackImportance);
 
+            this.Fitness = (float)
+                (PriceFactor * GlobalConfiguration.GameSettings.PriceWeight + 
+                DeadFactor * GlobalConfiguration.GameSettings.DeadCountWeight +
+                ImportanceFactor * GlobalConfiguration.GameSettings.ImportanceWeight);
+
+            CStrategyPool.Release(ExecutedStrategy);
+        }
+
+        private void DeadFitness(TargetingStrategy ExecutedStrategy)
+        {
+            CSimpleArtillary FCannon;
+            List<SlimFriendly> remains = this.Genes.Select(x => x).ToList();
+
+            while (remains.Count > 0)
+            {
+                for (int i = 0; i < remains.Count; i++)
+                {
+                    SlimFriendly SCannon = remains[i];
+                    FCannon = ExecutedStrategy.FriendliesData[SCannon.UID];
+                    this.DeadCount += FCannon.Fire(ExecutedStrategy.EnemiesData, this.Enemies, SCannon);
+
+                    if(SCannon.ShotsTaken == FCannon.Ammunition)
+                    {
+                        remains.RemoveAt(i);
+                        i--;
+                    }
+                }
+            }
+        }
+
+        private void OtherFitness(TargetingStrategy ExecutedStrategy)
+        {
             foreach (SlimEnemy EnemyCannon in this.Enemies)
             {
                 if (EnemyCannon.Health <= 0)
@@ -100,16 +122,6 @@ namespace TargetLogics
                     this.TotalAttackImportance += ExecutedStrategy.EnemiesData[EnemyCannon.UID].Importance;
                 }
             }
-
-            double PriceFactor = 1 - ((double)this.TotalAttackPrice / GlobalConfiguration.GameData.MaxAttackPrice);
-            double ImportanceFactor = ((double)this.TotalAttackImportance / GlobalConfiguration.GameData.MaxAttackImportance);
-
-            this.Fitness = (float)
-                (PriceFactor * GlobalConfiguration.GameSettings.PriceWeight + 
-                DeadFactor * GlobalConfiguration.GameSettings.DeadCountWeight +
-                ImportanceFactor * GlobalConfiguration.GameSettings.ImportanceWeight);
-
-            CStrategyPool.Release(ExecutedStrategy);
         }
 
         protected override void Mutate()

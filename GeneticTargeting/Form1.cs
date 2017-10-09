@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -177,7 +178,10 @@ namespace GeneticTargeting
 
             };
 
+            Stopwatch w = Stopwatch.StartNew();
             await Task.Factory.StartNew(() => PopGen.GeneratePopulation(cycles, progress), TaskCreationOptions.LongRunning);
+            w.Stop();
+            Debug.WriteLine(w.ElapsedMilliseconds);
 
             this.btnGeneratePopulation.Enabled = true;
             this.btnRestrategize.Enabled = true;

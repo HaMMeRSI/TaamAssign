@@ -117,7 +117,7 @@ namespace EvolutionaryLogic
             }
             if(nRemainder > 0)
             {
-                Assesments[Assesments.Length - 1] = Task.Factory.StartNew(() => this.PartialAssesment(Assesments.Length - 1 * nBulkSize, nChunksRemainder), TaskCreationOptions.LongRunning);
+                Assesments[Assesments.Length - 1] = Task.Factory.StartNew(() => this.PartialAssesment((Assesments.Length - 1) * nBulkSize, nChunksRemainder), TaskCreationOptions.None);
             }
 
             Task.WaitAll(Assesments);
