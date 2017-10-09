@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace TargetLogics
 {
-    public class TargetingStrategy : ILive
+    public class TargetingStrategy : ILive, ICloneable<TargetingStrategy>
     {
         public CWorld BestFitness { get; set; }
         public CMap Terrain { get; set; }
@@ -87,6 +87,11 @@ namespace TargetLogics
             GlobalConfiguration.GameData.MaxAttackImportance = GlobalConfiguration.GameData.MaxAttackImportance == 0 ? 1 : GlobalConfiguration.GameData.MaxAttackImportance;
         }
 
+        private TargetingStrategy()
+        {
+            this.FriendliesData = new Dictionary<int, CSimpleArtillary>();
+        }
+
         public void ResetStrategyStatus()
         {
             foreach (CSimpleArtillary Cannon in this.EnemiesData)
@@ -133,17 +138,17 @@ namespace TargetLogics
             this.Terrain.Draw(g);
             CSimpleArtillary Cannon;
 
-            foreach (SlimCannon ECannon in this.BestFitness.Enemies)
+            foreach (SlimEnemy ECannon in this.BestFitness.Enemies)
             {
                 this.EnemiesData[ECannon.UID].Draw(g);
                 
-                if (ECannon.Targets != null && ECannon.Health <= 0)
+                if (ECannon.HittedBy != null && ECannon.Health <= 0)
                 {
-                    foreach (int FCannon in ECannon.Targets)
+                    foreach (int FCannon in ECannon.HittedBy)
                     {
                         Cannon = this.FriendliesData[FCannon];
                         Pen pp = new Pen(Cannon.MyColor, 2);
-                        g.DrawLine(pp, CSimpleArtillary.CentralizeShoot(this.EnemiesData[ECannon.UID].Location, ECannon.Targets != null), CSimpleArtillary.CentralizeShoot(Cannon.Location, false));
+                        g.DrawLine(pp, CSimpleArtillary.CentralizeShoot(this.EnemiesData[ECannon.UID].Location, ECannon.HittedBy != null), CSimpleArtillary.CentralizeShoot(Cannon.Location, false));
                     }
                 }
             }
@@ -165,6 +170,26 @@ namespace TargetLogics
             {
                 MyCannon.Update();
             }
+        }
+
+        public TargetingStrategy Clone()
+        {
+            TargetingStrategy s = new TargetingStrategy();
+            s.EnemiesData = new CSimpleArtillary[this.EnemiesData.Length];
+            s.Terrain = this.Terrain;
+            s.BestFitness = this.BestFitness;
+
+            foreach (int UID in this.FriendliesData.Keys)
+            {
+                s.FriendliesData[UID] = this.FriendliesData[UID].Clone();
+            }
+
+            for (int i = 0; i < this.EnemiesData.Length; i++)
+            {
+                s.EnemiesData[i] = this.EnemiesData[i].Clone();
+            }
+
+            return s;
         }
 
         #endregion

@@ -7,21 +7,19 @@ using System.Threading.Tasks;
 
 namespace TargetLogics
 {
-    public class SlimCannon: ICloneable<SlimCannon>
+    public class SlimFriendly: ICloneable<SlimFriendly>
     {
         public int UID { get; set; }
         public int[] Targets { get; set; }
-        public float Health { get; set; }
 
-        public SlimCannon(int UID)
+        public SlimFriendly(int UID)
         {
             this.UID = UID;
-            this.Health = 1;
         }
 
-        public SlimCannon Clone()
+        public SlimFriendly Clone()
         {
-            SlimCannon Cannon = new SlimCannon(this.UID);
+            SlimFriendly Cannon = new SlimFriendly(this.UID);
             Cannon.Targets = (int[])Targets.Clone();
 
             return Cannon;
@@ -29,7 +27,7 @@ namespace TargetLogics
 
         public override string ToString()
         {
-            return string.Format("UID: {0}, Targets: {1}, Health: {2}", this.UID, this.Targets?.Length, this.Health);
+            return string.Format("UID: {0}, Targets: {1}", this.UID, this.Targets?.Length);
         }
     }
 }

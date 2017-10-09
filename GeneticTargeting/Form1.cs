@@ -26,6 +26,7 @@ namespace GeneticTargeting
 
             this.DoubleBuffered = true;
             this.Strategy = new TargetingStrategy(GlobalConfiguration.GameSettings.FriendlyCount, GlobalConfiguration.GameSettings.EnemyCount);
+            CStrategyPool.SetStrategy(this.Strategy);
 
             this.ipStrategy.TransformOrigin = new Point2D(-this.Strategy.Terrain.GetWidth() / 2, -this.Strategy.Terrain.GetHeight() / 2);
             this.ipStrategy.DrawFunction = (g) =>
@@ -170,6 +171,12 @@ namespace GeneticTargeting
             //}
 
             //await Task.WhenAll(tasks);
+            Action<IDNA> PopulationAssesment = (x) =>
+            {
+                CWorld world = (CWorld)x;
+
+            };
+
             await Task.Factory.StartNew(() => PopGen.GeneratePopulation(cycles, progress), TaskCreationOptions.LongRunning);
 
             this.btnGeneratePopulation.Enabled = true;
@@ -202,6 +209,7 @@ namespace GeneticTargeting
         private void Restrategize()
         {
             this.Strategy = new TargetingStrategy(GlobalConfiguration.GameSettings.FriendlyCount, GlobalConfiguration.GameSettings.EnemyCount);
+            CStrategyPool.SetStrategy(this.Strategy);
             PopGen = new God(() => new CWorld(Strategy));
             Strategy.BestFitness = (CWorld)PopGen.BestFitness;
             this.btnGeneratePopulation.Enabled = true;

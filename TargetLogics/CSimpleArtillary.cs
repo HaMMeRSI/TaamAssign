@@ -28,7 +28,6 @@ namespace TargetLogics
 
         public float Health { get; set; }
         public int ShotsTaken { get; set; }
-        public List<int> HittedBy { get; set; }
 
         private Point2D RenderLoc { get; set; }
 
@@ -49,12 +48,6 @@ namespace TargetLogics
             return this;
         }
 
-        public CSimpleArtillary SetHittedBy(List<int> colCannons)
-        {
-            this.HittedBy = colCannons;
-            return this;
-        }
-
         public CSimpleArtillary SetUID(int UID)
         {
             this.UID = UID;
@@ -70,7 +63,6 @@ namespace TargetLogics
 
         protected CSimpleArtillary(float fHealth, float fRange, int nAmmunition, int nShotsTaken, float fDamage, int nPriceForShot, int ForceConstraint, int nAccuracy, int MaxAccuracyRequired, int nImportance)
         {
-            this.HittedBy = new List<int>();
             this.Health = fHealth;
             this.Damage = fDamage;
             this.Range = fRange;
@@ -90,20 +82,20 @@ namespace TargetLogics
         }
 
 
-        public int Fire(CSimpleArtillary[] colActualTargets, int[] Targets)
+        public int Fire(CSimpleArtillary[] colActualTargets, SlimEnemy[] SlimEnemies, int[] Targets)
         {
             int IsEnemyDead = 0;
 
             if (Targets.Length > this.ShotsTaken)
             {
-                CSimpleArtillary currTarget = colActualTargets[Targets[this.ShotsTaken]];
+                SlimEnemy currSTarget = SlimEnemies[Targets[this.ShotsTaken]];
 
-                if (currTarget.Health > 0 && this.CheckFireConstraints(currTarget))
+                if (currSTarget.Health > 0 && this.CheckFireConstraints(colActualTargets[Targets[this.ShotsTaken]]))
                 {
-                    currTarget.Health -= this.Damage;
-                    currTarget.HittedBy.Add(this.UID);
+                    currSTarget.Health -= this.Damage;
+                    currSTarget.HittedBy.Add(this.UID);
 
-                    if (currTarget.Health <= 0)
+                    if (currSTarget.Health <= 0)
                     {
                         IsEnemyDead = 1;
                     }
@@ -127,9 +119,8 @@ namespace TargetLogics
         {
             return (new CSimpleArtillary(this.Health, this.Range, this.Ammunition, this.ShotsTaken, this.Damage, this.PriceForShot, this.ForceConstraint, this.Accuracy, this.MaxAccuracyRequired, this.Importance))
                 .SetLocation(this.Location.X, this.Location.Y)
-                .SetUID(this.UID)
+                .SetUID(this.UID);
                 //.SetTargets(new List<int>(this.Targets))
-                .SetHittedBy(new List<int>(this.HittedBy));
         }
 
         public CSimpleArtillary Revive()
@@ -145,7 +136,6 @@ namespace TargetLogics
             this.Health = 1;
             this.ShotsTaken = 0;
             //this.Targets.Clear();
-            this.HittedBy.Clear();
         }
 
         #region ILive
@@ -215,7 +205,7 @@ HP: {1}
 
         public override string ToString()
         {
-            return string.Format("UID: {0}, HP: {1}, HitBy: {2}", this.UID, Health, HittedBy.Count);
+            return string.Format("UID: {0}, HP: {1}", this.UID, Health);
         }
 
     }

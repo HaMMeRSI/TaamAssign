@@ -104,25 +104,52 @@ namespace EvolutionaryLogic
 
         private void AssessPopulation()
         {
+            int nBulkSize = 100;
+            int nChunksCount = this.Population.Count / nBulkSize;
+            int nChunksRemainder = this.Population.Count % nBulkSize;
+            int nRemainder = nChunksRemainder > 0 ? 1 : 0;
+            Task[] Assesments = new Task[nChunksCount + nRemainder];
+
+            for (int i = 0; i < Assesments.Length - nRemainder; i++)
+            {
+                int q = i;
+                Assesments[i] = Task.Factory.StartNew(() => this.PartialAssesment(q * nBulkSize, nBulkSize), TaskCreationOptions.None);
+            }
+            if(nRemainder > 0)
+            {
+                Assesments[Assesments.Length - 1] = Task.Factory.StartNew(() => this.PartialAssesment(Assesments.Length - 1 * nBulkSize, nChunksRemainder), TaskCreationOptions.LongRunning);
+            }
+
+            Task.WaitAll(Assesments);
+            int bestIdx = 0;
             float BestDNAFitness = -2;
             float TotalFintess = 0;
 
-            foreach (IDNA objDNA in this.Population)
+            for (int i = 0; i < this.Population.Count; i++)
             {
-                objDNA.CalculateFitness();
+                IDNA objDNA = this.Population[i];
                 TotalFintess += objDNA.GetFitnesss();
 
                 if (objDNA.GetFitnesss() > BestDNAFitness)
                 {
                     BestDNAFitness = objDNA.GetFitnesss();
-                    this.BestFitness = objDNA.Clone();
+                    bestIdx = i;
                 }
             }
 
+            this.BestFitness = this.Population[bestIdx].Clone();
             this.AvreageFitness = TotalFintess / GlobalConfiguration.PopulationCount;
 
             this.StatusGraph.AddToHistory(BestDNAFitness);
             this.StatusGraph.Average = this.AvreageFitness;
+        }
+
+        private void PartialAssesment(int nStart, int Offset)
+        {
+            for (int i = nStart; i < nStart + Offset; i++)
+            {
+                this.Population[i].CalculateFitness();
+            }
         }
 
         public string PrintAll()
