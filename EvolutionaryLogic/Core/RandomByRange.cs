@@ -31,15 +31,14 @@ namespace EvolutionaryLogic
         public T PickFromRange()
         {
             int nSelectend = Shared.Next((int)this.MyRange[this.MyRange.Count - 1].Item1);
-            for (int i = 0; i < this.MyRange.Count; i++)
+            int i = 0;
+
+            while (nSelectend >= this.MyRange[i].Item1)
             {
-                if(nSelectend <= this.MyRange[i].Item1)
-                {
-                    return this.MyRange[i].Item2;
-                }
+                i++;
             }
 
-            return null;
+            return this.MyRange[i].Item2;
         }
     }
 }

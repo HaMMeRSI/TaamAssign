@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace TargetLogics
 {
-    public class CWorld : DNA<SlimFriendly>, ILive
+    public class CWorld : DNA<SlimFriendly>
     {
         private TargetingStrategy Strategy { get; set; }
         public SlimEnemy[] Enemies { get; set; }
@@ -199,36 +199,6 @@ namespace TargetLogics
             }
 
             return world;
-        }
-
-        #endregion
-
-        #region ILive
-
-        public void Draw(Graphics g)
-        {
-            //foreach (CSimpleArtillary MyCannon in this.Enemies)
-            //{
-            //    MyCannon.Draw(g);
-            //}
-
-            //foreach (CSimpleArtillary MyCannon in this.Genes)
-            //{
-            //    MyCannon.Draw(g);
-            //}
-        }
-
-        public void Update()
-        {
-            //foreach (CSimpleArtillary MyCannon in this.Enemies)
-            //{
-            //    MyCannon.Update();
-            //}
-
-            //foreach (CSimpleArtillary MyCannon in this.Genes)
-            //{
-            //    MyCannon.Update();
-            //}
         }
 
         #endregion

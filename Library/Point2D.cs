@@ -35,6 +35,11 @@ namespace Library
             return (float)Math.Sqrt(Math.Pow(this.X - point.X, 2) + Math.Pow(this.Y - point.Y, 2));
         }
 
+        public double Dot(Point2D point)
+        {
+            return (this.X - point.X) * (this.X - point.X) + (this.Y - point.Y) * (this.Y - point.Y);
+        }
+
         public static implicit operator Point(Point2D p)
         {
             return new Point((int)p.X, (int)p.Y);

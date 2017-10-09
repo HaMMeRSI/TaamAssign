@@ -22,7 +22,8 @@ namespace TargetLogics
         public SlimFriendly Clone()
         {
             SlimFriendly Cannon = new SlimFriendly(this.UID);
-            Cannon.Targets = (int[])Targets.Clone();
+            Cannon.Targets = new int[this.Targets.Length];
+            Buffer.BlockCopy(this.Targets, 0, Cannon.Targets, 0, sizeof(int) * this.Targets.Length);
 
             return Cannon;
         }

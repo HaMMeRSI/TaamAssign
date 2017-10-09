@@ -100,7 +100,7 @@ namespace TargetLogics
         private bool CheckFireConstraints(CSimpleArtillary Target)
         {
             return 
-                this.Location.Distance(Target.Location) <= this.Range / 2 && 
+                this.Location.Dot(Target.Location) <= this.Range * this.Range / 4 && 
                 (Target.ForceConstraint & this.ForceConstraint) > 0 &&
                 this.Accuracy <= Target.MaxAccuracyRequired;
         }
@@ -189,6 +189,5 @@ Range: {1}
         {
             return string.Format("UID: {0}", this.UID);
         }
-
     }
 }
