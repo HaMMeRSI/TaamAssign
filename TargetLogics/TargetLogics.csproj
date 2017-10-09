@@ -45,11 +45,10 @@
     <Compile Include="ENUMForces.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CSimpleArtillary.cs" />
-    <Compile Include="SlimCannon.cs" />
     <Compile Include="Slim\SlimEnemy.cs" />
-    <Compile Include="Strategy\StrageyForces.cs" />
+    <Compile Include="Slim\SlimFriendly.cs" />
     <Compile Include="Strategy\StrategyPool.cs" />
-    <Compile Include="TargetingStrategy.cs" />
+    <Compile Include="Strategy\TargetingStrategy.cs" />
     <Compile Include="World.cs" />
   </ItemGroup>
   <ItemGroup>
