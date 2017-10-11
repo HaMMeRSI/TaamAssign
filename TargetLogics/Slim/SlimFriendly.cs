@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TargetLogics
 {
-    public class SlimFriendly: ICloneable<SlimFriendly>
+    public class SlimFriendly: ICloneable<SlimFriendly>, IIdentifiable
     {
         public int UID { get; set; }
         public int[] Targets { get; set; }

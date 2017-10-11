@@ -47,6 +47,7 @@
     <Compile Include="IGameLoop\ILive.cs" />
     <Compile Include="IGameLoop\IUpdateable.cs" />
     <Compile Include="IInstance\ICloneable.cs" />
+    <Compile Include="IInstance\IIdentifiable.cs" />
     <Compile Include="IInstance\INextGeneration.cs" />
     <Compile Include="IInstance\IRevivable.cs" />
     <Compile Include="Point2D.cs" />

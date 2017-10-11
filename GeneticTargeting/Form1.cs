@@ -26,16 +26,35 @@ namespace GeneticTargeting
             InitializeComponent();
 
             this.DoubleBuffered = true;
-            this.Strategy = new TargetingStrategy(GlobalConfiguration.GameSettings.FriendlyCount, GlobalConfiguration.GameSettings.EnemyCount);
-            CStrategyPool.SetStrategy(this.Strategy);
 
-            this.ipStrategy.TransformOrigin = new Point2D(-this.Strategy.Terrain.GetWidth() / 2, -this.Strategy.Terrain.GetHeight() / 2);
             this.ipStrategy.DrawFunction = (g) =>
             {
                 if (PopGen?.BestFitness != null)
                 {
+                    IWorld BestFitness = (IWorld)PopGen?.BestFitness;
                     this.Strategy.Draw(g);
-                    //((CWorld)PopGen.BestFitness).Draw(g);
+
+                    foreach (SlimEnemy ECannon in BestFitness.Enemies)
+                    {
+                        this.Strategy.EnemiesData[ECannon.UID].Draw(g);
+
+                        if (ECannon.HittedBy != null && ECannon.Health <= 0)
+                        {
+                            foreach (int FCannon in ECannon.HittedBy)
+                            {
+                                Pen pp = new Pen(this.Strategy.FriendliesData[FCannon].MyColor, 2);
+                                g.DrawLine(pp, 
+                                    CSimpleArtillary.CentralizeShoot(this.Strategy.EnemiesData[ECannon.UID].Location, ECannon.HittedBy != null), 
+                                    CSimpleArtillary.CentralizeShoot(this.Strategy.FriendliesData[FCannon].Location, false));
+                            }
+                        }
+                    }
+
+                    foreach (CSimpleArtillary MyCannon in this.Strategy.FriendliesData.Values)
+                    {
+                        MyCannon.Draw(g);
+                    }
+
                 }
             };
 
@@ -53,23 +72,26 @@ namespace GeneticTargeting
         {
             #region Genetic Configuration
 
-            this.tbPopulationSize.Tag = GlobalConfiguration.GetDelegate("PopulationCount");
             this.tbPopulationSize.Value = GlobalConfiguration.PopulationCount;
+            this.tbPopulationSize.Tag = GlobalConfiguration.GetDelegate("PopulationCount");
 
-            this.tbMutationChance.Tag = GlobalConfiguration.GetDelegate("MutationChance");
             this.tbMutationChance.Value = (decimal)GlobalConfiguration.MutationChance;
+            this.tbMutationChance.Tag = GlobalConfiguration.GetDelegate("MutationChance");
 
-            this.tbParentChance.Tag = GlobalConfiguration.GetDelegate("ParentChance");
             this.tbParentChance.Value = (decimal)GlobalConfiguration.ParentChance;
+            this.tbParentChance.Tag = GlobalConfiguration.GetDelegate("ParentChance");
 
-            this.cbApplyElitist.Tag = GlobalConfiguration.GetDelegate("ApplyElitist");
             this.cbApplyElitist.CheckState = GlobalConfiguration.ApplyElitist ? CheckState.Checked : CheckState.Unchecked;
+            this.cbApplyElitist.Tag = GlobalConfiguration.GetDelegate("ApplyElitist");
 
-            this.cbApplyNaturalSelection.Tag = GlobalConfiguration.GetDelegate("ApplyNaturalSelection");
             this.cbApplyNaturalSelection.CheckState = GlobalConfiguration.ApplyNaturalSelection ? CheckState.Checked : CheckState.Unchecked;
+            this.cbApplyNaturalSelection.Tag = GlobalConfiguration.GetDelegate("ApplyNaturalSelection");
 
-            this.cbPartialGenomCrossover.Tag = GlobalConfiguration.GetDelegate("PartialGenomCrossover");
             this.cbPartialGenomCrossover.CheckState = GlobalConfiguration.PartialGenomCrossover ? CheckState.Checked : CheckState.Unchecked;
+            this.cbPartialGenomCrossover.Tag = GlobalConfiguration.GetDelegate("PartialGenomCrossover");
+
+            this.cbSingleTargetGenome.CheckState = GlobalConfiguration.SingleTargetGenome ? CheckState.Checked : CheckState.Unchecked;
+            this.cbSingleTargetGenome.Tag = GlobalConfiguration.GetDelegate("SingleTargetGenome");
             
             #endregion
 
@@ -77,72 +99,72 @@ namespace GeneticTargeting
 
             #region General
 
-            this.tbFriendlyCount.Tag = GlobalConfiguration.GetDelegate("FriendlyCount");
             this.tbFriendlyCount.Value = GlobalConfiguration.GameSettings.FriendlyCount;
+            this.tbFriendlyCount.Tag = GlobalConfiguration.GetDelegate("FriendlyCount");
 
-            this.tbEnemyCount.Tag = GlobalConfiguration.GetDelegate("EnemyCount");
             this.tbEnemyCount.Value = GlobalConfiguration.GameSettings.EnemyCount;
+            this.tbEnemyCount.Tag = GlobalConfiguration.GetDelegate("EnemyCount");
 
-            this.nmGridSize.Tag = GlobalConfiguration.GetDelegate("GridSize");
             this.nmGridSize.Value = GlobalConfiguration.GameSettings.GridSize;
+            this.nmGridSize.Tag = GlobalConfiguration.GetDelegate("GridSize");
 
             #endregion
 
             #region DeadCount
 
-            this.nmMaxDamage.Tag = GlobalConfiguration.GetDelegate("MaxDamage");
             this.nmMaxDamage.Value = (decimal)GlobalConfiguration.GameSettings.MaxDamage;
+            this.nmMaxDamage.Tag = GlobalConfiguration.GetDelegate("MaxDamage");
 
-            this.nmMinDamage.Tag = GlobalConfiguration.GetDelegate("MinDamage");
             this.nmMinDamage.Value = (decimal)GlobalConfiguration.GameSettings.MinDamage;
+            this.nmMinDamage.Tag = GlobalConfiguration.GetDelegate("MinDamage");
 
-            this.nmMaxRadius.Tag = GlobalConfiguration.GetDelegate("MaxRadius");
             this.nmMaxRadius.Value = GlobalConfiguration.GameSettings.MaxRadius;
+            this.nmMaxRadius.Tag = GlobalConfiguration.GetDelegate("MaxRadius");
 
-            this.nmMinRadius.Tag = GlobalConfiguration.GetDelegate("MinRadius");
             this.nmMinRadius.Value = GlobalConfiguration.GameSettings.MinRadius;
+            this.nmMinRadius.Tag = GlobalConfiguration.GetDelegate("MinRadius");
 
-            this.nmMaxAmmunition.Tag = GlobalConfiguration.GetDelegate("MaxAmmunition");
             this.nmMaxAmmunition.Value = GlobalConfiguration.GameSettings.MaxAmmunition;
+            this.nmMaxAmmunition.Tag = GlobalConfiguration.GetDelegate("MaxAmmunition");
 
-            this.nmMinAmmunition.Tag = GlobalConfiguration.GetDelegate("MinAmmunition");
             this.nmMinAmmunition.Value = GlobalConfiguration.GameSettings.MinAmmunition;
+            this.nmMinAmmunition.Tag = GlobalConfiguration.GetDelegate("MinAmmunition");
 
-            this.nmMinAccuracyForShot.Tag = GlobalConfiguration.GetDelegate("MinAccuracyForShot");
             this.nmMinAccuracyForShot.Value = (decimal)GlobalConfiguration.GameSettings.MinAccuracyForShot;
+            this.nmMinAccuracyForShot.Tag = GlobalConfiguration.GetDelegate("MinAccuracyForShot");
 
-            this.nmMaxAccuracyForShot.Tag = GlobalConfiguration.GetDelegate("MaxAccuracyForShot");
             this.nmMaxAccuracyForShot.Value = (decimal)GlobalConfiguration.GameSettings.MaxAccuracyForShot;
+            this.nmMaxAccuracyForShot.Tag = GlobalConfiguration.GetDelegate("MaxAccuracyForShot");
 
             #endregion
 
             #region Price
 
-            this.nmMaxPricePerShot.Tag = GlobalConfiguration.GetDelegate("MaxPricePerShot");
             this.nmMaxPricePerShot.Value = GlobalConfiguration.GameSettings.MaxPricePerShot;
+            this.nmMaxPricePerShot.Tag = GlobalConfiguration.GetDelegate("MaxPricePerShot");
 
-            this.nmMinPricePerShot.Tag = GlobalConfiguration.GetDelegate("MinPricePerShot");
             this.nmMinPricePerShot.Value = GlobalConfiguration.GameSettings.MinPricePerShot;
+            this.nmMinPricePerShot.Tag = GlobalConfiguration.GetDelegate("MinPricePerShot");
 
-            this.nmMaxImportance.Tag = GlobalConfiguration.GetDelegate("MaxImportance");
             this.nmMaxImportance.Value = GlobalConfiguration.GameSettings.MaxImportance;
+            this.nmMaxImportance.Tag = GlobalConfiguration.GetDelegate("MaxImportance");
 
-            this.nmMinImportance.Tag = GlobalConfiguration.GetDelegate("MinImportance");
             this.nmMinImportance.Value = GlobalConfiguration.GameSettings.MinImportance;
+            this.nmMinImportance.Tag = GlobalConfiguration.GetDelegate("MinImportance");
 
             
             #endregion
 
             #region Weights
 
-            this.nmDeadCountWeight.Tag = GlobalConfiguration.GetDelegate("DeadCountWeight");
             this.nmDeadCountWeight.Value = (decimal)GlobalConfiguration.GameSettings.DeadCountWeight;
+            this.nmDeadCountWeight.Tag = GlobalConfiguration.GetDelegate("DeadCountWeight");
 
-            this.nmPriceWeight.Tag = GlobalConfiguration.GetDelegate("PriceWeight");
             this.nmPriceWeight.Value = (decimal)GlobalConfiguration.GameSettings.PriceWeight;
+            this.nmPriceWeight.Tag = GlobalConfiguration.GetDelegate("PriceWeight");
 
-            this.nmImportanceWeight.Tag = GlobalConfiguration.GetDelegate("ImportanceWeight");
             this.nmImportanceWeight.Value = (decimal)GlobalConfiguration.GameSettings.ImportanceWeight;
+            this.nmImportanceWeight.Tag = GlobalConfiguration.GetDelegate("ImportanceWeight");
 
             #endregion
 
@@ -154,7 +176,6 @@ namespace GeneticTargeting
             int cycles = Convert.ToInt32(this.numCycles.Value);
 
             Progress<IDNA> progress = new Progress<IDNA>(world => {
-                Strategy.BestFitness = (CWorld)world;
                 this.UpdateBestFitnessLabels();
                 this.ipStatus.TransformOrigin.X = -PopGen.StatusGraph.GetWidth();
                 this.ipStatus.TransformOrigin.Y = -PopGen.StatusGraph.GetHeight();
@@ -163,20 +184,6 @@ namespace GeneticTargeting
             this.btnGeneratePopulation.Enabled = false;
             this.btnRestrategize.Enabled = false;
             this.btnStart.Enabled = false;
-
-            //int n = 3;
-            //Task[] tasks = new Task[n];
-            //for (int i = 0; i < n; i++)
-            //{
-            //    tasks[i] = Task.Factory.StartNew(() => PopGen.GeneratePopulation(cycles, progress), TaskCreationOptions.LongRunning);
-            //}
-
-            //await Task.WhenAll(tasks);
-            Action<IDNA> PopulationAssesment = (x) =>
-            {
-                CWorld world = (CWorld)x;
-
-            };
 
             Stopwatch w = Stopwatch.StartNew();
             await Task.Factory.StartNew(() => PopGen.GeneratePopulation(cycles, progress), TaskCreationOptions.LongRunning);
@@ -193,15 +200,18 @@ namespace GeneticTargeting
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            this.IsStarted = true;
-            PopGen = new God(() => new CWorld(Strategy));
-            Strategy.BestFitness = (CWorld)PopGen.BestFitness;
+            this.btnStart.Text = "Restart!";
+            if (this.IsStarted)
+            {
+                this.InitPopulation();
+            } 
+            else
+            {
+                this.Restrategize();
+            }
             this.btnGeneratePopulation.Enabled = true;
             this.btnRestrategize.Enabled = true;
-            this.btnStart.Text = "Restart!";
-
-            this.UpdateBestFitnessLabels();
-            this.ipStrategy.Refresh();
+            this.IsStarted = true;
         }
 
         private void btnRestrategize_Click(object sender, EventArgs e)
@@ -209,18 +219,27 @@ namespace GeneticTargeting
             this.Restrategize();
         }
 
-
         private void Restrategize()
         {
             this.Strategy = new TargetingStrategy(GlobalConfiguration.GameSettings.FriendlyCount, GlobalConfiguration.GameSettings.EnemyCount);
+            this.ipStrategy.TransformOrigin = new Point2D(-this.Strategy.Terrain.GetWidth() / 2, -this.Strategy.Terrain.GetHeight() / 2);
             CStrategyPool.SetStrategy(this.Strategy);
-            PopGen = new God(() => new CWorld(Strategy));
-            Strategy.BestFitness = (CWorld)PopGen.BestFitness;
-            this.btnGeneratePopulation.Enabled = true;
-            this.btnStart.Text = "Restart!";
+            this.InitPopulation();
+        }
+
+        private void InitPopulation()
+        {
+            PopGen = new God(this.GetPopulationGenerator());
 
             this.UpdateBestFitnessLabels();
             this.ipStrategy.Refresh();
+        }
+
+        public Func<IDNA> GetPopulationGenerator()
+        {
+            if (!GlobalConfiguration.SingleTargetGenome)
+                return () => new CCannonWorld(Strategy);
+            return () => new COrderedWorld(Strategy);
         }
 
         private void UpdateBestFitnessLabels()
@@ -228,9 +247,9 @@ namespace GeneticTargeting
             this.lblGenerationCount.Text = "Curr gen count: " + PopGen.GenerationCount;
             this.lblAverageFitness.Text = "Average fitness: " + PopGen.AvreageFitness;
             this.lblBestFitness.Text = "Best Fitness: " + PopGen.BestFitness.GetFitnesss();
-            this.lblBestDeadCount.Text = "Best dead count: " + ((CWorld)PopGen.BestFitness).DeadCount;
-            this.lblBestTotalPrice.Text = "Best total price: " + ((CWorld)PopGen.BestFitness).TotalAttackPrice;
-            this.lblTotalImportance.Text = "Best total importance: " + ((CWorld)PopGen.BestFitness).TotalAttackImportance;
+            this.lblBestDeadCount.Text = "Best dead count: " + ((IWorld)PopGen.BestFitness).DeadCount;
+            this.lblBestTotalPrice.Text = "Best total price: " + ((IWorld)PopGen.BestFitness).TotalAttackPrice;
+            this.lblTotalImportance.Text = "Best total importance: " + ((IWorld)PopGen.BestFitness).TotalAttackImportance;
         }
 
         private void tbConfig_TextChanged(object sender, EventArgs e)

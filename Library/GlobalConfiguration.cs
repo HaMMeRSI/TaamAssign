@@ -16,6 +16,7 @@ namespace Library
         public static bool ApplyElitist = true; 
         public static bool ApplyNaturalSelection = true;
         public static bool PartialGenomCrossover = false;
+        public static bool SingleTargetGenome = false;
         
         private static Dictionary<string, Action<object>> Delegates = new Dictionary<string, Action<object>>();
 
@@ -27,6 +28,7 @@ namespace Library
             Delegates["ApplyElitist"] = (value) => ApplyElitist = Convert.ToBoolean(value);
             Delegates["ApplyNaturalSelection"] = (value) => ApplyNaturalSelection = Convert.ToBoolean(value);
             Delegates["PartialGenomCrossover"] = (value) => PartialGenomCrossover = Convert.ToBoolean(value);
+            Delegates["SingleTargetGenome"] = (value) => SingleTargetGenome = Convert.ToBoolean(value);
         }
 
         public static Action<object> GetDelegate(string Name)
@@ -40,6 +42,7 @@ namespace Library
         {
             public static int MaxAttackPrice = 1;
             public static int MaxAttackImportance = 1;
+            public static int TotalAttackAmmo = 0;
         }
 
         public class GameSettings

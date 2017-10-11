@@ -92,6 +92,7 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.ipStrategy = new GeneticTargeting.InteractivePanel();
             this.ipStatus = new GeneticTargeting.InteractivePanel();
+            this.cbSingleTargetGenome = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numCycles)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbMutationChance)).BeginInit();
@@ -324,6 +325,7 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage1.Controls.Add(this.cbSingleTargetGenome);
             this.tabPage1.Controls.Add(this.cbPartialGenomCrossover);
             this.tabPage1.Controls.Add(this.cbApplyNaturalSelection);
             this.tabPage1.Controls.Add(this.cbApplyElitist);
@@ -856,8 +858,6 @@
             this.ipStrategy.ScaleFactor = 25;
             this.ipStrategy.Size = new System.Drawing.Size(455, 778);
             this.ipStrategy.TabIndex = 10;
-            point2D1.X = 0D;
-            point2D1.Y = 0D;
             this.ipStrategy.TransformOrigin = point2D1;
             this.ipStrategy.UpdateFunction = null;
             // 
@@ -870,10 +870,19 @@
             this.ipStatus.ScaleFactor = 25;
             this.ipStatus.Size = new System.Drawing.Size(447, 286);
             this.ipStatus.TabIndex = 11;
-            point2D2.X = 0D;
-            point2D2.Y = 0D;
             this.ipStatus.TransformOrigin = point2D2;
             this.ipStatus.UpdateFunction = null;
+            // 
+            // cbSingleTargetGenome
+            // 
+            this.cbSingleTargetGenome.AutoSize = true;
+            this.cbSingleTargetGenome.Location = new System.Drawing.Point(169, 183);
+            this.cbSingleTargetGenome.Name = "cbSingleTargetGenome";
+            this.cbSingleTargetGenome.Size = new System.Drawing.Size(165, 21);
+            this.cbSingleTargetGenome.TabIndex = 5;
+            this.cbSingleTargetGenome.Text = "Single target genome";
+            this.cbSingleTargetGenome.UseVisualStyleBackColor = true;
+            this.cbSingleTargetGenome.CheckedChanged += new System.EventHandler(this.cbConfig_TextChanged);
             // 
             // Form1
             // 
@@ -988,6 +997,7 @@
         private System.Windows.Forms.Timer timer1;
         private InteractivePanel ipStrategy;
         private InteractivePanel ipStatus;
+        private System.Windows.Forms.CheckBox cbSingleTargetGenome;
     }
 }
 

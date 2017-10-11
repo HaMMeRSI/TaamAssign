@@ -45,11 +45,16 @@
     <Compile Include="ENUMForces.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CSimpleArtillary.cs" />
+    <Compile Include="Slim\SingleTargetFriendly.cs" />
     <Compile Include="Slim\SlimEnemy.cs" />
     <Compile Include="Slim\SlimFriendly.cs" />
     <Compile Include="Strategy\StrategyPool.cs" />
     <Compile Include="Strategy\TargetingStrategy.cs" />
-    <Compile Include="World.cs" />
+    <Compile Include="World\BaseWorld.cs" />
+    <Compile Include="World\CCannonWorld.cs" />
+    <Compile Include="World\COrderedWorld.cs" />
+    <Compile Include="World\AWorld.cs" />
+    <Compile Include="World\IWorld.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EvolutionaryLogic\EvolutionaryLogic.csproj">

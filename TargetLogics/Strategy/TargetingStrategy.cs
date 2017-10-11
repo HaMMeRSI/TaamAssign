@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using EvolutionaryLogic;
 
 namespace TargetLogics
 {
     public class TargetingStrategy : ILive, ICloneable<TargetingStrategy>
     {
-        public CWorld BestFitness { get; set; }
         public CMap Terrain { get; set; }
         public Dictionary<int, CSimpleArtillary> FriendliesData { get; set; }
         public CSimpleArtillary[] EnemiesData { get; set; }
@@ -23,6 +23,7 @@ namespace TargetLogics
             this.FriendliesData = new Dictionary<int, CSimpleArtillary>();
             GlobalConfiguration.GameData.MaxAttackPrice = 0;
             GlobalConfiguration.GameData.MaxAttackImportance = 0;
+            GlobalConfiguration.GameData.TotalAttackAmmo = 0;
             // SHOULD Be replaced by dataSource
             for (int UIDCoutner = 0; UIDCoutner < nFriendlyCount; UIDCoutner++)
             {
@@ -47,6 +48,7 @@ namespace TargetLogics
                 ForceConstraints |= Shared.HitChance(.6) ? (int)ENUMForces.Air : 0;
                 ForceConstraints |= Shared.HitChance(.6) ? (int)ENUMForces.Sea : 0;
                 GlobalConfiguration.GameData.MaxAttackPrice += PricePerShot * Ammo;
+                GlobalConfiguration.GameData.TotalAttackAmmo += Ammo;
                 CSimpleArtillary objCannon = new CSimpleArtillary(Range, Ammo, Damage, PricePerShot, ForceConstraints, Accuracy, MinAccuracy, 1);
                 objCannon
                     .SetLocation(point).
@@ -123,27 +125,6 @@ namespace TargetLogics
         public void Draw(Graphics g)
         {
             this.Terrain.Draw(g);
-            CSimpleArtillary Cannon;
-
-            foreach (SlimEnemy ECannon in this.BestFitness.Enemies)
-            {
-                this.EnemiesData[ECannon.UID].Draw(g);
-                
-                if (ECannon.HittedBy != null && ECannon.Health <= 0)
-                {
-                    foreach (int FCannon in ECannon.HittedBy)
-                    {
-                        Cannon = this.FriendliesData[FCannon];
-                        Pen pp = new Pen(Cannon.MyColor, 2);
-                        g.DrawLine(pp, CSimpleArtillary.CentralizeShoot(this.EnemiesData[ECannon.UID].Location, ECannon.HittedBy != null), CSimpleArtillary.CentralizeShoot(Cannon.Location, false));
-                    }
-                }
-            }
-
-            foreach (CSimpleArtillary MyCannon in this.FriendliesData.Values)
-            {
-                MyCannon.Draw(g);
-            }
         }
 
         public void Update()
@@ -164,7 +145,6 @@ namespace TargetLogics
             TargetingStrategy s = new TargetingStrategy();
             s.EnemiesData = new CSimpleArtillary[this.EnemiesData.Length];
             s.Terrain = this.Terrain;
-            s.BestFitness = this.BestFitness;
 
             foreach (int UID in this.FriendliesData.Keys)
             {

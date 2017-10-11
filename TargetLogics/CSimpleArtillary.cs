@@ -72,26 +72,42 @@ namespace TargetLogics
         }
 
 
-        public int Fire(CSimpleArtillary[] colActualTargets, SlimEnemy[] SlimEnemies, SlimFriendly Cannon)
+        public int Fire(CSimpleArtillary ActualTargets, SlimEnemy SlimEnemy, SlimFriendly Cannon)
         {
             int IsEnemyDead = 0;
 
             if (Cannon.Targets.Length > Cannon.ShotsTaken)
             {
-                SlimEnemy currSTarget = SlimEnemies[Cannon.Targets[Cannon.ShotsTaken]];
-
-                if (currSTarget.Health > 0 && this.CheckFireConstraints(colActualTargets[Cannon.Targets[Cannon.ShotsTaken]]))
+                if (SlimEnemy.Health > 0 && this.CheckFireConstraints(ActualTargets))
                 {
-                    currSTarget.Health -= this.Damage;
-                    currSTarget.HittedBy.Add(this.UID);
+                    SlimEnemy.Health -= this.Damage;
+                    SlimEnemy.HittedBy.Add(this.UID);
 
-                    if (currSTarget.Health <= 0)
+                    if (SlimEnemy.Health <= 0)
                     {
                         IsEnemyDead = 1;
                     }
                 }
 
                 Cannon.ShotsTaken++;
+            }
+
+            return IsEnemyDead;
+        }
+
+        public int Fire(CSimpleArtillary ActualTarget, SlimEnemy SlimEnemy, SingleTargetFriendly Cannon)
+        {
+            int IsEnemyDead = 0;
+
+            if (SlimEnemy.Health > 0 && this.CheckFireConstraints(ActualTarget))
+            {
+                SlimEnemy.Health -= this.Damage;
+                SlimEnemy.HittedBy.Add(Cannon.CannonUID);
+
+                if (SlimEnemy.Health <= 0)
+                {
+                    IsEnemyDead = 1;
+                }
             }
 
             return IsEnemyDead;
@@ -166,8 +182,8 @@ Range: {1}
             }
             else
             {
-                g.DrawString("A: " + this.Ammunition.ToString(), new Font("Microsoft Sans Serif", 12), new SolidBrush(Color.White), (float)this.Location.X - 15, (float)this.Location.Y - 20);
-                g.DrawString("P: " + this.PriceForShot.ToString(), new Font("Microsoft Sans Serif", 12), new SolidBrush(Color.White), (float)this.Location.X - 15, (float)this.Location.Y);
+                g.DrawString("A: " + this.Ammunition.ToString(), new Font("Microsoft Sans Serif", 12), new SolidBrush(Color.Black), (float)this.Location.X - 15, (float)this.Location.Y - 20);
+                g.DrawString("P: " + this.PriceForShot.ToString(), new Font("Microsoft Sans Serif", 12), new SolidBrush(Color.Black), (float)this.Location.X - 15, (float)this.Location.Y);
             }
         }
 
