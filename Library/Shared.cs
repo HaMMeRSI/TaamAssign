@@ -42,5 +42,20 @@ namespace Library
             int tMinMax = Math.Max(Value, Min);
             return Math.Min(tMinMax, Max);
         }
+
+        public static long NextLong(long max)
+        {
+            ulong uRange = (ulong)max;
+            ulong ulongRand;
+
+            do
+            {
+                byte[] buf = new byte[8];
+                rnd.NextBytes(buf);
+                ulongRand = (ulong)BitConverter.ToInt64(buf, 0);
+            } while (ulongRand > ulong.MaxValue - ((ulong.MaxValue % uRange) + 1) % uRange);
+
+            return (long)(ulongRand % uRange);
+        }
     }
 }

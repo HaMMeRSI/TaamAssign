@@ -11,8 +11,8 @@ namespace Library
         #region Genetic configuration
 
         public static int PopulationCount = 500;
-        public static float MutationChance = 7f;
-        public static float ParentChance = 10f;
+        public static float MutationChance = 1f;
+        public static float ParentChance = 0;
         public static bool ApplyElitist = true; 
         public static bool ApplyNaturalSelection = true;
         public static bool PartialGenomCrossover = false;

@@ -13,7 +13,7 @@ namespace EvolutionaryLogic
         public RandomByRange<IDNA> MyMatingPool { get; set; }
         public float AverageFitness { get; set; }
 
-        public MatingPool(List<IDNA> Population, float AverageFitness, Func<double, double> funcOptimaizer)
+        public MatingPool(List<IDNA> Population, float AverageFitness)
         {
             this.AverageFitness = AverageFitness;
             this.MyMatingPool = new RandomByRange<IDNA>();
@@ -25,7 +25,13 @@ namespace EvolutionaryLogic
                 {
                     n = Shared.Next(1);
                 }
-                this.MyMatingPool.AddToRange(n, Population[i], funcOptimaizer);
+                Func<double, long> optimizationFunc = (item) => (long)(Math.Pow(item * 100, 3));
+                if (GlobalConfiguration.ApplyNaturalSelection)
+                {
+                    optimizationFunc = (item) => (long)(item * i * i);
+                }
+
+                this.MyMatingPool.AddToRange(n, Population[i], optimizationFunc);
             }
         }
 
