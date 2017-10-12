@@ -41,9 +41,9 @@ namespace EvolutionaryLogic
             this.MyRange.Add(item);
         }
 
-        public T PickFromRange()
+        public T Pick()
         {
-            long nSelectend = Shared.NextLong((long)this.MyRange[this.MyRange.Count - 1].Range);
+            long nSelectend = Shared.NextLong(this.MyRange[this.MyRange.Count - 1].Range);
             int i = 0;
 
             while (nSelectend >= this.MyRange[i].Range)

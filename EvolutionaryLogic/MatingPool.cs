@@ -45,7 +45,6 @@ namespace EvolutionaryLogic
             else
             {
                 child = arrParents[0].Crossover(arrParents[1]);
-
             }
 
             return child;
@@ -55,8 +54,8 @@ namespace EvolutionaryLogic
         {
             IDNA[] arrParents = new IDNA[2];
 
-            arrParents[0] = this.MyRoulette.PickFromRange();
-            arrParents[1] = this.MyRoulette.PickFromRange();
+            arrParents[0] = this.MyRoulette.Pick();
+            arrParents[1] = this.MyRoulette.Pick();
 
             return arrParents;
         }

@@ -13,7 +13,6 @@ namespace EvolutionaryLogic
         #region Properties
 
         private List<IDNA> Population { get; set; }
-        public PopulationSelector MySelector { get; set; }
 
         public IDNA BestFitness { get; set; }
         public int GenerationCount { get; set; }
@@ -25,7 +24,6 @@ namespace EvolutionaryLogic
         public God(Func<IDNA> PopulationGenerator)
         {
             this.Population = new List<IDNA>();
-            this.MySelector = new PopulationSelector();
             this.GenerationCount = 0;
             this.StatusGraph = new CStatutsGraph();
 
