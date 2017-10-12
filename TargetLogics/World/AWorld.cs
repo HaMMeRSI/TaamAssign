@@ -8,13 +8,12 @@ namespace TargetLogics
 {
     public abstract class AWorld<T> : DNA<T>, IWorld where T : ICloneable<T>, IIdentifiable
     {
-        protected TargetingStrategy Strategy { get; set; }
         public SlimEnemy[] Enemies { get; set; }
         public int TotalAttackPrice { get; set; }
         public int DeadCount { get; set; }
         public int TotalAttackImportance { get; set; }
 
-        public AWorld(TargetingStrategy Strategy, int nGenesCount) : this(Strategy, nGenesCount, true)
+        public AWorld(int nGenesCount) : this(nGenesCount, true)
         {
             for (int i = 0; i < this.Enemies.Length; i++)
             {
@@ -22,13 +21,12 @@ namespace TargetLogics
             }
         }
 
-        protected AWorld(TargetingStrategy Strategy, int nGenesCount, bool isSimple) : base(nGenesCount)
+        protected AWorld(int nGenesCount, bool isSimple) : base(nGenesCount)
         {
-            this.Strategy = Strategy;
             this.TotalAttackPrice = 0;
             this.DeadCount = 0;
             this.TotalAttackImportance = 0;
-            this.Enemies = new SlimEnemy[Strategy.GetEnemyCount()];
+            this.Enemies = new SlimEnemy[CStrategyPool.ActiveStrategy.GetEnemyCount()];
         }
 
 
@@ -37,7 +35,7 @@ namespace TargetLogics
             this.DeadFitness();
             this.OtherFitness();
 
-            float DeadFactor = (float)this.DeadCount / Strategy.GetEnemyCount();
+            float DeadFactor = (float)this.DeadCount / CStrategyPool.ActiveStrategy.GetEnemyCount();
             float PriceFactor = 1 - ((float)this.TotalAttackPrice / GlobalConfiguration.GameData.MaxAttackPrice);
             float ImportanceFactor = ((float)this.TotalAttackImportance / GlobalConfiguration.GameData.MaxAttackImportance);
 
@@ -157,10 +155,10 @@ namespace TargetLogics
                 {
                     foreach (int HittedBy in EnemyCannon.HittedBy)
                     {
-                        this.TotalAttackPrice += Strategy.FriendliesData[HittedBy].PriceForShot;
+                        this.TotalAttackPrice += CStrategyPool.ActiveStrategy.FriendliesData[HittedBy].PriceForShot;
                     }
 
-                    this.TotalAttackImportance += Strategy.EnemiesData[EnemyCannon.UID].Importance;
+                    this.TotalAttackImportance += CStrategyPool.ActiveStrategy.EnemiesData[EnemyCannon.UID].Importance;
                 }
             }
         }

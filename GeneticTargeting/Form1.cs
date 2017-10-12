@@ -18,7 +18,6 @@ namespace GeneticTargeting
     public partial class Form1 : Form
     {
         public static God PopGen { get; set; }
-        public TargetingStrategy Strategy { get; set; }
         public bool IsStarted { get; set; }
 
         public Form1()
@@ -32,25 +31,25 @@ namespace GeneticTargeting
                 if (PopGen?.BestFitness != null)
                 {
                     IWorld BestFitness = (IWorld)PopGen?.BestFitness;
-                    this.Strategy.Draw(g);
+                    CStrategyPool.ActiveStrategy.Draw(g);
 
                     foreach (SlimEnemy ECannon in BestFitness.Enemies)
                     {
-                        this.Strategy.EnemiesData[ECannon.UID].Draw(g);
+                        CStrategyPool.ActiveStrategy.EnemiesData[ECannon.UID].Draw(g);
 
                         if (ECannon.HittedBy != null && ECannon.Health <= 0)
                         {
                             foreach (int FCannon in ECannon.HittedBy)
                             {
-                                Pen pp = new Pen(this.Strategy.FriendliesData[FCannon].MyColor, 2);
+                                Pen pp = new Pen(CStrategyPool.ActiveStrategy.FriendliesData[FCannon].MyColor, 2);
                                 g.DrawLine(pp, 
-                                    CSimpleArtillary.CentralizeShoot(this.Strategy.EnemiesData[ECannon.UID].Location, ECannon.HittedBy != null), 
-                                    CSimpleArtillary.CentralizeShoot(this.Strategy.FriendliesData[FCannon].Location, false));
+                                    CSimpleArtillary.CentralizeShoot(CStrategyPool.ActiveStrategy.EnemiesData[ECannon.UID].Location, ECannon.HittedBy != null), 
+                                    CSimpleArtillary.CentralizeShoot(CStrategyPool.ActiveStrategy.FriendliesData[FCannon].Location, false));
                             }
                         }
                     }
 
-                    foreach (CSimpleArtillary MyCannon in this.Strategy.FriendliesData.Values)
+                    foreach (CSimpleArtillary MyCannon in CStrategyPool.ActiveStrategy.FriendliesData.Values)
                     {
                         MyCannon.Draw(g);
                     }
@@ -58,7 +57,7 @@ namespace GeneticTargeting
                 }
             };
 
-            this.ipStrategy.UpdateFunction = () => this.Strategy.Update();
+            this.ipStrategy.UpdateFunction = () => CStrategyPool.ActiveStrategy.Update();
 
             this.ipStatus.DrawFunction = (g) =>
             {
@@ -221,9 +220,8 @@ namespace GeneticTargeting
 
         private void Restrategize()
         {
-            this.Strategy = new TargetingStrategy(GlobalConfiguration.GameSettings.FriendlyCount, GlobalConfiguration.GameSettings.EnemyCount);
-            this.ipStrategy.TransformOrigin = new Point2D(-this.Strategy.Terrain.GetWidth() / 2, -this.Strategy.Terrain.GetHeight() / 2);
-            CStrategyPool.SetStrategy(this.Strategy);
+            CStrategyPool.CreateStrategy(GlobalConfiguration.GameSettings.FriendlyCount, GlobalConfiguration.GameSettings.EnemyCount);
+            this.ipStrategy.TransformOrigin = new Point2D(-CStrategyPool.ActiveStrategy.Terrain.GetWidth() / 2, -CStrategyPool.ActiveStrategy.Terrain.GetHeight() / 2);
             this.InitPopulation();
         }
 
@@ -238,8 +236,8 @@ namespace GeneticTargeting
         public Func<IDNA> GetPopulationGenerator()
         {
             if (!GlobalConfiguration.SingleTargetGenome)
-                return () => new CCannonWorld(Strategy);
-            return () => new COrderedWorld(Strategy);
+                return () => new CCannonWorld();
+            return () => new COrderedWorld();
         }
 
         private void UpdateBestFitnessLabels()

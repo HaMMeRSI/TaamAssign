@@ -9,18 +9,12 @@ namespace TargetLogics
 {
     public class CStrategyPool
     {
-        private static TargetingStrategy ActiveStrategy { get; set; }
+        public static TargetingStrategy ActiveStrategy { get; private set; }
         private static ConcurrentStack<TargetingStrategy> FreeStrategyPool { get; set; } = new ConcurrentStack<TargetingStrategy>();
 
         public static void CreateStrategy(int nFriendlyCount, int nEnemyCount)
         {
             ActiveStrategy = new TargetingStrategy(nFriendlyCount, nEnemyCount);
-            FreeStrategyPool.Clear();
-        }
-
-        public static void SetStrategy(TargetingStrategy strategy)
-        {
-            ActiveStrategy = strategy;
             FreeStrategyPool.Clear();
         }
 

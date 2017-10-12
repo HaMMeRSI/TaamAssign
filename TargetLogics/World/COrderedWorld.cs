@@ -12,10 +12,10 @@ namespace TargetLogics
     {
         #region CTors
 
-        public COrderedWorld(TargetingStrategy Strategy) : base(Strategy, GlobalConfiguration.GameData.TotalAttackAmmo)
+        public COrderedWorld() : base(GlobalConfiguration.GameData.TotalAttackAmmo)
         {
             int j = 0;
-            foreach (CSimpleArtillary Cannon in Strategy.FriendliesData.Values)
+            foreach (CSimpleArtillary Cannon in CStrategyPool.ActiveStrategy.FriendliesData.Values)
             {
                 for (int i = 0; i < Cannon.Ammunition; i++)
                 {
@@ -26,14 +26,14 @@ namespace TargetLogics
             }
         }
 
-        private COrderedWorld(TargetingStrategy Strategy, bool isSimple)
-            : base(Strategy, GlobalConfiguration.GameData.TotalAttackAmmo, isSimple)
+        private COrderedWorld(bool isSimple)
+            : base(GlobalConfiguration.GameData.TotalAttackAmmo, isSimple)
         {
         }
 
         public override IWorld CreateInstance(bool IsSimple)
         {
-            return IsSimple ? new COrderedWorld(this.Strategy, IsSimple) : new COrderedWorld(this.Strategy);
+            return IsSimple ? new COrderedWorld(IsSimple) : new COrderedWorld();
         }
 
         #endregion
@@ -44,7 +44,7 @@ namespace TargetLogics
             {
                 if (Cannon.Target == -1)
                 {
-                    Cannon.Target = Shared.Next(Strategy.EnemiesData.Length);
+                    Cannon.Target = Shared.Next(CStrategyPool.ActiveStrategy.GetEnemyCount());
                 }
             }
         }
@@ -53,7 +53,8 @@ namespace TargetLogics
         {
             foreach (SingleTargetFriendly SCannon in this.Genes)
             {
-                this.DeadCount += Strategy.FriendliesData[SCannon.CannonUID].Fire(Strategy.EnemiesData[SCannon.Target], this.Enemies[SCannon.Target], SCannon);
+                this.DeadCount += CStrategyPool.ActiveStrategy.FriendliesData[SCannon.CannonUID]
+                                    .Fire(CStrategyPool.ActiveStrategy.EnemiesData[SCannon.Target], this.Enemies[SCannon.Target], SCannon);
             }
         }
 

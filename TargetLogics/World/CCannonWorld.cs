@@ -13,23 +13,23 @@ namespace TargetLogics
     {
         #region CTors
 
-        public CCannonWorld(TargetingStrategy Strategy)
-            : base(Strategy, Strategy.GetFriendlyCount())
+        public CCannonWorld()
+            : base(CStrategyPool.ActiveStrategy.GetFriendlyCount())
         {
-            for (int i = 0; i < Strategy.GetFriendlyCount(); i++)
+            for (int i = 0; i < CStrategyPool.ActiveStrategy.GetFriendlyCount(); i++)
             {
-                this.Genes[i] = new SlimFriendly(Strategy.FriendliesData[i].UID);
+                this.Genes[i] = new SlimFriendly(CStrategyPool.ActiveStrategy.FriendliesData[i].UID);
             }
         }
 
-        private CCannonWorld(TargetingStrategy Strategy, bool isSimple)
-            : base(Strategy, Strategy.GetFriendlyCount(), isSimple)
+        private CCannonWorld(bool isSimple)
+            : base(CStrategyPool.ActiveStrategy.GetFriendlyCount(), isSimple)
         {
         }
 
         public override IWorld CreateInstance(bool IsSimple)
         {
-            return IsSimple ? new CCannonWorld(this.Strategy, IsSimple) : new CCannonWorld(this.Strategy);
+            return IsSimple ? new CCannonWorld(IsSimple) : new CCannonWorld();
         }
 
         #endregion
@@ -42,12 +42,12 @@ namespace TargetLogics
             {
                 if (Cannon.Targets == null)
                 {
-                    int nAmmo = Strategy.FriendliesData[Cannon.UID].Ammunition;
+                    int nAmmo = CStrategyPool.ActiveStrategy.FriendliesData[Cannon.UID].Ammunition;
                     Cannon.Targets = new int[nAmmo];
 
                     for (int i = 0; i < nAmmo; i++)
                     {
-                        Cannon.Targets[i] = Shared.Next(Strategy.EnemiesData.Length);
+                        Cannon.Targets[i] = Shared.Next(CStrategyPool.ActiveStrategy.GetEnemyCount());
                     }
                 }
             }
@@ -63,8 +63,9 @@ namespace TargetLogics
                 for (int i = 0; i < remains.Count; i++)
                 {
                     SlimFriendly SCannon = remains[i];
-                    FCannon = Strategy.FriendliesData[SCannon.UID];
-                    this.DeadCount += FCannon.Fire(Strategy.EnemiesData[SCannon.Targets[SCannon.ShotsTaken]], this.Enemies[SCannon.Targets[SCannon.ShotsTaken]], SCannon);
+                    FCannon = CStrategyPool.ActiveStrategy.FriendliesData[SCannon.UID];
+                    this.DeadCount += FCannon
+                                        .Fire(CStrategyPool.ActiveStrategy.EnemiesData[SCannon.Targets[SCannon.ShotsTaken]], this.Enemies[SCannon.Targets[SCannon.ShotsTaken]], SCannon);
 
                     if (SCannon.ShotsTaken == FCannon.Ammunition)
                     {
