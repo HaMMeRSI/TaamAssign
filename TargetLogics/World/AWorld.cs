@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace TargetLogics
 {
-    public abstract class AWorld<T> : DNA<T>, IWorld where T : ICloneable<T>, IIdentifiable
+    public abstract class AWorld: DNA<ISlim>, IWorld
     {
         public SlimEnemy[] Enemies { get; set; }
         public int TotalAttackPrice { get; set; }
@@ -54,12 +54,12 @@ namespace TargetLogics
 
         public IDNA CoinCrossover(IDNA objPartner)
         {
-            AWorld<T> child = (AWorld<T>)this.CreateInstance(false);
-            AWorld<T> partner = (AWorld<T>)objPartner;
+            AWorld child = (AWorld)this.CreateInstance(false);
+            AWorld partner = (AWorld)objPartner;
 
             for (int i = 0; i < partner.Genes.Length; i++)
             {
-                child[i] = Shared.Coin() ? this[i].Clone() : partner[i].Clone();
+                child[i] = (ISlim)(Shared.Coin() ? this[i].Clone() : partner[i].Clone());
             }
 
             child.Mutate();
@@ -69,8 +69,8 @@ namespace TargetLogics
 
         public IDNA PartialGenomeCrossover(IDNA objPartner)
         {
-            AWorld<T> child = (AWorld<T>)this.CreateInstance(false);
-            AWorld<T> partner = (AWorld<T>)objPartner;
+            AWorld child = (AWorld)this.CreateInstance(false);
+            AWorld partner = (AWorld)objPartner;
 
             int nStart = Shared.Next(this.Genes.Length / 2 + 1);
             int nEnd = nStart + Shared.Next(this.Genes.Length / 2);
@@ -78,7 +78,7 @@ namespace TargetLogics
 
             for (int i = nStart; i < nEnd; i++)
             {
-                child[i] = partner[i].Clone();
+                child[i] = (ISlim)partner[i].Clone();
                 colPassedGenesUIDs.Add(partner[i].UID);
             }
 
@@ -95,7 +95,7 @@ namespace TargetLogics
                     continue;
                 }
 
-                child[nGeneInsertionPos] = this.Genes[i].Clone();
+                child[nGeneInsertionPos] = (ISlim)this.Genes[i].Clone();
                 nGeneInsertionPos++;
             }
 
@@ -108,7 +108,7 @@ namespace TargetLogics
 
         public override IDNA Clone()
         {
-            AWorld<T> world = (AWorld<T>)this.CreateInstance(true);
+            AWorld world = (AWorld)this.CreateInstance(true);
             world.TotalAttackImportance = this.TotalAttackImportance;
             world.TotalAttackPrice = this.TotalAttackPrice;
             world.DeadCount = this.DeadCount;
@@ -116,7 +116,7 @@ namespace TargetLogics
 
             for (int i = 0; i < this.Genes.Length; i++)
             {
-                world[i] = this[i].Clone();
+                world[i] = (ISlim)this[i].Clone();
             }
 
             for (int i = 0; i < this.Enemies.Length; i++)
@@ -129,11 +129,11 @@ namespace TargetLogics
 
         public override IDNA Revive()
         {
-            AWorld<T> world = (AWorld<T>)this.CreateInstance(true);
+            AWorld world = (AWorld)this.CreateInstance(true);
 
             for (int i = 0; i < this.Genes.Length; i++)
             {
-                world[i] = this[i].Clone();
+                world[i] = (ISlim)this[i].Clone();
             }
 
             for (int i = 0; i < this.Enemies.Length; i++)
@@ -142,6 +142,40 @@ namespace TargetLogics
             }
 
             return world;
+        }
+
+        protected override void Mutate()
+        {
+            bool Mutated = false;
+            foreach (ISlim Cannon in this.Genes)
+            {
+                if (Shared.HitChance(GlobalConfiguration.MutationChance / 100))
+                {
+                    Cannon.ResetTarget();
+                    Mutated = true;
+                }
+            }
+
+            if (GlobalConfiguration.PartialGenomCrossover && Shared.HitChance(GlobalConfiguration.MutationChance / 100))
+            {
+                int nReplaceWith;
+                ISlim Temp;
+                for (int i = 0; i < this.Genes.Length; i++)
+                {
+                    if (Shared.HitChance(.6))
+                    {
+                        nReplaceWith = Shared.Next(this.Genes.Length);
+                        Temp = this[nReplaceWith];
+                        this[nReplaceWith] = this[i];
+                        this[i] = Temp;
+                    }
+                }
+            }
+
+            if (Mutated)
+            {
+                this.Execute();
+            }
         }
 
         public abstract IWorld CreateInstance(bool IsSimple);

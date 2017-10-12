@@ -1,8 +1,9 @@
-﻿using Library;
+﻿using System;
+using Library;
 
 namespace TargetLogics
 {
-    public class SingleTargetFriendly : ICloneable<SingleTargetFriendly>, IIdentifiable
+    public class SingleTargetFriendly : ISlim
     {
         public int UID { get; set; }
         public int CannonUID { get; set; }
@@ -15,7 +16,12 @@ namespace TargetLogics
             this.Target = -1;
         }
 
-        public SingleTargetFriendly Clone()
+        public void ResetTarget()
+        {
+            this.Target = -1;
+        }
+
+        public object Clone()
         {
             SingleTargetFriendly Cannon = new SingleTargetFriendly(this.UID, this.CannonUID);
             Cannon.Target = this.Target;

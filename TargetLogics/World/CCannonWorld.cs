@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace TargetLogics
 {
-    public class CCannonWorld : AWorld<SlimFriendly>
+    public class CCannonWorld : AWorld
     {
         #region CTors
 
@@ -56,13 +56,13 @@ namespace TargetLogics
         protected override void DeadFitness()
         {
             CSimpleArtillary FCannon;
-            List<SlimFriendly> remains = this.Genes.Select(x => x).ToList();
+            List<ISlim> remains = this.Genes.Select(x => x).ToList();
 
             while (remains.Count > 0)
             {
                 for (int i = 0; i < remains.Count; i++)
                 {
-                    SlimFriendly SCannon = remains[i];
+                    SlimFriendly SCannon = (SlimFriendly)remains[i];
                     FCannon = CStrategyPool.ActiveStrategy.FriendliesData[SCannon.UID];
                     this.DeadCount += FCannon
                                         .Fire(CStrategyPool.ActiveStrategy.EnemiesData[SCannon.Targets[SCannon.ShotsTaken]], this.Enemies[SCannon.Targets[SCannon.ShotsTaken]], SCannon);
@@ -73,40 +73,6 @@ namespace TargetLogics
                         i--;
                     }
                 }
-            }
-        }
-
-        protected override void Mutate()
-        {
-            bool Mutated = false;
-            foreach (SlimFriendly Cannon in this.Genes)
-            {
-                if (Shared.HitChance(GlobalConfiguration.MutationChance / 100))
-                {
-                    Cannon.Targets = null;
-                    Mutated = true;
-                }
-            }
-
-            if (GlobalConfiguration.PartialGenomCrossover && Shared.HitChance(GlobalConfiguration.MutationChance / 100))
-            {
-                int nReplaceWith;
-                SlimFriendly Temp;
-                for (int i = 0; i < this.Genes.Length; i++)
-                {
-                    if (Shared.HitChance(.6))
-                    {
-                        nReplaceWith = Shared.Next(this.Genes.Length);
-                        Temp = this[nReplaceWith];
-                        this[nReplaceWith] = this[i];
-                        this[i] = Temp;
-                    }
-                }
-            }
-
-            if (Mutated)
-            {
-                this.Execute();
             }
         }
 

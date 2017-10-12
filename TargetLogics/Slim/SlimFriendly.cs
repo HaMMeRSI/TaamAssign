@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TargetLogics
 {
-    public class SlimFriendly: ICloneable<SlimFriendly>, IIdentifiable
+    public class SlimFriendly: ISlim
     {
         public int UID { get; set; }
         public int[] Targets { get; set; }
@@ -19,7 +19,12 @@ namespace TargetLogics
             this.ShotsTaken = 0;
         }
 
-        public SlimFriendly Clone()
+        public void ResetTarget()
+        {
+            this.Targets = null;
+        }
+
+        public object Clone()
         {
             SlimFriendly Cannon = new SlimFriendly(this.UID);
             Cannon.Targets = new int[this.Targets.Length];
