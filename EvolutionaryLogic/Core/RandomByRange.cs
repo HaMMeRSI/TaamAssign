@@ -11,6 +11,11 @@ namespace EvolutionaryLogic
     {
         public T Entity;
         public long Range;
+
+        public override string ToString()
+        {
+            return Range.ToString();
+        }
     }
 
     public class RandomByRange<T> where T: class
@@ -47,6 +52,11 @@ namespace EvolutionaryLogic
             }
 
             return this.MyRange[i].Entity;
+        }
+
+        public void Clear()
+        {
+            this.MyRange.Clear();
         }
     }
 }

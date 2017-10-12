@@ -41,70 +41,22 @@ namespace EvolutionaryLogic
 
         public void GeneratePopulation(int Generations, IProgress<IDNA> progress)
         {
+            MatingPool pool = new MatingPool();
             for (int i = 0; i < Generations; i++)
             {
-                List<IDNA> NewPop = new List<IDNA>();
-                int nElitilst = (int)(GlobalConfiguration.ApplyElitist ? Math.Max(this.Population.Count * .01f, 1) : 0);
-                this.ChooseElitist(NewPop, nElitilst);
-
-                MatingPool pool = new MatingPool(this.Population);
-
-                for (int j = 0; j < GlobalConfiguration.PopulationCount - nElitilst; j++)
-                {
-                    var p = pool.GetChild();
-
-                    NewPop.Add(p);
-                }
-
-                this.Population = NewPop;
+                int nElitilstCount = (int)(GlobalConfiguration.ApplyElitist ? Math.Max(this.Population.Count * .01f, 1) : 0);
+                this.Population = pool.GetEvolvedPopulation(this.Population, nElitilstCount);
                 this.GenerationCount++;
                 this.AssessPopulation();
-
 
                 progress.Report(this.BestFitness);
             }
         }
 
-        public void ChooseElitist(List<IDNA> colNewPopulation, int nElitistCount)
-        {
-            if (GlobalConfiguration.ApplyNaturalSelection)
-            {
-                this.MySelector.NaturalSelection(this.Population);
-                for (int j = 0; j < nElitistCount; j++)
-                {
-                    colNewPopulation.Add(this.Population[this.Population.Count - 1 - j].Revive());
-                }
-            }
-            else if (GlobalConfiguration.ApplyElitist)
-            {
-                IDNA[] Elitists = new IDNA[nElitistCount];
-                for (int j = 0; j < nElitistCount; j++)
-                {
-                    Elitists[j] = this.Population[j];
-                }
-
-                for (int j = nElitistCount; j < this.Population.Count; j++)
-                {
-                    for (int k = 0; k < nElitistCount; k++)
-                    {
-                        if (this.Population[j].GetFitnesss() > Elitists[k].GetFitnesss())
-                        {
-                            Elitists[k] = this.Population[j];
-                            break;
-                        }
-                    }
-                }
-
-                for (int j = 0; j < nElitistCount; j++)
-                {
-                    colNewPopulation.Add(Elitists[j].Revive());
-                }
-            }
-        }
 
         private void AssessPopulation()
         {
-            int nBulkSize = 100;
+            int nBulkSize = 50;
             int nChunksCount = this.Population.Count / nBulkSize;
             int nChunksRemainder = this.Population.Count % nBulkSize;
             int nRemainder = nChunksRemainder > 0 ? 1 : 0;

@@ -11,29 +11,29 @@ namespace EvolutionaryLogic
     public class MatingPool
     {
         public RandomByRange<IDNA> MyRoulette { get; set; }
+        public PopulationSelector MySelector { get; set; }
 
-        public MatingPool(List<IDNA> Population)
+        public MatingPool()
         {
             this.MyRoulette = new RandomByRange<IDNA>();
-
-            for (int i = Population.Count - 1; i >= 0; i--)
-            {
-                double n = Population[i].GetFitnesss();
-                if (n == 0)
-                {
-                    n = Shared.Next(1);
-                }
-                Func<double, long> optimizationFunc = (item) => (long)(Math.Pow(item * 100, 3));
-                if (GlobalConfiguration.ApplyNaturalSelection)
-                {
-                    optimizationFunc = (item) => (long)(item * i * i);
-                }
-
-                this.MyRoulette.AddToRange(n, Population[i], optimizationFunc);
-            }
+            this.MySelector = new PopulationSelector();
         }
 
-        public IDNA GetChild()
+        public List<IDNA> GetEvolvedPopulation(List<IDNA> Population, int nElitilstCount)
+        {
+            List<IDNA> NewPop = new List<IDNA>();
+            NewPop.AddRange(this.ChooseElitist(Population, nElitilstCount));
+            this.InitRoulette(Population);
+
+            for (int j = 0; j < GlobalConfiguration.PopulationCount - nElitilstCount; j++)
+            {
+                NewPop.Add(this.Crossover());
+            }
+
+            return NewPop;
+        }
+
+        public IDNA Crossover()
         {
             IDNA child = null;
             IDNA[] arrParents = this.PickParents();
@@ -59,6 +59,66 @@ namespace EvolutionaryLogic
             arrParents[1] = this.MyRoulette.PickFromRange();
 
             return arrParents;
+        }
+
+        private List<IDNA> ChooseElitist(List<IDNA> Population, int nElitistCount)
+        {
+            List<IDNA> Elitist = new List<IDNA>();
+            if (GlobalConfiguration.ApplyNaturalSelection)
+            {
+                this.MySelector.NaturalSelection(Population);
+                for (int j = 0; j < nElitistCount; j++)
+                {
+                    Elitist.Add(Population[Population.Count - 1 - j].Revive());
+                }
+            }
+            else if (GlobalConfiguration.ApplyElitist)
+            {
+                IDNA[] Elitists = new IDNA[nElitistCount];
+                for (int j = 0; j < nElitistCount; j++)
+                {
+                    Elitists[j] = Population[j];
+                }
+
+                for (int j = nElitistCount; j < Population.Count; j++)
+                {
+                    for (int k = 0; k < nElitistCount; k++)
+                    {
+                        if (Population[j].GetFitnesss() > Elitists[k].GetFitnesss())
+                        {
+                            Elitists[k] = Population[j];
+                            break;
+                        }
+                    }
+                }
+
+                for (int j = 0; j < nElitistCount; j++)
+                {
+                    Elitist.Add(Elitists[j].Revive());
+                }
+            }
+
+            return Elitist;
+        }
+
+        private void InitRoulette(List<IDNA> Population)
+        {
+            this.MyRoulette.Clear();
+            for (int i = Population.Count - 1; i >= 0; i--)
+            {
+                double n = Population[i].GetFitnesss();
+                if (n == 0)
+                {
+                    n = Shared.Next(1);
+                }
+                Func<double, long> optimizationFunc = (item) => (long)(Math.Pow(item * 100, 3));
+                if (GlobalConfiguration.ApplyNaturalSelection)
+                {
+                    optimizationFunc = (item) => (long)(item * i * i);
+                }
+
+                this.MyRoulette.AddToRange(n, Population[i], optimizationFunc);
+            }
         }
     }
 }
