@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Library.Point2D point2D1 = new Library.Point2D();
-            Library.Point2D point2D2 = new Library.Point2D();
+            Library.Point2D point2D5 = new Library.Point2D();
+            Library.Point2D point2D6 = new Library.Point2D();
             this.btnGeneratePopulation = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.numCycles = new System.Windows.Forms.NumericUpDown();
@@ -49,6 +49,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.tbcSettings = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.cbSingleTargetGenome = new System.Windows.Forms.CheckBox();
             this.cbPartialGenomCrossover = new System.Windows.Forms.CheckBox();
             this.cbApplyNaturalSelection = new System.Windows.Forms.CheckBox();
             this.cbApplyElitist = new System.Windows.Forms.CheckBox();
@@ -92,7 +93,9 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.ipStrategy = new GeneticTargeting.InteractivePanel();
             this.ipStatus = new GeneticTargeting.InteractivePanel();
-            this.cbSingleTargetGenome = new System.Windows.Forms.CheckBox();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.nmThreadBulkSize = new System.Windows.Forms.NumericUpDown();
+            this.label12 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numCycles)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbMutationChance)).BeginInit();
@@ -123,6 +126,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.nmMinImportance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nmMaxPricePerShot)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nmMinPricePerShot)).BeginInit();
+            this.tabPage6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nmThreadBulkSize)).BeginInit();
             this.SuspendLayout();
             // 
             // btnGeneratePopulation
@@ -316,6 +321,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbcSettings.Controls.Add(this.tabPage1);
             this.tbcSettings.Controls.Add(this.tabPage2);
+            this.tbcSettings.Controls.Add(this.tabPage6);
             this.tbcSettings.Location = new System.Drawing.Point(924, 448);
             this.tbcSettings.Name = "tbcSettings";
             this.tbcSettings.SelectedIndex = 0;
@@ -341,6 +347,17 @@
             this.tabPage1.Size = new System.Drawing.Size(425, 314);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Configuration";
+            // 
+            // cbSingleTargetGenome
+            // 
+            this.cbSingleTargetGenome.AutoSize = true;
+            this.cbSingleTargetGenome.Location = new System.Drawing.Point(169, 183);
+            this.cbSingleTargetGenome.Name = "cbSingleTargetGenome";
+            this.cbSingleTargetGenome.Size = new System.Drawing.Size(165, 21);
+            this.cbSingleTargetGenome.TabIndex = 5;
+            this.cbSingleTargetGenome.Text = "Single target genome";
+            this.cbSingleTargetGenome.UseVisualStyleBackColor = true;
+            this.cbSingleTargetGenome.CheckedChanged += new System.EventHandler(this.cbConfig_TextChanged);
             // 
             // cbPartialGenomCrossover
             // 
@@ -858,7 +875,7 @@
             this.ipStrategy.ScaleFactor = 25;
             this.ipStrategy.Size = new System.Drawing.Size(455, 778);
             this.ipStrategy.TabIndex = 10;
-            this.ipStrategy.TransformOrigin = point2D1;
+            this.ipStrategy.TransformOrigin = point2D5;
             this.ipStrategy.UpdateFunction = null;
             // 
             // ipStatus
@@ -870,19 +887,56 @@
             this.ipStatus.ScaleFactor = 25;
             this.ipStatus.Size = new System.Drawing.Size(447, 286);
             this.ipStatus.TabIndex = 11;
-            this.ipStatus.TransformOrigin = point2D2;
+            this.ipStatus.TransformOrigin = point2D6;
             this.ipStatus.UpdateFunction = null;
             // 
-            // cbSingleTargetGenome
+            // tabPage6
             // 
-            this.cbSingleTargetGenome.AutoSize = true;
-            this.cbSingleTargetGenome.Location = new System.Drawing.Point(169, 183);
-            this.cbSingleTargetGenome.Name = "cbSingleTargetGenome";
-            this.cbSingleTargetGenome.Size = new System.Drawing.Size(165, 21);
-            this.cbSingleTargetGenome.TabIndex = 5;
-            this.cbSingleTargetGenome.Text = "Single target genome";
-            this.cbSingleTargetGenome.UseVisualStyleBackColor = true;
-            this.cbSingleTargetGenome.CheckedChanged += new System.EventHandler(this.cbConfig_TextChanged);
+            this.tabPage6.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage6.Controls.Add(this.nmThreadBulkSize);
+            this.tabPage6.Controls.Add(this.label12);
+            this.tabPage6.Location = new System.Drawing.Point(4, 25);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Size = new System.Drawing.Size(425, 314);
+            this.tabPage6.TabIndex = 2;
+            this.tabPage6.Text = "Performance";
+            // 
+            // nmThreadBulkSize
+            // 
+            this.nmThreadBulkSize.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.nmThreadBulkSize.Location = new System.Drawing.Point(169, 16);
+            this.nmThreadBulkSize.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.nmThreadBulkSize.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nmThreadBulkSize.Name = "nmThreadBulkSize";
+            this.nmThreadBulkSize.Size = new System.Drawing.Size(248, 22);
+            this.nmThreadBulkSize.TabIndex = 1;
+            this.nmThreadBulkSize.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.nmThreadBulkSize.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(4, 16);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(117, 17);
+            this.label12.TabIndex = 2;
+            this.label12.Text = "Thread bulk size:";
             // 
             // Form1
             // 
@@ -931,6 +985,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.nmMinImportance)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nmMaxPricePerShot)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nmMinPricePerShot)).EndInit();
+            this.tabPage6.ResumeLayout(false);
+            this.tabPage6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nmThreadBulkSize)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -998,6 +1055,9 @@
         private InteractivePanel ipStrategy;
         private InteractivePanel ipStatus;
         private System.Windows.Forms.CheckBox cbSingleTargetGenome;
+        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.NumericUpDown nmThreadBulkSize;
+        private System.Windows.Forms.Label label12;
     }
 }
 

@@ -13,11 +13,11 @@ namespace Library
         public static int PopulationCount = 500;
         public static float MutationChance = 1f;
         public static float ParentChance = 0;
-        public static bool ApplyElitist = true; 
+        public static bool ApplyElitist = true;
         public static bool ApplyNaturalSelection = true;
         public static bool PartialGenomCrossover = false;
         public static bool SingleTargetGenome = false;
-        
+
         private static Dictionary<string, Action<object>> Delegates = new Dictionary<string, Action<object>>();
 
         static GlobalConfiguration()
@@ -99,9 +99,19 @@ namespace Library
 
                 Delegates["MaxPricePerShot"] = (value) => MaxPricePerShot = Convert.ToInt32(value);
                 Delegates["MinPricePerShot"] = (value) => MinPricePerShot = Convert.ToInt32(value);
-                Delegates["DeadCountWeight"] = (value) => { float val = (float)Convert.ToDouble(value); DeadCountWeight = val;};
-                Delegates["PriceWeight"] = (value) => { float val = (float)Convert.ToDouble(value); PriceWeight = val;};
+                Delegates["DeadCountWeight"] = (value) => { float val = (float)Convert.ToDouble(value); DeadCountWeight = val; };
+                Delegates["PriceWeight"] = (value) => { float val = (float)Convert.ToDouble(value); PriceWeight = val; };
                 Delegates["ImportanceWeight"] = (value) => { float val = (float)Convert.ToDouble(value); ImportanceWeight = val; };
+            }
+        }
+
+        public class Performances
+        {
+            public static int ThreadBulkSize = 100;
+
+            static Performances()
+            {
+                Delegates["ThreadBulkSize"] = (value) => ThreadBulkSize = Convert.ToInt32(value);
             }
         }
     }

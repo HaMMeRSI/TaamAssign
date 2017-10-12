@@ -56,20 +56,19 @@ namespace EvolutionaryLogic
 
         private void AssessPopulation()
         {
-            int nBulkSize = 50;
-            int nChunksCount = this.Population.Count / nBulkSize;
-            int nChunksRemainder = this.Population.Count % nBulkSize;
+            int nChunksCount = this.Population.Count / GlobalConfiguration.Performances.ThreadBulkSize;
+            int nChunksRemainder = this.Population.Count % GlobalConfiguration.Performances.ThreadBulkSize;
             int nRemainder = nChunksRemainder > 0 ? 1 : 0;
             Task[] Assesments = new Task[nChunksCount + nRemainder];
 
             for (int i = 0; i < Assesments.Length - nRemainder; i++)
             {
                 int q = i;
-                Assesments[i] = Task.Factory.StartNew(() => this.PartialAssesment(q * nBulkSize, nBulkSize), TaskCreationOptions.None);
+                Assesments[i] = Task.Factory.StartNew(() => this.PartialAssesment(q * GlobalConfiguration.Performances.ThreadBulkSize, GlobalConfiguration.Performances.ThreadBulkSize), TaskCreationOptions.None);
             }
             if(nRemainder > 0)
             {
-                Assesments[Assesments.Length - 1] = Task.Factory.StartNew(() => this.PartialAssesment((Assesments.Length - 1) * nBulkSize, nChunksRemainder), TaskCreationOptions.None);
+                Assesments[Assesments.Length - 1] = Task.Factory.StartNew(() => this.PartialAssesment((Assesments.Length - 1) * GlobalConfiguration.Performances.ThreadBulkSize, nChunksRemainder), TaskCreationOptions.None);
             }
 
             Task.WaitAll(Assesments);

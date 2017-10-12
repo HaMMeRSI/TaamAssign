@@ -168,6 +168,13 @@ namespace GeneticTargeting
             #endregion
 
             #endregion
+
+            #region Performances
+
+            this.nmThreadBulkSize.Value = GlobalConfiguration.Performances.ThreadBulkSize;
+            this.nmThreadBulkSize.Tag = GlobalConfiguration.GetDelegate("ThreadBulkSize");
+            
+            #endregion
         }
 
         private async void btnGeneratePopulation_Click(object sender, EventArgs e)
