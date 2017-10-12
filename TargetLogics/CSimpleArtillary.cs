@@ -126,7 +126,6 @@ namespace TargetLogics
             return (new CSimpleArtillary(this.Range, this.Ammunition, this.Damage, this.PriceForShot, this.ForceConstraint, this.Accuracy, this.MaxAccuracyRequired, this.Importance))
                 .SetLocation(this.Location.X, this.Location.Y)
                 .SetUID(this.UID);
-                //.SetTargets(new List<int>(this.Targets))
         }
 
         public CSimpleArtillary Revive()
@@ -134,7 +133,6 @@ namespace TargetLogics
             return (new CSimpleArtillary(this.Range, this.Ammunition, this.Damage, this.PriceForShot, this.ForceConstraint, this.Accuracy, this.MaxAccuracyRequired, this.Importance))
                 .SetLocation(this.Location.X, this.Location.Y)
                 .SetUID(this.UID);
-                //.SetTargets(new List<int>(this.Targets));
         }
 
         #region ILive

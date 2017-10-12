@@ -8,5 +8,7 @@ namespace TargetLogics
 {
     public interface IStrategyDataSource
     {
+        CSimpleArtillary[] GetFriendlyData();
+        CSimpleArtillary[] GetEnemyData();
     }
 }

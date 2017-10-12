@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Library.Point2D point2D5 = new Library.Point2D();
-            Library.Point2D point2D6 = new Library.Point2D();
+            Library.Point2D point2D3 = new Library.Point2D();
+            Library.Point2D point2D4 = new Library.Point2D();
             this.btnGeneratePopulation = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.numCycles = new System.Windows.Forms.NumericUpDown();
@@ -96,6 +96,7 @@
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.nmThreadBulkSize = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
+            this.cbFixedStrategy = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numCycles)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbMutationChance)).BeginInit();
@@ -875,7 +876,7 @@
             this.ipStrategy.ScaleFactor = 25;
             this.ipStrategy.Size = new System.Drawing.Size(455, 778);
             this.ipStrategy.TabIndex = 10;
-            this.ipStrategy.TransformOrigin = point2D5;
+            this.ipStrategy.TransformOrigin = point2D3;
             this.ipStrategy.UpdateFunction = null;
             // 
             // ipStatus
@@ -887,12 +888,13 @@
             this.ipStatus.ScaleFactor = 25;
             this.ipStatus.Size = new System.Drawing.Size(447, 286);
             this.ipStatus.TabIndex = 11;
-            this.ipStatus.TransformOrigin = point2D6;
+            this.ipStatus.TransformOrigin = point2D4;
             this.ipStatus.UpdateFunction = null;
             // 
             // tabPage6
             // 
             this.tabPage6.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage6.Controls.Add(this.cbFixedStrategy);
             this.tabPage6.Controls.Add(this.nmThreadBulkSize);
             this.tabPage6.Controls.Add(this.label12);
             this.tabPage6.Location = new System.Drawing.Point(4, 25);
@@ -937,6 +939,17 @@
             this.label12.Size = new System.Drawing.Size(117, 17);
             this.label12.TabIndex = 2;
             this.label12.Text = "Thread bulk size:";
+            // 
+            // cbFixedStrategy
+            // 
+            this.cbFixedStrategy.AutoSize = true;
+            this.cbFixedStrategy.Location = new System.Drawing.Point(169, 44);
+            this.cbFixedStrategy.Name = "cbFixedStrategy";
+            this.cbFixedStrategy.Size = new System.Drawing.Size(118, 21);
+            this.cbFixedStrategy.TabIndex = 6;
+            this.cbFixedStrategy.Text = "Fixed strategy";
+            this.cbFixedStrategy.UseVisualStyleBackColor = true;
+            this.cbFixedStrategy.CheckedChanged += new System.EventHandler(this.cbConfig_TextChanged);
             // 
             // Form1
             // 
@@ -1058,6 +1071,7 @@
         private System.Windows.Forms.TabPage tabPage6;
         private System.Windows.Forms.NumericUpDown nmThreadBulkSize;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.CheckBox cbFixedStrategy;
     }
 }
 

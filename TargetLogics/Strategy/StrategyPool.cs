@@ -1,9 +1,5 @@
-﻿using System;
+﻿using Library;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TargetLogics
 {
@@ -12,9 +8,17 @@ namespace TargetLogics
         public static TargetingStrategy ActiveStrategy { get; private set; }
         private static ConcurrentStack<TargetingStrategy> FreeStrategyPool { get; set; } = new ConcurrentStack<TargetingStrategy>();
 
-        public static void CreateStrategy(int nFriendlyCount, int nEnemyCount)
+        public static void CreateRandomStrategy(CMap Terrain)
         {
-            ActiveStrategy = new TargetingStrategy(nFriendlyCount, nEnemyCount);
+            RandomStrategyDataSource ds = new RandomStrategyDataSource(Terrain);
+            ActiveStrategy = new TargetingStrategy(ds);
+            FreeStrategyPool.Clear();
+        }
+
+        public static void CreateFixedStrategy(CMap Terrain)
+        {
+            FixedStrategyDataSource ds = new FixedStrategyDataSource(Terrain);
+            ActiveStrategy = new TargetingStrategy(ds);
             FreeStrategyPool.Clear();
         }
 

@@ -17,21 +17,21 @@ namespace GeneticTargeting
 {
     public partial class Form1 : Form
     {
+        private CMap Terrain { get; set; }
         public static God PopGen { get; set; }
         public bool IsStarted { get; set; }
 
         public Form1()
         {
             InitializeComponent();
-
-            this.DoubleBuffered = true;
+            this.Terrain = new CMap(GlobalConfiguration.GameSettings.GridSize, 100);
 
             this.ipStrategy.DrawFunction = (g) =>
             {
                 if (PopGen?.BestFitness != null)
                 {
                     IWorld BestFitness = (IWorld)PopGen?.BestFitness;
-                    CStrategyPool.ActiveStrategy.Draw(g);
+                    this.Terrain.Draw(g);
 
                     foreach (SlimEnemy ECannon in BestFitness.Enemies)
                     {
@@ -173,6 +173,9 @@ namespace GeneticTargeting
 
             this.nmThreadBulkSize.Value = GlobalConfiguration.Performances.ThreadBulkSize;
             this.nmThreadBulkSize.Tag = GlobalConfiguration.GetDelegate("ThreadBulkSize");
+
+            this.cbFixedStrategy.CheckState = GlobalConfiguration.Performances.FixedStrategy ? CheckState.Checked : CheckState.Unchecked;
+            this.cbFixedStrategy.Tag = GlobalConfiguration.GetDelegate("FixedStrategy");
             
             #endregion
         }
@@ -227,8 +230,16 @@ namespace GeneticTargeting
 
         private void Restrategize()
         {
-            CStrategyPool.CreateStrategy(GlobalConfiguration.GameSettings.FriendlyCount, GlobalConfiguration.GameSettings.EnemyCount);
-            this.ipStrategy.TransformOrigin = new Point2D(-CStrategyPool.ActiveStrategy.Terrain.GetWidth() / 2, -CStrategyPool.ActiveStrategy.Terrain.GetHeight() / 2);
+            if (!GlobalConfiguration.Performances.FixedStrategy)
+            {
+                CStrategyPool.CreateRandomStrategy(this.Terrain);
+            }
+            else
+            {
+                CStrategyPool.CreateFixedStrategy(this.Terrain);
+            }
+
+            this.ipStrategy.TransformOrigin = new Point2D(-this.Terrain.GetWidth() / 2, -this.Terrain.GetHeight() / 2);
             this.InitPopulation();
         }
 

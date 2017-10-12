@@ -108,10 +108,12 @@ namespace Library
         public class Performances
         {
             public static int ThreadBulkSize = 100;
-
+            public static bool FixedStrategy = false;
+            
             static Performances()
             {
                 Delegates["ThreadBulkSize"] = (value) => ThreadBulkSize = Convert.ToInt32(value);
+                Delegates["FixedStrategy"] = (value) => FixedStrategy = Convert.ToBoolean(value);
             }
         }
     }

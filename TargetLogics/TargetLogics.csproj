@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CMap.cs" />
+    <Compile Include="Entities\CArtillary.cs" />
+    <Compile Include="Entities\CTarget.cs" />
     <Compile Include="ENUMForces.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CSimpleArtillary.cs" />
@@ -49,6 +51,9 @@
     <Compile Include="Slim\SingleTargetFriendly.cs" />
     <Compile Include="Slim\SlimEnemy.cs" />
     <Compile Include="Slim\SlimFriendly.cs" />
+    <Compile Include="Strategy\FixedStrategyDataSource.cs" />
+    <Compile Include="Strategy\IStrategyDataSource.cs" />
+    <Compile Include="Strategy\RandomStrategyDataSource.cs" />
     <Compile Include="Strategy\StrategyPool.cs" />
     <Compile Include="Strategy\TargetingStrategy.cs" />
     <Compile Include="World\BaseWorld.cs" />
