@@ -47,7 +47,7 @@ namespace EvolutionaryLogic
                 int nElitilst = (int)(GlobalConfiguration.ApplyElitist ? Math.Max(this.Population.Count * .01f, 1) : 0);
                 this.ChooseElitist(NewPop, nElitilst);
 
-                MatingPool pool = new MatingPool(this.Population, this.AvreageFitness);
+                MatingPool pool = new MatingPool(this.Population);
 
                 for (int j = 0; j < GlobalConfiguration.PopulationCount - nElitilst; j++)
                 {

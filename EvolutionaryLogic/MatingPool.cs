@@ -10,13 +10,11 @@ namespace EvolutionaryLogic
 {
     public class MatingPool
     {
-        public RandomByRange<IDNA> MyMatingPool { get; set; }
-        public float AverageFitness { get; set; }
+        public RandomByRange<IDNA> MyRoulette { get; set; }
 
-        public MatingPool(List<IDNA> Population, float AverageFitness)
+        public MatingPool(List<IDNA> Population)
         {
-            this.AverageFitness = AverageFitness;
-            this.MyMatingPool = new RandomByRange<IDNA>();
+            this.MyRoulette = new RandomByRange<IDNA>();
 
             for (int i = Population.Count - 1; i >= 0; i--)
             {
@@ -31,7 +29,7 @@ namespace EvolutionaryLogic
                     optimizationFunc = (item) => (long)(item * i * i);
                 }
 
-                this.MyMatingPool.AddToRange(n, Population[i], optimizationFunc);
+                this.MyRoulette.AddToRange(n, Population[i], optimizationFunc);
             }
         }
 
@@ -57,8 +55,8 @@ namespace EvolutionaryLogic
         {
             IDNA[] arrParents = new IDNA[2];
 
-            arrParents[0] = this.MyMatingPool.PickFromRange();
-            arrParents[1] = this.MyMatingPool.PickFromRange();
+            arrParents[0] = this.MyRoulette.PickFromRange();
+            arrParents[1] = this.MyRoulette.PickFromRange();
 
             return arrParents;
         }

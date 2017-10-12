@@ -7,13 +7,19 @@ using System.Threading.Tasks;
 
 namespace EvolutionaryLogic
 {
+    struct RangeItem<T>
+    {
+        public T Entity;
+        public long Range;
+    }
+
     public class RandomByRange<T> where T: class
     {
-        private List<Tuple<long, T>> MyRange { get; set; }
+        private List<RangeItem<T>> MyRange { get; set; }
 
         public RandomByRange()
         {
-            this.MyRange = new List<Tuple<long, T>>();
+            this.MyRange = new List<RangeItem<T>>();
         }
 
         public void AddToRange(double fValue, T Entity, Func<double, long> funcOptimaizer)
@@ -21,24 +27,26 @@ namespace EvolutionaryLogic
             long dLastItem = 0;
             if (this.MyRange.Count > 0)
             {
-                dLastItem = this.MyRange[this.MyRange.Count - 1].Item1;
+                dLastItem = this.MyRange[this.MyRange.Count - 1].Range;
             }
 
-            Tuple<long, T> item = new Tuple<long, T>(dLastItem + funcOptimaizer(fValue), Entity);
+            RangeItem<T> item = new RangeItem<T>();
+            item.Entity = Entity;
+            item.Range = dLastItem + funcOptimaizer(fValue);
             this.MyRange.Add(item);
         }
 
         public T PickFromRange()
         {
-            long nSelectend = Shared.NextLong((long)this.MyRange[this.MyRange.Count - 1].Item1);
+            long nSelectend = Shared.NextLong((long)this.MyRange[this.MyRange.Count - 1].Range);
             int i = 0;
 
-            while (nSelectend >= this.MyRange[i].Item1)
+            while (nSelectend >= this.MyRange[i].Range)
             {
                 i++;
             }
 
-            return this.MyRange[i].Item2;
+            return this.MyRange[i].Entity;
         }
     }
 }
