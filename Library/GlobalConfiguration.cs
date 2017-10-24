@@ -75,9 +75,9 @@ namespace Library
             #endregion
 
             #region Weights
-            public static float DeadCountWeight = .7f;
-            public static float PriceWeight = .15f;
-            public static float ImportanceWeight = .15f;
+            public static float DeadCountWeight = .85f;
+            public static float PriceWeight = .1f;
+            public static float ImportanceWeight = .05f;
             #endregion
 
             static GameSettings()
