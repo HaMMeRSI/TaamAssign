@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{68A7F0EC-7ECD-4DF9-A875-035D904D44DA}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>GeneticTargeting</RootNamespace>
-    <AssemblyName>GeneticTargeting</AssemblyName>
+    <RootNamespace>TaamAssign</RootNamespace>
+    <AssemblyName>TaamAssign</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -41,6 +41,7 @@
     <Reference Include="LiveCharts.Wpf, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
       <HintPath>..\packages\LiveCharts.Wpf.0.9.7\lib\net45\LiveCharts.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -111,9 +112,9 @@
       <Project>{3625c9df-ccfc-48d0-9561-559db497bc67}</Project>
       <Name>Library</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TargetLogics\TargetLogics.csproj">
+    <ProjectReference Include="..\TargetLogics\TaamLogics.csproj">
       <Project>{a9315fed-aa3f-4c01-b338-912416c15410}</Project>
-      <Name>TargetLogics</Name>
+      <Name>TaamLogics</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

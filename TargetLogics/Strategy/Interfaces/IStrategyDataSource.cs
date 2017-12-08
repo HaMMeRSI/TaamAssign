@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TargetLogics
+namespace TaamLogics
 {
     public interface IStrategyDataSource
     {
-        CSimpleArtillary[] GetFriendlyData();
-        CSimpleArtillary[] GetEnemyData();
+        CSimpleBattalion[] GetBatalionData();
+        CSimpleSector   [] GetSectorData();
     }
 }

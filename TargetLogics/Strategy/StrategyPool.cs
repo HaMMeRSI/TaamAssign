@@ -1,30 +1,23 @@
 ﻿using Library;
 using System.Collections.Concurrent;
 
-namespace TargetLogics
+namespace TaamLogics
 {
     public class CStrategyPool
     {
-        public static TargetingStrategy ActiveStrategy { get; private set; }
-        private static ConcurrentStack<TargetingStrategy> FreeStrategyPool { get; set; } = new ConcurrentStack<TargetingStrategy>();
+        public static AssignmentStrategy ActiveStrategy { get; private set; }
+        private static ConcurrentStack<AssignmentStrategy> FreeStrategyPool { get; set; } = new ConcurrentStack<AssignmentStrategy>();
 
         public static void CreateRandomStrategy(CMap Terrain)
         {
-            RandomStrategyDataSource ds = new RandomStrategyDataSource(Terrain);
-            ActiveStrategy = new TargetingStrategy(ds);
+            PartialFixedStrategyDataSource ds = new PartialFixedStrategyDataSource(Terrain);
+            ActiveStrategy = new AssignmentStrategy(ds);
             FreeStrategyPool.Clear();
         }
 
-        public static void CreateFixedStrategy(CMap Terrain)
+        public static AssignmentStrategy GetFromPool()
         {
-            FixedStrategyDataSource ds = new FixedStrategyDataSource(Terrain);
-            ActiveStrategy = new TargetingStrategy(ds);
-            FreeStrategyPool.Clear();
-        }
-
-        public static TargetingStrategy GetFromPool()
-        {
-            TargetingStrategy FreeStrategy = null;
+            AssignmentStrategy FreeStrategy = null;
             bool b = FreeStrategyPool.TryPop(out FreeStrategy);
             if(!b)
             {
@@ -34,7 +27,7 @@ namespace TargetLogics
             return FreeStrategy;
         }
 
-        public static void Release(TargetingStrategy strategy)
+        public static void Release(AssignmentStrategy strategy)
         {
             FreeStrategyPool.Push(strategy);
         }

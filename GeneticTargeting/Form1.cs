@@ -11,7 +11,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using TargetLogics;
+using TaamLogics;
 
 namespace GeneticTargeting
 {
@@ -30,30 +30,22 @@ namespace GeneticTargeting
             {
                 if (PopGen?.BestFitness != null)
                 {
-                    IWorld BestFitness = (IWorld)PopGen?.BestFitness;
-                    this.Terrain.Draw(g);
+                    CTaamAssignment BestFitness = (CTaamAssignment)PopGen?.BestFitness;
+                    // this.Terrain.Draw(g);
 
-                    foreach (SlimEnemy ECannon in BestFitness.Enemies)
+                    int CounterY = 0;
+                    foreach (DNASubSequence SectorAssignment in BestFitness.GetGenes())
                     {
-                        CStrategyPool.ActiveStrategy.EnemiesData[ECannon.UID].Draw(g);
-
-                        if (ECannon.HittedBy != null && ECannon.Health <= 0)
+                        CSimpleSector ActiveSector = CStrategyPool.ActiveStrategy.SectorsData[SectorAssignment.SectorUID];
+                        for (int i = 0; i < SectorAssignment.GetGenes().Length; i++)
                         {
-                            foreach (int FCannon in ECannon.HittedBy)
-                            {
-                                Pen pp = new Pen(CStrategyPool.ActiveStrategy.FriendliesData[FCannon].MyColor, 2);
-                                g.DrawLine(pp, 
-                                    CSimpleArtillary.CentralizeShoot(CStrategyPool.ActiveStrategy.EnemiesData[ECannon.UID].Location, ECannon.HittedBy != null), 
-                                    CSimpleArtillary.CentralizeShoot(CStrategyPool.ActiveStrategy.FriendliesData[FCannon].Location, false));
-                            }
+                            ActiveSector.AssignedBattalions[i] = CStrategyPool.ActiveStrategy.BattalionsData[SectorAssignment.GetGenes()[i].BattalionUID];
                         }
-                    }
 
-                    foreach (CSimpleArtillary MyCannon in CStrategyPool.ActiveStrategy.FriendliesData.Values)
-                    {
-                        MyCannon.Draw(g);
+                        ActiveSector.Location.Y = CounterY;
+                        ActiveSector.Draw(g);
+                        CounterY += 120;
                     }
-
                 }
             };
 
@@ -226,20 +218,14 @@ namespace GeneticTargeting
         private void btnRestrategize_Click(object sender, EventArgs e)
         {
             this.Restrategize();
+            //var a = new TaamCalendar();
+            //var b = a.GetTaamChunks(new DateTime(2018,1,1));
         }
 
         private void Restrategize()
         {
-            if (!GlobalConfiguration.Performances.FixedStrategy)
-            {
-                CStrategyPool.CreateRandomStrategy(this.Terrain);
-            }
-            else
-            {
-                CStrategyPool.CreateFixedStrategy(this.Terrain);
-            }
-
-            this.ipStrategy.TransformOrigin = new Point2D(-this.Terrain.GetWidth() / 2, -this.Terrain.GetHeight() / 2);
+            CStrategyPool.CreateRandomStrategy(this.Terrain);
+            // this.ipStrategy.TransformOrigin = new Point2D(-this.Terrain.GetWidth() / 2, -this.Terrain.GetHeight() / 2);
             this.InitPopulation();
         }
 
@@ -253,9 +239,7 @@ namespace GeneticTargeting
 
         public Func<IDNA> GetPopulationGenerator()
         {
-            if (!GlobalConfiguration.SingleTargetGenome)
-                return () => new CCannonWorld();
-            return () => new COrderedWorld();
+            return () => new CTaamAssignment();
         }
 
         private void UpdateBestFitnessLabels()
@@ -263,9 +247,6 @@ namespace GeneticTargeting
             this.lblGenerationCount.Text = "Curr gen count: " + PopGen.GenerationCount;
             this.lblAverageFitness.Text = "Average fitness: " + PopGen.AvreageFitness;
             this.lblBestFitness.Text = "Best Fitness: " + PopGen.BestFitness.GetFitnesss();
-            this.lblBestDeadCount.Text = "Best dead count: " + ((IWorld)PopGen.BestFitness).DeadCount;
-            this.lblBestTotalPrice.Text = "Best total price: " + ((IWorld)PopGen.BestFitness).TotalAttackPrice;
-            this.lblTotalImportance.Text = "Best total importance: " + ((IWorld)PopGen.BestFitness).TotalAttackImportance;
         }
 
         private void tbConfig_TextChanged(object sender, EventArgs e)
@@ -291,6 +272,7 @@ namespace GeneticTargeting
             GlobalConfiguration.GameSettings.GridSize = (int)((NumericUpDown)sender).Value;
             if (IsStarted)
             {
+                this.Terrain = new CMap(GlobalConfiguration.GameSettings.GridSize, 100);
                 this.Restrategize();
             }
         }

@@ -35,6 +35,11 @@ namespace EvolutionaryLogic
             // Initiallize genes in apply
         }
 
+        public T[] GetGenes()
+        {
+            return this.Genes;
+        }
+
         public float GetFitnesss()
         {
             return this.Fitness;
@@ -53,7 +58,7 @@ namespace EvolutionaryLogic
         }
 
         public abstract void CalculateFitness();
-        protected abstract void Mutate();
+        public abstract bool Mutate();
         public abstract IDNA Clone();
         public abstract IDNA Revive();
     }

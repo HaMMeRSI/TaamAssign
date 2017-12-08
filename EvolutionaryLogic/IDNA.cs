@@ -10,6 +10,7 @@ namespace EvolutionaryLogic
     public interface IDNA: INextGeneration<IDNA>
     {
         IDNA Crossover(IDNA objPartner);
+        bool Mutate();
         void CalculateFitness();
         float GetFitnesss();
         void Execute();

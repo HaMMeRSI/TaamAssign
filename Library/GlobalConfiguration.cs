@@ -50,7 +50,7 @@ namespace Library
             #region General
             public static int FriendlyCount = 20;
             public static int EnemyCount = 25;
-            public static int GridSize = 10;
+            public static int GridSize = 20;
             #endregion
 
             #region DeadCount
