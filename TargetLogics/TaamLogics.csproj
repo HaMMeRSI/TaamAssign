@@ -56,6 +56,7 @@
     <Compile Include="Strategy\PartialFixedStrategyDataSource.cs" />
     <Compile Include="Strategy\RandomStrategyDataSource.cs" />
     <Compile Include="Strategy\StrategyPool.cs" />
+    <Compile Include="TaamDNA\BattalionAssignmentFollower.cs" />
     <Compile Include="TaamDNA\CTaamAssignment.cs" />
     <Compile Include="TaamCalendar\TaamCalendar.cs" />
     <Compile Include="TaamCalendar\TaamChunk.cs" />

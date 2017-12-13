@@ -66,7 +66,8 @@ namespace TaamLogics
 
         public int GetReservationsScore()
         {
-            return this.Reservations.Sum(x => (int)x.Importance);
+            var res = this.Reservations.Sum(x => (int)x.Importance);
+            return res == 0 ? 1 : res;
         }
     }
 }

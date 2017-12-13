@@ -46,6 +46,16 @@ namespace TaamLogics
             return this.SectorsData.Length;
         }
 
+        public int GetRandomBattalionUID()
+        {
+            return Shared.Next(this.BattalionsData.Length);
+        }
+
+        public int GetRandomSectorUID()
+        {
+            return Shared.Next(this.SectorsData.Length);
+        }
+
         public void Update()
         {
         }

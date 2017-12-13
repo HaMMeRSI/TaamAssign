@@ -34,12 +34,14 @@ namespace GeneticTargeting
                     // this.Terrain.Draw(g);
 
                     int CounterY = 0;
-                    foreach (DNASubSequence SectorAssignment in BestFitness.GetGenes())
+                    var Genes = BestFitness.GetGenes();
+                    for (int i = 0; i < CStrategyPool.ActiveStrategy.GetSectorsCount(); i++)
                     {
-                        CSimpleSector ActiveSector = CStrategyPool.ActiveStrategy.SectorsData[SectorAssignment.SectorUID];
-                        for (int i = 0; i < SectorAssignment.GetGenes().Length; i++)
+                        var ActiveSector = CStrategyPool.ActiveStrategy.SectorsData[i];
+                        for (int j = 0; j < TaamCalendar.ChunksCount; j++)
                         {
-                            ActiveSector.AssignedBattalions[i] = CStrategyPool.ActiveStrategy.BattalionsData[SectorAssignment.GetGenes()[i].BattalionUID];
+                            CSingleAssignment SectorAssignment = Genes[i * TaamCalendar.ChunksCount + j];
+                            ActiveSector.AssignedBattalions[j] = CStrategyPool.ActiveStrategy.BattalionsData[SectorAssignment.BattalionUID];
                         }
 
                         ActiveSector.Location.Y = CounterY;
@@ -54,6 +56,63 @@ namespace GeneticTargeting
             this.ipStatus.DrawFunction = (g) =>
             {
                 PopGen?.StatusGraph.Draw(g);
+            };
+
+            SolidBrush b = new SolidBrush(Color.Black);
+            Font f = new Font(FontFamily.GenericMonospace, 15);
+
+            this.ipBattalionToSectorSum.DrawFunction = g =>
+            {
+                if (PopGen?.BestFitness != null)
+                {
+                    CTaamAssignment BestFitness = (CTaamAssignment)PopGen.BestFitness;
+                    int yCounter = 0;
+                    var Assignments = BestFitness.GetGenes();
+
+                    //int[][] BattalionToSectorRotation = Shared.SafeArray(CStrategyPool.ActiveStrategy.GetBattalionsCount(), () => Shared.SafeArray<int>(TaamCalendar.ChunksCount));
+                    // new int[CStrategyPool.ActiveStrategy.GetBattalionsCount()][];
+                    // Brigade - Rotation, Count
+                    SortedDictionary<int, int>[] BattalionInSectorCount = Shared.SafeArray(CStrategyPool.ActiveStrategy.GetBattalionsCount(), () => new SortedDictionary<int, int>());
+                    for (int i = 0; i < Assignments.Length; i++)
+                    {
+                        var Assignment = Assignments[i];
+                        if (BattalionInSectorCount[Assignment.BattalionUID] == null)
+                        {
+                            BattalionInSectorCount[Assignment.BattalionUID] = new SortedDictionary<int, int>();
+                            BattalionInSectorCount[Assignment.BattalionUID][i % TaamCalendar.ChunksCount] = 1;
+                        }
+                        else
+                        {
+                            if (!BattalionInSectorCount[Assignment.BattalionUID].ContainsKey(i % TaamCalendar.ChunksCount))
+                            {
+                                BattalionInSectorCount[Assignment.BattalionUID][i % TaamCalendar.ChunksCount] = 1;
+                            }
+                            else
+                            {
+                                BattalionInSectorCount[Assignment.BattalionUID][i % TaamCalendar.ChunksCount]++;
+                            }
+                        }
+                    }
+
+                    for (int i = 0; i < BattalionInSectorCount.Length; i++)
+                    {
+                        string strRow = string.Format("b" + (i < 10 ? "0" + i : i + ""));
+                        string strRotations = "";
+
+                        for (int j = 1; j < BattalionInSectorCount.Length; j++)
+                        {
+
+                        }
+                        foreach (var RotationPair in BattalionInSectorCount[i])
+                        {
+                            strRotations += "r" + RotationPair.Key + ": " + RotationPair.Value + ", ";
+                        }
+
+                        strRow += ";   " + strRotations;
+                        g.DrawString(strRow, f, b, 0, yCounter);
+                        yCounter += 20;
+                    }
+                }
             };
 
             this.initConfigDelegation();

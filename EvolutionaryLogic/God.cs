@@ -42,7 +42,7 @@ namespace EvolutionaryLogic
             MatingPool pool = new MatingPool();
             for (int i = 0; i < Generations; i++)
             {
-                int nElitilstCount = (int)(GlobalConfiguration.ApplyElitist ? Math.Max(this.Population.Count * .01f, 1) : 0);
+                int nElitilstCount = (int)(GlobalConfiguration.ApplyElitist ? Math.Max(this.Population.Count * .001f, 1) : 0);
                 this.Population = pool.GetEvolvedPopulation(this.Population, nElitilstCount);
                 this.GenerationCount++;
                 this.AssessPopulation();

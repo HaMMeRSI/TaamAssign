@@ -57,5 +57,27 @@ namespace Library
 
             return (long)(ulongRand % uRange);
         }
+
+        public static T[] SafeArray<T>(int Size)
+        {
+            T[] arr = new T[Size];
+            for (int i = 0; i < Size; i++)
+            {
+                arr[i] = default(T);
+            }
+
+            return arr;
+        }
+
+        public static T[] SafeArray<T>(int Size, Func<T> Initializer)
+        {
+            T[] arr = new T[Size];
+            for (int i = 0; i < Size; i++)
+            {
+                arr[i] = Initializer();
+            }
+
+            return arr;
+        }
     }
 }

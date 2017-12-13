@@ -11,7 +11,7 @@ namespace Library
         #region Genetic configuration
 
         public static int PopulationCount = 500;
-        public static float MutationChance = 1f;
+        public static float MutationChance = .5f;
         public static float ParentChance = 0;
         public static bool ApplyElitist = true;
         public static bool ApplyNaturalSelection = true;
@@ -107,7 +107,7 @@ namespace Library
 
         public class Performances
         {
-            public static int ThreadBulkSize = 100;
+            public static int ThreadBulkSize = 500;
             public static bool FixedStrategy = false;
             
             static Performances()
