@@ -11,22 +11,15 @@ namespace EvolutionaryLogic
     public class MatingPool
     {
         public RandomByRange<IDNA> MyRoulette { get; set; }
-        public PopulationSelector MySelector { get; set; }
 
         public MatingPool()
         {
             this.MyRoulette = new RandomByRange<IDNA>();
-            this.MySelector = new PopulationSelector();
         }
 
         public List<IDNA> GetEvolvedPopulation(List<IDNA> Population, int nElitilstCount)
         {
             List<IDNA> NewPop = new List<IDNA>();
-            if (GlobalConfiguration.ApplyNaturalSelection)
-            {
-                this.MySelector.NaturalSelection(Population);
-            }
-
             NewPop.AddRange(this.ChooseElitist(Population, nElitilstCount));
             this.InitRoulette(Population);
 
@@ -115,14 +108,10 @@ namespace EvolutionaryLogic
             for (int i = Population.Count - 1; i >= 0; i--)
             {
                 double n = Population[i].GetFitnesss();
-                if (n == 0)
-                {
-                    n = Shared.Next(1);
-                }
                 Func<double, long> optimizationFunc = (item) => (long)(Math.Pow(item * 100, 3));
                 //if (GlobalConfiguration.ApplyNaturalSelection)
                 //{
-                //    optimizationFunc = (item) => (long)(item * i * i);
+                //    optimizationFunc = (item) => (long)(item*10 * (i * i));
                 //}
 
                 this.MyRoulette.AddToRange(n, Population[i], optimizationFunc);

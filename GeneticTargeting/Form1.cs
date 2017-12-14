@@ -25,6 +25,9 @@ namespace GeneticTargeting
         {
             InitializeComponent();
             this.Terrain = new CMap(GlobalConfiguration.GameSettings.GridSize, 100);
+            Font f = new Font(FontFamily.GenericMonospace, 15);
+            SolidBrush b = new SolidBrush(Color.Black);
+            Pen p = new Pen(new SolidBrush(Color.Black), 3);
 
             this.ipStrategy.DrawFunction = (g) =>
             {
@@ -38,14 +41,31 @@ namespace GeneticTargeting
                     for (int i = 0; i < CStrategyPool.ActiveStrategy.GetSectorsCount(); i++)
                     {
                         var ActiveSector = CStrategyPool.ActiveStrategy.SectorsData[i];
+                        CSimpleBattalion[] AssignedBattalions = new CSimpleBattalion[TaamCalendar.ChunksCount];
+                        Point2D Location = new Point2D();
+
                         for (int j = 0; j < TaamCalendar.ChunksCount; j++)
                         {
                             CSingleAssignment SectorAssignment = Genes[i * TaamCalendar.ChunksCount + j];
-                            ActiveSector.AssignedBattalions[j] = CStrategyPool.ActiveStrategy.BattalionsData[SectorAssignment.BattalionUID];
+                            AssignedBattalions[j] = CStrategyPool.ActiveStrategy.BattalionsData[SectorAssignment.BattalionUID];
                         }
 
-                        ActiveSector.Location.Y = CounterY;
-                        ActiveSector.Draw(g);
+                        Location.Y = CounterY;
+                        g.DrawString(ActiveSector.UID.ToString() + ":", f, b, (int)Location.X - 130, (int)Location.Y + 40);
+                        g.DrawString(ActiveSector.MySectorialBrigade.ToString() + ":", f, b, (int)Location.X - 130, (int)Location.Y + 60);
+                        g.DrawRectangle(p, (int)Location.X, (int)Location.Y, 800, 100);
+
+                        for (int j = 0; j < TaamCalendar.ChunksCount; j++)
+                        {
+                            g.DrawLine(p, (int)Location.X + 200 * j, (int)Location.Y, (int)Location.X + 200 * j, (int)Location.Y + 100);
+                            if (AssignedBattalions[j] != null)
+                            {
+                                int OffsetX = 90 + (200 * j);
+                                g.DrawString(AssignedBattalions[j].UID.ToString(), f, b, (int)Location.X + OffsetX, (int)Location.Y + 40);
+                            }
+                        }
+
+
                         CounterY += 120;
                     }
                 }
@@ -58,8 +78,6 @@ namespace GeneticTargeting
                 PopGen?.StatusGraph.Draw(g);
             };
 
-            SolidBrush b = new SolidBrush(Color.Black);
-            Font f = new Font(FontFamily.GenericMonospace, 15);
 
             this.ipBattalionToSectorSum.DrawFunction = g =>
             {
@@ -69,47 +87,35 @@ namespace GeneticTargeting
                     int yCounter = 0;
                     var Assignments = BestFitness.GetGenes();
 
-                    //int[][] BattalionToSectorRotation = Shared.SafeArray(CStrategyPool.ActiveStrategy.GetBattalionsCount(), () => Shared.SafeArray<int>(TaamCalendar.ChunksCount));
-                    // new int[CStrategyPool.ActiveStrategy.GetBattalionsCount()][];
-                    // Brigade - Rotation, Count
-                    SortedDictionary<int, int>[] BattalionInSectorCount = Shared.SafeArray(CStrategyPool.ActiveStrategy.GetBattalionsCount(), () => new SortedDictionary<int, int>());
+                    // [] Battalion, [] 4 Rotations
+                    int[][] BattalionToSectorRotation = Shared.SafeArray(CStrategyPool.ActiveStrategy.GetBattalionsCount(), () => Shared.SafeArray<int>(TaamCalendar.ChunksCount));
                     for (int i = 0; i < Assignments.Length; i++)
                     {
-                        var Assignment = Assignments[i];
-                        if (BattalionInSectorCount[Assignment.BattalionUID] == null)
-                        {
-                            BattalionInSectorCount[Assignment.BattalionUID] = new SortedDictionary<int, int>();
-                            BattalionInSectorCount[Assignment.BattalionUID][i % TaamCalendar.ChunksCount] = 1;
-                        }
-                        else
-                        {
-                            if (!BattalionInSectorCount[Assignment.BattalionUID].ContainsKey(i % TaamCalendar.ChunksCount))
-                            {
-                                BattalionInSectorCount[Assignment.BattalionUID][i % TaamCalendar.ChunksCount] = 1;
-                            }
-                            else
-                            {
-                                BattalionInSectorCount[Assignment.BattalionUID][i % TaamCalendar.ChunksCount]++;
-                            }
-                        }
+                        BattalionToSectorRotation[Assignments[i].BattalionUID][i % TaamCalendar.ChunksCount]++;
                     }
 
-                    for (int i = 0; i < BattalionInSectorCount.Length; i++)
+                    for (int i = 0; i < BattalionToSectorRotation.Length; i++)
                     {
+                        SolidBrush bb = new SolidBrush(Color.Black);
                         string strRow = string.Format("b" + (i < 10 ? "0" + i : i + ""));
                         string strRotations = "";
 
-                        for (int j = 1; j < BattalionInSectorCount.Length; j++)
+                        int nMoreThenOne = 0;
+                        for (int j = 0; j < BattalionToSectorRotation[i].Length; j++)
                         {
-
-                        }
-                        foreach (var RotationPair in BattalionInSectorCount[i])
-                        {
-                            strRotations += "r" + RotationPair.Key + ": " + RotationPair.Value + ", ";
+                            if(BattalionToSectorRotation[i][j] != 0)
+                            {
+                                strRotations += "r" + j + ": " + BattalionToSectorRotation[i][j] + ", ";
+                                nMoreThenOne++;
+                            }
+                            if(BattalionToSectorRotation[i][j] > 1 || nMoreThenOne > 2)
+                            {
+                                bb.Color = Color.Red;
+                            }
                         }
 
                         strRow += ";   " + strRotations;
-                        g.DrawString(strRow, f, b, 0, yCounter);
+                        g.DrawString(strRow, f, bb, 0, yCounter);
                         yCounter += 20;
                     }
                 }

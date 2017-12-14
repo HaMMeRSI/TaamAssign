@@ -58,6 +58,15 @@ namespace Library
             return (long)(ulongRand % uRange);
         }
 
+        public static long NextLong2(long max)
+        {
+            byte[] buf = new byte[8];
+            rnd.NextBytes(buf);
+            long longRand = BitConverter.ToInt64(buf, 0);
+
+            return (Math.Abs(longRand % (max)));
+        }
+
         public static T[] SafeArray<T>(int Size)
         {
             T[] arr = new T[Size];

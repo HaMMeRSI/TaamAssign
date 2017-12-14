@@ -18,6 +18,7 @@ namespace EvolutionaryLogic
         public int GenerationCount { get; set; }
         public float AvreageFitness { get; set; }
         public CStatutsGraph StatusGraph { get; set; }
+        public PopulationSelector MySelector { get; set; }
 
         #endregion
 
@@ -26,6 +27,7 @@ namespace EvolutionaryLogic
             this.Population = new List<IDNA>();
             this.GenerationCount = 0;
             this.StatusGraph = new CStatutsGraph();
+            this.MySelector = new PopulationSelector();
 
             for (int i = 0; i < GlobalConfiguration.PopulationCount; i++)
             {
@@ -42,6 +44,11 @@ namespace EvolutionaryLogic
             MatingPool pool = new MatingPool();
             for (int i = 0; i < Generations; i++)
             {
+                if (GlobalConfiguration.ApplyNaturalSelection)
+                {
+                    this.MySelector.NaturalSelection(Population);
+                }
+
                 int nElitilstCount = (int)(GlobalConfiguration.ApplyElitist ? Math.Max(this.Population.Count * .001f, 1) : 0);
                 this.Population = pool.GetEvolvedPopulation(this.Population, nElitilstCount);
                 this.GenerationCount++;

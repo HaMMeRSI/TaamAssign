@@ -43,7 +43,7 @@ namespace EvolutionaryLogic
 
         public T Pick()
         {
-            long nSelectend = Shared.NextLong(this.MyRange[this.MyRange.Count - 1].Range);
+            long nSelectend = Shared.NextLong2(this.MyRange[this.MyRange.Count - 1].Range);
             int i = 0;
 
             while (nSelectend >= this.MyRange[i].Range)

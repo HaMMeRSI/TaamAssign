@@ -25,9 +25,10 @@ namespace TaamLogics
                 {
                     var Taams = CalendarGen.GetTaamChunks(CStrategyPool.ActiveStrategy.SectorsData[SectorUID].StartOfYear);
 
-                    for (int j = 0; j < TaamCalendar.ChunksCount; j++)
+                    for (int Rotation = 0; Rotation < TaamCalendar.ChunksCount; Rotation++)
                     {
-                        this[SectorUID * TaamCalendar.ChunksCount + j] = new CSingleAssignment(SectorUID * TaamCalendar.ChunksCount + j, Taams[j].Start, Taams[j].End, SectorUID);
+                        this[SectorUID * TaamCalendar.ChunksCount + Rotation] = 
+                            new CSingleAssignment(SectorUID * TaamCalendar.ChunksCount + Rotation, Taams[Rotation].Start, Taams[Rotation].End, SectorUID);
                     }
                 }
             }
@@ -76,11 +77,7 @@ namespace TaamLogics
         private float CalculateAssignmentRulesFitness()
         {
             Dictionary<int, BattalionAssignmentFollower> BattalionFollowers = new Dictionary<int, BattalionAssignmentFollower>();
-            HashSet<int>[] BattalionDestrebution = new HashSet<int>[TaamCalendar.ChunksCount];
-            for (int i = 0; i < BattalionDestrebution.Length; i++)
-            {
-                BattalionDestrebution[i] = new HashSet<int>();
-            }
+            HashSet<int>[] BattalionDestrebution = Shared.SafeArray(TaamCalendar.ChunksCount, () => new HashSet<int>());
 
             for (int i = 0; i < this.Genes.Length; i++)
             {
@@ -220,11 +217,6 @@ namespace TaamLogics
                     this[i].BattalionUID = CStrategyPool.ActiveStrategy.GetRandomBattalionUID();
                 }
             }
-
-            //if (Mutated)
-            //{
-            //    this.Execute();
-            //}
 
             return Mutated;
         }
