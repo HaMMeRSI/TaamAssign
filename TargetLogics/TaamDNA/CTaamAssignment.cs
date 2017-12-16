@@ -36,14 +36,31 @@ namespace TaamLogics
 
         public override void Execute()
         {
-            foreach (var Assignment in this.Genes)
+            List<int> BattalionSpread = new List<int>();
+            foreach (var Battalion in CStrategyPool.ActiveStrategy.BattalionsData)
             {
-                // DNASequence.Execute();
-                if(Assignment.BattalionUID == -1)
+                for (int i = 0; i < (int)Math.Ceiling((double)TaamCalendar.ChunksCount / 2); i++)
                 {
-                    Assignment.BattalionUID = CStrategyPool.ActiveStrategy.GetRandomBattalionUID();
+                    BattalionSpread.Add(Battalion.UID);
                 }
             }
+
+            foreach (var Assignment in this.Genes)
+            {
+                var index = Shared.Next(BattalionSpread.Count);
+                Assignment.BattalionUID = BattalionSpread[index];
+                BattalionSpread.RemoveAt(index);
+            }
+
+
+            //foreach (var Assignment in this.Genes)
+            //{
+            //    // DNASequence.Execute();
+            //    if(Assignment.BattalionUID == -1)
+            //    {
+            //        Assignment.BattalionUID = CStrategyPool.ActiveStrategy.GetRandomBattalionUID();
+            //    }
+            //}
         }
 
         public override void CalculateFitness()
@@ -175,24 +192,20 @@ namespace TaamLogics
 
             for (int i = nStart; i < nEnd; i++)
             {
-                child[i] = (CSingleAssignment)partner[i].Clone();
+                child[i] = partner[i].Clone();
                 colPassedGenesUIDs.Add(partner[i].UID);
             }
 
             int nGeneInsertionPos = 0;
             for (int i = 0; i < this.Genes.Length; i++)
             {
-                if (nGeneInsertionPos == nStart)
-                {
-                    nGeneInsertionPos = nEnd;
-                }
-
                 if (colPassedGenesUIDs.Contains(this.Genes[i].UID))
                 {
+                    nGeneInsertionPos++;
                     continue;
                 }
 
-                child[nGeneInsertionPos] = (CSingleAssignment)this.Genes[i].Clone();
+                child[nGeneInsertionPos] = this.Genes[i].Clone();
                 nGeneInsertionPos++;
             }
 
@@ -215,6 +228,10 @@ namespace TaamLogics
                 if (Shared.HitChance(GlobalConfiguration.MutationChance / 100))
                 {
                     this[i].BattalionUID = CStrategyPool.ActiveStrategy.GetRandomBattalionUID();
+                    //int index1 = Shared.Next(this.Genes.Length);
+                    //int t = this[i].BattalionUID;
+                    //this[i].BattalionUID = this[index1].BattalionUID;
+                    //this[index1].BattalionUID = t;
                 }
             }
 

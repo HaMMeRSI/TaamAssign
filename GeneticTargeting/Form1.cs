@@ -24,7 +24,7 @@ namespace GeneticTargeting
         public Form1()
         {
             InitializeComponent();
-            this.Terrain = new CMap(GlobalConfiguration.GameSettings.GridSize, 100);
+            this.Terrain = new CMap(10, 100);
             Font f = new Font(FontFamily.GenericMonospace, 15);
             SolidBrush b = new SolidBrush(Color.Black);
             Pen p = new Pen(new SolidBrush(Color.Black), 3);
@@ -60,8 +60,9 @@ namespace GeneticTargeting
                             g.DrawLine(p, (int)Location.X + 200 * j, (int)Location.Y, (int)Location.X + 200 * j, (int)Location.Y + 100);
                             if (AssignedBattalions[j] != null)
                             {
+                                SolidBrush bbb = new SolidBrush(CStrategyPool.ActiveStrategy.BattalionsData[AssignedBattalions[j].UID].ScoreAssignment(Genes[i * TaamCalendar.ChunksCount + j]) > 0 ? Color.Red : Color.Black);
                                 int OffsetX = 90 + (200 * j);
-                                g.DrawString(AssignedBattalions[j].UID.ToString(), f, b, (int)Location.X + OffsetX, (int)Location.Y + 40);
+                                g.DrawString(AssignedBattalions[j].UID.ToString(), f, bbb, (int)Location.X + OffsetX, (int)Location.Y + 40);
                             }
                         }
 
@@ -146,84 +147,6 @@ namespace GeneticTargeting
             this.cbPartialGenomCrossover.CheckState = GlobalConfiguration.PartialGenomCrossover ? CheckState.Checked : CheckState.Unchecked;
             this.cbPartialGenomCrossover.Tag = GlobalConfiguration.GetDelegate("PartialGenomCrossover");
 
-            this.cbSingleTargetGenome.CheckState = GlobalConfiguration.SingleTargetGenome ? CheckState.Checked : CheckState.Unchecked;
-            this.cbSingleTargetGenome.Tag = GlobalConfiguration.GetDelegate("SingleTargetGenome");
-            
-            #endregion
-
-            #region Game Settings
-
-            #region General
-
-            this.tbFriendlyCount.Value = GlobalConfiguration.GameSettings.FriendlyCount;
-            this.tbFriendlyCount.Tag = GlobalConfiguration.GetDelegate("FriendlyCount");
-
-            this.tbEnemyCount.Value = GlobalConfiguration.GameSettings.EnemyCount;
-            this.tbEnemyCount.Tag = GlobalConfiguration.GetDelegate("EnemyCount");
-
-            this.nmGridSize.Value = GlobalConfiguration.GameSettings.GridSize;
-            this.nmGridSize.Tag = GlobalConfiguration.GetDelegate("GridSize");
-
-            #endregion
-
-            #region DeadCount
-
-            this.nmMaxDamage.Value = (decimal)GlobalConfiguration.GameSettings.MaxDamage;
-            this.nmMaxDamage.Tag = GlobalConfiguration.GetDelegate("MaxDamage");
-
-            this.nmMinDamage.Value = (decimal)GlobalConfiguration.GameSettings.MinDamage;
-            this.nmMinDamage.Tag = GlobalConfiguration.GetDelegate("MinDamage");
-
-            this.nmMaxRadius.Value = GlobalConfiguration.GameSettings.MaxRadius;
-            this.nmMaxRadius.Tag = GlobalConfiguration.GetDelegate("MaxRadius");
-
-            this.nmMinRadius.Value = GlobalConfiguration.GameSettings.MinRadius;
-            this.nmMinRadius.Tag = GlobalConfiguration.GetDelegate("MinRadius");
-
-            this.nmMaxAmmunition.Value = GlobalConfiguration.GameSettings.MaxAmmunition;
-            this.nmMaxAmmunition.Tag = GlobalConfiguration.GetDelegate("MaxAmmunition");
-
-            this.nmMinAmmunition.Value = GlobalConfiguration.GameSettings.MinAmmunition;
-            this.nmMinAmmunition.Tag = GlobalConfiguration.GetDelegate("MinAmmunition");
-
-            this.nmMinAccuracyForShot.Value = (decimal)GlobalConfiguration.GameSettings.MinAccuracyForShot;
-            this.nmMinAccuracyForShot.Tag = GlobalConfiguration.GetDelegate("MinAccuracyForShot");
-
-            this.nmMaxAccuracyForShot.Value = (decimal)GlobalConfiguration.GameSettings.MaxAccuracyForShot;
-            this.nmMaxAccuracyForShot.Tag = GlobalConfiguration.GetDelegate("MaxAccuracyForShot");
-
-            #endregion
-
-            #region Price
-
-            this.nmMaxPricePerShot.Value = GlobalConfiguration.GameSettings.MaxPricePerShot;
-            this.nmMaxPricePerShot.Tag = GlobalConfiguration.GetDelegate("MaxPricePerShot");
-
-            this.nmMinPricePerShot.Value = GlobalConfiguration.GameSettings.MinPricePerShot;
-            this.nmMinPricePerShot.Tag = GlobalConfiguration.GetDelegate("MinPricePerShot");
-
-            this.nmMaxImportance.Value = GlobalConfiguration.GameSettings.MaxImportance;
-            this.nmMaxImportance.Tag = GlobalConfiguration.GetDelegate("MaxImportance");
-
-            this.nmMinImportance.Value = GlobalConfiguration.GameSettings.MinImportance;
-            this.nmMinImportance.Tag = GlobalConfiguration.GetDelegate("MinImportance");
-
-            
-            #endregion
-
-            #region Weights
-
-            this.nmDeadCountWeight.Value = (decimal)GlobalConfiguration.GameSettings.DeadCountWeight;
-            this.nmDeadCountWeight.Tag = GlobalConfiguration.GetDelegate("DeadCountWeight");
-
-            this.nmPriceWeight.Value = (decimal)GlobalConfiguration.GameSettings.PriceWeight;
-            this.nmPriceWeight.Tag = GlobalConfiguration.GetDelegate("PriceWeight");
-
-            this.nmImportanceWeight.Value = (decimal)GlobalConfiguration.GameSettings.ImportanceWeight;
-            this.nmImportanceWeight.Tag = GlobalConfiguration.GetDelegate("ImportanceWeight");
-
-            #endregion
-
             #endregion
 
             #region Performances
@@ -233,7 +156,18 @@ namespace GeneticTargeting
 
             this.cbFixedStrategy.CheckState = GlobalConfiguration.Performances.FixedStrategy ? CheckState.Checked : CheckState.Unchecked;
             this.cbFixedStrategy.Tag = GlobalConfiguration.GetDelegate("FixedStrategy");
-            
+
+            #endregion
+
+
+            #region Assignment
+
+            this.nmBattalionCount.Value = GlobalConfiguration.Assignemnt.BattalionCount;
+            this.nmBattalionCount.Tag = GlobalConfiguration.GetDelegate("BattalionCount");
+
+            this.nmSectorCount.Value = GlobalConfiguration.Assignemnt.SectorCount;
+            this.nmSectorCount.Tag = GlobalConfiguration.GetDelegate("SectorCount");
+
             #endregion
         }
 
@@ -329,16 +263,6 @@ namespace GeneticTargeting
             if (tb.Tag != null)
             {
                 ((Action<object>)(tb).Tag)(tb.CheckState == CheckState.Checked);
-            }
-        }
-
-        private void nmGridSize_ValueChanged(object sender, EventArgs e)
-        {
-            GlobalConfiguration.GameSettings.GridSize = (int)((NumericUpDown)sender).Value;
-            if (IsStarted)
-            {
-                this.Terrain = new CMap(GlobalConfiguration.GameSettings.GridSize, 100);
-                this.Restrategize();
             }
         }
 

@@ -114,10 +114,9 @@ namespace TaamLogics
 
         public CSimpleBattalion[] GetBatalionData()
         {
-            int BC = 60;
-            CSimpleBattalion[] Battalions = new CSimpleBattalion[BC];
+            CSimpleBattalion[] Battalions = new CSimpleBattalion[GlobalConfiguration.Assignemnt.BattalionCount];
 
-            for (int i = 0; i < BC; i++)
+            for (int i = 0; i < Battalions.Length; i++)
             {
                 Battalions[i] = new CSimpleBattalion(EConstraints.All, Shared.Next(80) + 20);
                 Battalions[i].SetUID(i);
@@ -137,7 +136,7 @@ namespace TaamLogics
 
         public CSimpleSector[] GetSectorData()
         {
-            CSimpleSector[] Secotrs = new CSimpleSector[30];
+            CSimpleSector[] Secotrs = new CSimpleSector[GlobalConfiguration.Assignemnt.SectorCount];
             var objSectorialBrigade = Enum.GetValues(typeof(ESectorialBrigade));
 
             DateTime FirstWednesday = new DateTime(2018, 1, 1);
