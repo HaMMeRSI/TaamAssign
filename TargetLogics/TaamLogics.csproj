@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DrawFollower.cs" />
     <Compile Include="Elements\BattalionAssigner.cs" />
     <Compile Include="Elements\Battalion\Reservation.cs" />
     <Compile Include="Elements\EForce.cs" />

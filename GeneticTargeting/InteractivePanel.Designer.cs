@@ -1,4 +1,4 @@
-﻿namespace GeneticTargeting
+﻿namespace TaamAssign
 {
     partial class InteractivePanel
     {

@@ -1,4 +1,4 @@
-﻿namespace GeneticTargeting
+﻿namespace TaamAssign
 {
     partial class Form1
     {
@@ -57,9 +57,9 @@
             this.nmThreadBulkSize = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.ipBattalionToSectorSum = new GeneticTargeting.InteractivePanel();
-            this.ipStatus = new GeneticTargeting.InteractivePanel();
-            this.ipStrategy = new GeneticTargeting.InteractivePanel();
+            this.ipBattalionToSectorSum = new TaamAssign.InteractivePanel();
+            this.ipStatus = new TaamAssign.InteractivePanel();
+            this.ipStrategy = new TaamAssign.InteractivePanel();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
@@ -67,6 +67,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.nmSectorCount = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
+            this.cbSwitchMutation = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numCycles)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbMutationChance)).BeginInit();
@@ -254,6 +255,7 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage1.Controls.Add(this.cbSwitchMutation);
             this.tabPage1.Controls.Add(this.cbPartialGenomCrossover);
             this.tabPage1.Controls.Add(this.cbApplyNaturalSelection);
             this.tabPage1.Controls.Add(this.cbApplyElitist);
@@ -531,6 +533,18 @@
             this.label3.TabIndex = 4;
             this.label3.Text = "Serctor Count:";
             // 
+            // cbSwitchMutation
+            // 
+            this.cbSwitchMutation.AutoSize = true;
+            this.cbSwitchMutation.Location = new System.Drawing.Point(140, 151);
+            this.cbSwitchMutation.Margin = new System.Windows.Forms.Padding(2);
+            this.cbSwitchMutation.Name = "cbSwitchMutation";
+            this.cbSwitchMutation.Size = new System.Drawing.Size(116, 19);
+            this.cbSwitchMutation.TabIndex = 5;
+            this.cbSwitchMutation.Text = "Switch mutation";
+            this.cbSwitchMutation.UseVisualStyleBackColor = true;
+            this.cbSwitchMutation.CheckedChanged += new System.EventHandler(this.cbConfig_TextChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -601,6 +615,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NumericUpDown nmBattalionCount;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.CheckBox cbSwitchMutation;
     }
 }
 

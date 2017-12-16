@@ -16,7 +16,8 @@ namespace Library
         public static bool ApplyElitist = true;
         public static bool ApplyNaturalSelection = true;
         public static bool PartialGenomCrossover = false;
-
+        public static bool SwitchMutation = false;
+        
         private static Dictionary<string, Action<object>> Delegates = new Dictionary<string, Action<object>>();
 
         static GlobalConfiguration()
@@ -27,6 +28,7 @@ namespace Library
             Delegates["ApplyElitist"] = (value) => ApplyElitist = Convert.ToBoolean(value);
             Delegates["ApplyNaturalSelection"] = (value) => ApplyNaturalSelection = Convert.ToBoolean(value);
             Delegates["PartialGenomCrossover"] = (value) => PartialGenomCrossover = Convert.ToBoolean(value);
+            Delegates["SwitchMutation"] = (value) => SwitchMutation = Convert.ToBoolean(value);
         }
 
         public static Action<object> GetDelegate(string Name)

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TaamLogics;
 
-namespace GeneticTargeting
+namespace TaamAssign
 {
     public partial class Form1 : Form
     {
@@ -60,7 +60,17 @@ namespace GeneticTargeting
                             g.DrawLine(p, (int)Location.X + 200 * j, (int)Location.Y, (int)Location.X + 200 * j, (int)Location.Y + 100);
                             if (AssignedBattalions[j] != null)
                             {
+
                                 SolidBrush bbb = new SolidBrush(CStrategyPool.ActiveStrategy.BattalionsData[AssignedBattalions[j].UID].ScoreAssignment(Genes[i * TaamCalendar.ChunksCount + j]) > 0 ? Color.Red : Color.Black);
+
+                                CSimpleBattalion Battalion = CStrategyPool.ActiveStrategy.BattalionsData[Genes[i * TaamCalendar.ChunksCount + j].BattalionUID];
+                                CSimpleSector Sector = CStrategyPool.ActiveStrategy.SectorsData[Genes[i * TaamCalendar.ChunksCount + j].SectorUID];
+
+                                if((Battalion.Force & Sector.ForceConstraint) == 0)
+                                {
+                                    bbb.Color = Color.Yellow;
+                                }
+
                                 int OffsetX = 90 + (200 * j);
                                 g.DrawString(AssignedBattalions[j].UID.ToString(), f, bbb, (int)Location.X + OffsetX, (int)Location.Y + 40);
                             }
@@ -89,7 +99,7 @@ namespace GeneticTargeting
                     var Assignments = BestFitness.GetGenes();
 
                     // [] Battalion, [] 4 Rotations
-                    int[][] BattalionToSectorRotation = Shared.SafeArray(CStrategyPool.ActiveStrategy.GetBattalionsCount(), () => Shared.SafeArray<int>(TaamCalendar.ChunksCount));
+                    DrawFollower[] BattalionToSectorRotation = Shared.SafeArray(CStrategyPool.ActiveStrategy.GetBattalionsCount(), () => new DrawFollower());
                     for (int i = 0; i < Assignments.Length; i++)
                     {
                         BattalionToSectorRotation[Assignments[i].BattalionUID][i % TaamCalendar.ChunksCount]++;
@@ -102,7 +112,7 @@ namespace GeneticTargeting
                         string strRotations = "";
 
                         int nMoreThenOne = 0;
-                        for (int j = 0; j < BattalionToSectorRotation[i].Length; j++)
+                        for (int j = 0; j < BattalionToSectorRotation[i].RotationsCount.Length; j++)
                         {
                             if(BattalionToSectorRotation[i][j] != 0)
                             {
@@ -147,15 +157,18 @@ namespace GeneticTargeting
             this.cbPartialGenomCrossover.CheckState = GlobalConfiguration.PartialGenomCrossover ? CheckState.Checked : CheckState.Unchecked;
             this.cbPartialGenomCrossover.Tag = GlobalConfiguration.GetDelegate("PartialGenomCrossover");
 
+            this.cbPartialGenomCrossover.CheckState = GlobalConfiguration.PartialGenomCrossover ? CheckState.Checked : CheckState.Unchecked;
+            this.cbPartialGenomCrossover.Tag = GlobalConfiguration.GetDelegate("PartialGenomCrossover");
+
+            this.cbSwitchMutation.CheckState = GlobalConfiguration.SwitchMutation ? CheckState.Checked : CheckState.Unchecked;
+            this.cbSwitchMutation.Tag = GlobalConfiguration.GetDelegate("SwitchMutation");
+
             #endregion
 
             #region Performances
 
             this.nmThreadBulkSize.Value = GlobalConfiguration.Performances.ThreadBulkSize;
             this.nmThreadBulkSize.Tag = GlobalConfiguration.GetDelegate("ThreadBulkSize");
-
-            this.cbFixedStrategy.CheckState = GlobalConfiguration.Performances.FixedStrategy ? CheckState.Checked : CheckState.Unchecked;
-            this.cbFixedStrategy.Tag = GlobalConfiguration.GetDelegate("FixedStrategy");
 
             #endregion
 

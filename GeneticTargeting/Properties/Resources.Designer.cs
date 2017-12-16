@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GeneticTargeting.Properties
+namespace TaamAssign.Properties
 {
 
 

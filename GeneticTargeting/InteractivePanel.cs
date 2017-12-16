@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using Library;
 using System.Reflection;
 
-namespace GeneticTargeting
+namespace TaamAssign
 {
     public partial class InteractivePanel : UserControl
     {

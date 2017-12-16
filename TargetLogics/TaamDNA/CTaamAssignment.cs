@@ -65,30 +65,10 @@ namespace TaamLogics
 
         public override void CalculateFitness()
         {
-            float AssignmentRules = this.CalculateAssignmentRulesFitness();
-
-            float BattalionReservedFitness = 0;
-            //Dictionary<int, int> ReservesionForBattalionScore = new Dictionary<int, int>();
-            int[] ReservesionForBattalionScore = Shared.SafeArray<int>(CStrategyPool.ActiveStrategy.GetBattalionsCount());
-
-            for (int i = 0; i < CStrategyPool.ActiveStrategy.GetSectorsCount(); i++)
-            {
-                for (int j = 0; j < TaamCalendar.ChunksCount; j++)
-                {
-                    CSingleAssignment Assignment = this[i * TaamCalendar.ChunksCount + j];
-                    ReservesionForBattalionScore[Assignment.BattalionUID] += 
-                        CStrategyPool.ActiveStrategy.BattalionsData[Assignment.BattalionUID].ScoreAssignment(Assignment);
-                }
-            }
-
-            for (int i = 0; i < ReservesionForBattalionScore.Length; i++)
-            {
-                BattalionReservedFitness += (float)ReservesionForBattalionScore[i] /
-                    CStrategyPool.ActiveStrategy.BattalionsData[i].GetReservationsScore();
-            }
-
-            BattalionReservedFitness = 1-(BattalionReservedFitness / CStrategyPool.ActiveStrategy.GetBattalionsCount());
-            this.Fitness = (AssignmentRules * .85f + BattalionReservedFitness * .15f);
+            this.Fitness = 
+                this.CalculateAssignmentRulesFitness() * .65f + 
+                this.CalculateReservesionFitness() * .125f + 
+                this.CalculateConstraintsFitness() * .225f;
         }
 
         private float CalculateAssignmentRulesFitness()
@@ -152,6 +132,46 @@ namespace TaamLogics
             return (RotationScore * .7f + TotalDestrebutionFitness * .3f);
         }
 
+        private float CalculateReservesionFitness()
+        {
+            float BattalionReservedFitness = 0;
+            //Dictionary<int, int> ReservesionForBattalionScore = new Dictionary<int, int>();
+            int[] ReservesionForBattalionScore = Shared.SafeArray<int>(CStrategyPool.ActiveStrategy.GetBattalionsCount());
+
+            for (int i = 0; i < CStrategyPool.ActiveStrategy.GetSectorsCount(); i++)
+            {
+                for (int j = 0; j < TaamCalendar.ChunksCount; j++)
+                {
+                    CSingleAssignment Assignment = this[i * TaamCalendar.ChunksCount + j];
+                    ReservesionForBattalionScore[Assignment.BattalionUID] +=
+                        CStrategyPool.ActiveStrategy.BattalionsData[Assignment.BattalionUID].ScoreAssignment(Assignment);
+                }
+            }
+
+            for (int i = 0; i < ReservesionForBattalionScore.Length; i++)
+            {
+                BattalionReservedFitness += (float)ReservesionForBattalionScore[i] /
+                    CStrategyPool.ActiveStrategy.BattalionsData[i].GetReservationsScore();
+            }
+
+            return 1 - (BattalionReservedFitness / CStrategyPool.ActiveStrategy.GetBattalionsCount());
+        }
+
+        private float CalculateConstraintsFitness()
+        {
+            float Score = 0;
+
+            for (int i = 0; i < this.Genes.Length; i++)
+            {
+                CSimpleBattalion Battalion  = CStrategyPool.ActiveStrategy.BattalionsData[this.Genes[i].BattalionUID];
+                CSimpleSector Sector        = CStrategyPool.ActiveStrategy.SectorsData[this.Genes[i].SectorUID];
+
+                Score += ((Battalion.Force & Sector.ForceConstraint) > 0) ? 1 : 0;
+            }
+
+            return Score / this.Genes.Length;
+        }
+
         public override IDNA Clone()
         {
             CTaamAssignment Copy = new CTaamAssignment(false);
@@ -166,7 +186,7 @@ namespace TaamLogics
 
         public override IDNA Crossover(IDNA objPartner)
         {
-            return GlobalConfiguration.PartialGenomCrossover ? this.PartialGenomeCrossover(objPartner) : this.CoinCrossover(objPartner);
+            return GlobalConfiguration.PartialGenomCrossover || GlobalConfiguration.SwitchMutation ? this.PartialGenomeCrossover(objPartner) : this.CoinCrossover(objPartner);
         }
 
         public IDNA CoinCrossover(IDNA objPartner)
@@ -186,7 +206,7 @@ namespace TaamLogics
             CTaamAssignment child = new CTaamAssignment(false);
             CTaamAssignment partner = (CTaamAssignment)objPartner;
 
-            int nStart = Shared.Next(this.Genes.Length / 2)+1;
+            int nStart = Shared.Next(this.Genes.Length / 2) + 1;
             int nEnd = nStart + Shared.Next(this.Genes.Length / 2);
             List<int> colPassedGenesUIDs = new List<int>();
 
@@ -199,9 +219,13 @@ namespace TaamLogics
             int nGeneInsertionPos = 0;
             for (int i = 0; i < this.Genes.Length; i++)
             {
+                if (nGeneInsertionPos == nStart)
+                {
+                    nGeneInsertionPos = nEnd;
+                }
+
                 if (colPassedGenesUIDs.Contains(this.Genes[i].UID))
                 {
-                    nGeneInsertionPos++;
                     continue;
                 }
 
@@ -227,11 +251,18 @@ namespace TaamLogics
             {
                 if (Shared.HitChance(GlobalConfiguration.MutationChance / 100))
                 {
-                    this[i].BattalionUID = CStrategyPool.ActiveStrategy.GetRandomBattalionUID();
-                    //int index1 = Shared.Next(this.Genes.Length);
-                    //int t = this[i].BattalionUID;
-                    //this[i].BattalionUID = this[index1].BattalionUID;
-                    //this[index1].BattalionUID = t;
+                    if (GlobalConfiguration.SwitchMutation)
+                    {
+                        int index1 = Shared.Next(this.Genes.Length);
+                        int t = this[i].BattalionUID;
+                        this[i].BattalionUID = this[index1].BattalionUID;
+                        this[index1].BattalionUID = t;
+                    }
+                    else
+                    {
+                        this[i].BattalionUID = CStrategyPool.ActiveStrategy.GetRandomBattalionUID();
+                    }
+                    
                 }
             }
 
