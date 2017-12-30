@@ -247,22 +247,22 @@ namespace TaamLogics
         {
             bool Mutated = false;
 
-            for (int i = 0; i < this.Genes.Length; i++)
+            if (GlobalConfiguration.SwitchMutation)
             {
-                if (Shared.HitChance(GlobalConfiguration.MutationChance / 100))
+                int index1 = Shared.Next(this.Genes.Length);
+                int index2 = Shared.Next(this.Genes.Length);
+                int t = this[index2].BattalionUID;
+                this[index2].BattalionUID = this[index1].BattalionUID;
+                this[index1].BattalionUID = t;
+            }
+            else
+            {
+                for (int i = 0; i < this.Genes.Length; i++)
                 {
-                    if (GlobalConfiguration.SwitchMutation)
-                    {
-                        int index1 = Shared.Next(this.Genes.Length);
-                        int t = this[i].BattalionUID;
-                        this[i].BattalionUID = this[index1].BattalionUID;
-                        this[index1].BattalionUID = t;
-                    }
-                    else
+                    if (Shared.HitChance(GlobalConfiguration.MutationChance / 100))
                     {
                         this[i].BattalionUID = CStrategyPool.ActiveStrategy.GetRandomBattalionUID();
                     }
-                    
                 }
             }
 

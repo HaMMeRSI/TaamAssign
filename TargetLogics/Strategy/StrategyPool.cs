@@ -8,9 +8,9 @@ namespace TaamLogics
         public static AssignmentStrategy ActiveStrategy { get; private set; }
         private static ConcurrentStack<AssignmentStrategy> FreeStrategyPool { get; set; } = new ConcurrentStack<AssignmentStrategy>();
 
-        public static void CreateRandomStrategy(CMap Terrain)
+        public static void CreateRandomStrategy()
         {
-            PartialFixedStrategyDataSource ds = new PartialFixedStrategyDataSource(Terrain);
+            PartialFixedStrategyDataSource ds = new PartialFixedStrategyDataSource();
             ActiveStrategy = new AssignmentStrategy(ds);
             FreeStrategyPool.Clear();
         }

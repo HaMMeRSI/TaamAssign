@@ -55,6 +55,8 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlgorithemCoordinator.cs" />
+    <Compile Include="AnnealingProccess.cs" />
     <Compile Include="Core\MergeSort.cs" />
     <Compile Include="Core\RandomByRange.cs" />
     <Compile Include="CStatutsGraph.cs" />

@@ -38,10 +38,11 @@
             this.tbScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbScale.Location = new System.Drawing.Point(0, 0);
+            this.tbScale.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tbScale.Maximum = 100;
             this.tbScale.Minimum = 1;
             this.tbScale.Name = "tbScale";
-            this.tbScale.Size = new System.Drawing.Size(186, 56);
+            this.tbScale.Size = new System.Drawing.Size(142, 56);
             this.tbScale.TabIndex = 0;
             this.tbScale.TickStyle = System.Windows.Forms.TickStyle.None;
             this.tbScale.Value = 25;
@@ -52,9 +53,10 @@
             this.pnlView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlView.Location = new System.Drawing.Point(0, 62);
+            this.pnlView.Location = new System.Drawing.Point(0, 33);
+            this.pnlView.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.pnlView.Name = "pnlView";
-            this.pnlView.Size = new System.Drawing.Size(189, 127);
+            this.pnlView.Size = new System.Drawing.Size(142, 121);
             this.pnlView.TabIndex = 1;
             this.pnlView.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlView_Paint);
             this.pnlView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlView_MouseDown);
@@ -63,12 +65,13 @@
             // 
             // InteractivePanel
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.tbScale);
             this.Controls.Add(this.pnlView);
+            this.Controls.Add(this.tbScale);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "InteractivePanel";
-            this.Size = new System.Drawing.Size(189, 189);
+            this.Size = new System.Drawing.Size(142, 154);
             ((System.ComponentModel.ISupportInitialize)(this.tbScale)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

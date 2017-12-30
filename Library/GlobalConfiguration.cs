@@ -9,19 +9,29 @@ namespace Library
     public class GlobalConfiguration
     {
         #region Genetic configuration
-
+        public static int GenerationCount = 1;
         public static int PopulationCount = 500;
         public static float MutationChance = .7f;
         public static float ParentChance = 0;
         public static bool ApplyElitist = true;
         public static bool ApplyNaturalSelection = true;
         public static bool PartialGenomCrossover = false;
+        #endregion
+
+
+        #region Simulated Annealing configuration
+
+        public static int InitialTempature = 500;
+        public static double TempatureDecay = 0.0001;
+
+        #endregion
         public static bool SwitchMutation = false;
         
         private static Dictionary<string, Action<object>> Delegates = new Dictionary<string, Action<object>>();
 
         static GlobalConfiguration()
         {
+            Delegates["GenerationCount"] = (value) => GenerationCount = Convert.ToInt32(value);
             Delegates["PopulationCount"] = (value) => PopulationCount = Convert.ToInt32(value);
             Delegates["MutationChance"] = (value) => MutationChance = (float)Convert.ToDouble(value);
             Delegates["ParentChance"] = (value) => ParentChance = (float)Convert.ToDouble(value);
@@ -29,6 +39,8 @@ namespace Library
             Delegates["ApplyNaturalSelection"] = (value) => ApplyNaturalSelection = Convert.ToBoolean(value);
             Delegates["PartialGenomCrossover"] = (value) => PartialGenomCrossover = Convert.ToBoolean(value);
             Delegates["SwitchMutation"] = (value) => SwitchMutation = Convert.ToBoolean(value);
+            Delegates["InitialTempature"] = (value) => InitialTempature = Convert.ToInt32(value);
+            Delegates["TempatureDecay"] = (value) => TempatureDecay = Convert.ToDouble(value);
         }
 
         public static Action<object> GetDelegate(string Name)
@@ -36,7 +48,6 @@ namespace Library
             return Delegates[Name];
         }
 
-        #endregion
 
         public class Assignemnt
         {

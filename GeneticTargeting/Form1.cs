@@ -17,120 +17,13 @@ namespace TaamAssign
 {
     public partial class Form1 : Form
     {
-        private CMap Terrain { get; set; }
-        public static God PopGen { get; set; }
-        public bool IsStarted { get; set; }
+        public BaseOptimizationLogic MyOptimizer { get; set; }
 
         public Form1()
         {
             InitializeComponent();
-            this.Terrain = new CMap(10, 100);
-            Font f = new Font(FontFamily.GenericMonospace, 15);
-            SolidBrush b = new SolidBrush(Color.Black);
-            Pen p = new Pen(new SolidBrush(Color.Black), 3);
-
-            this.ipStrategy.DrawFunction = (g) =>
-            {
-                if (PopGen?.BestFitness != null)
-                {
-                    CTaamAssignment BestFitness = (CTaamAssignment)PopGen?.BestFitness;
-                    // this.Terrain.Draw(g);
-
-                    int CounterY = 0;
-                    var Genes = BestFitness.GetGenes();
-                    for (int i = 0; i < CStrategyPool.ActiveStrategy.GetSectorsCount(); i++)
-                    {
-                        var ActiveSector = CStrategyPool.ActiveStrategy.SectorsData[i];
-                        CSimpleBattalion[] AssignedBattalions = new CSimpleBattalion[TaamCalendar.ChunksCount];
-                        Point2D Location = new Point2D();
-
-                        for (int j = 0; j < TaamCalendar.ChunksCount; j++)
-                        {
-                            CSingleAssignment SectorAssignment = Genes[i * TaamCalendar.ChunksCount + j];
-                            AssignedBattalions[j] = CStrategyPool.ActiveStrategy.BattalionsData[SectorAssignment.BattalionUID];
-                        }
-
-                        Location.Y = CounterY;
-                        g.DrawString(ActiveSector.UID.ToString() + ":", f, b, (int)Location.X - 130, (int)Location.Y + 40);
-                        g.DrawString(ActiveSector.MySectorialBrigade.ToString() + ":", f, b, (int)Location.X - 130, (int)Location.Y + 60);
-                        g.DrawRectangle(p, (int)Location.X, (int)Location.Y, 800, 100);
-
-                        for (int j = 0; j < TaamCalendar.ChunksCount; j++)
-                        {
-                            g.DrawLine(p, (int)Location.X + 200 * j, (int)Location.Y, (int)Location.X + 200 * j, (int)Location.Y + 100);
-                            if (AssignedBattalions[j] != null)
-                            {
-
-                                SolidBrush bbb = new SolidBrush(CStrategyPool.ActiveStrategy.BattalionsData[AssignedBattalions[j].UID].ScoreAssignment(Genes[i * TaamCalendar.ChunksCount + j]) > 0 ? Color.Red : Color.Black);
-
-                                CSimpleBattalion Battalion = CStrategyPool.ActiveStrategy.BattalionsData[Genes[i * TaamCalendar.ChunksCount + j].BattalionUID];
-                                CSimpleSector Sector = CStrategyPool.ActiveStrategy.SectorsData[Genes[i * TaamCalendar.ChunksCount + j].SectorUID];
-
-                                if((Battalion.Force & Sector.ForceConstraint) == 0)
-                                {
-                                    bbb.Color = Color.Yellow;
-                                }
-
-                                int OffsetX = 90 + (200 * j);
-                                g.DrawString(AssignedBattalions[j].UID.ToString(), f, bbb, (int)Location.X + OffsetX, (int)Location.Y + 40);
-                            }
-                        }
-
-
-                        CounterY += 120;
-                    }
-                }
-            };
-
-            this.ipStrategy.UpdateFunction = () => CStrategyPool.ActiveStrategy.Update();
-
-            this.ipStatus.DrawFunction = (g) =>
-            {
-                PopGen?.StatusGraph.Draw(g);
-            };
-
-
-            this.ipBattalionToSectorSum.DrawFunction = g =>
-            {
-                if (PopGen?.BestFitness != null)
-                {
-                    CTaamAssignment BestFitness = (CTaamAssignment)PopGen.BestFitness;
-                    int yCounter = 0;
-                    var Assignments = BestFitness.GetGenes();
-
-                    // [] Battalion, [] 4 Rotations
-                    DrawFollower[] BattalionToSectorRotation = Shared.SafeArray(CStrategyPool.ActiveStrategy.GetBattalionsCount(), () => new DrawFollower());
-                    for (int i = 0; i < Assignments.Length; i++)
-                    {
-                        BattalionToSectorRotation[Assignments[i].BattalionUID][i % TaamCalendar.ChunksCount]++;
-                    }
-
-                    for (int i = 0; i < BattalionToSectorRotation.Length; i++)
-                    {
-                        SolidBrush bb = new SolidBrush(Color.Black);
-                        string strRow = string.Format("b" + (i < 10 ? "0" + i : i + ""));
-                        string strRotations = "";
-
-                        int nMoreThenOne = 0;
-                        for (int j = 0; j < BattalionToSectorRotation[i].RotationsCount.Length; j++)
-                        {
-                            if(BattalionToSectorRotation[i][j] != 0)
-                            {
-                                strRotations += "r" + j + ": " + BattalionToSectorRotation[i][j] + ", ";
-                                nMoreThenOne++;
-                            }
-                            if(BattalionToSectorRotation[i][j] > 1 || nMoreThenOne > 2)
-                            {
-                                bb.Color = Color.Red;
-                            }
-                        }
-
-                        strRow += ";   " + strRotations;
-                        g.DrawString(strRow, f, bb, 0, yCounter);
-                        yCounter += 20;
-                    }
-                }
-            };
+            this.MyOptimizer = new GeneticLogic();
+            this.InitIPs();
 
             this.initConfigDelegation();
         }
@@ -138,6 +31,9 @@ namespace TaamAssign
         public void initConfigDelegation()
         {
             #region Genetic Configuration
+
+            this.numCycles.Value = GlobalConfiguration.GenerationCount;
+            this.numCycles.Tag = GlobalConfiguration.GetDelegate("GenerationCount");
 
             this.tbPopulationSize.Value = GlobalConfiguration.PopulationCount;
             this.tbPopulationSize.Tag = GlobalConfiguration.GetDelegate("PopulationCount");
@@ -154,14 +50,15 @@ namespace TaamAssign
             this.cbApplyNaturalSelection.CheckState = GlobalConfiguration.ApplyNaturalSelection ? CheckState.Checked : CheckState.Unchecked;
             this.cbApplyNaturalSelection.Tag = GlobalConfiguration.GetDelegate("ApplyNaturalSelection");
 
-            this.cbPartialGenomCrossover.CheckState = GlobalConfiguration.PartialGenomCrossover ? CheckState.Checked : CheckState.Unchecked;
-            this.cbPartialGenomCrossover.Tag = GlobalConfiguration.GetDelegate("PartialGenomCrossover");
+            #endregion
 
-            this.cbPartialGenomCrossover.CheckState = GlobalConfiguration.PartialGenomCrossover ? CheckState.Checked : CheckState.Unchecked;
-            this.cbPartialGenomCrossover.Tag = GlobalConfiguration.GetDelegate("PartialGenomCrossover");
+            #region Genetic Configuration
 
-            this.cbSwitchMutation.CheckState = GlobalConfiguration.SwitchMutation ? CheckState.Checked : CheckState.Unchecked;
-            this.cbSwitchMutation.Tag = GlobalConfiguration.GetDelegate("SwitchMutation");
+            this.nmInitialTempature.Value = GlobalConfiguration.InitialTempature;
+            this.nmInitialTempature.Tag = GlobalConfiguration.GetDelegate("InitialTempature");
+
+            this.nmTempatureDecay.Value = (decimal)GlobalConfiguration.TempatureDecay;
+            this.nmTempatureDecay.Tag = GlobalConfiguration.GetDelegate("TempatureDecay");
 
             #endregion
 
@@ -184,81 +81,47 @@ namespace TaamAssign
             #endregion
         }
 
-        private async void btnGeneratePopulation_Click(object sender, EventArgs e)
+        private async void btnLaunch_Click(object sender, EventArgs e)
         {
-            int cycles = Convert.ToInt32(this.numCycles.Value);
-
             Progress<IDNA> progress = new Progress<IDNA>(world => {
-                this.UpdateBestFitnessLabels();
-                this.ipStatus.TransformOrigin.X = -PopGen.StatusGraph.GetWidth();
-                this.ipStatus.TransformOrigin.Y = -PopGen.StatusGraph.GetHeight();
+                this.ipLog.Refresh();
+                this.ipStatusGraph.TransformOrigin.X = -this.MyOptimizer.GetStatusGraph().GetWidth();
+                this.ipStatusGraph.TransformOrigin.Y = -this.MyOptimizer.GetStatusGraph().GetHeight();
+                this.ipStatusGraph.Refresh();
             });
 
-            this.btnGeneratePopulation.Enabled = false;
             this.btnRestrategize.Enabled = false;
             this.btnStart.Enabled = false;
+            this.btnLaunchOptimizer.Enabled = false;
 
             Stopwatch w = Stopwatch.StartNew();
-            await Task.Factory.StartNew(() => PopGen.GeneratePopulation(cycles, progress), TaskCreationOptions.LongRunning);
+            await this.MyOptimizer.LaunchOptimizer(progress);
             w.Stop();
             Debug.WriteLine(w.ElapsedMilliseconds);
 
-            this.btnGeneratePopulation.Enabled = true;
             this.btnRestrategize.Enabled = true;
             this.btnStart.Enabled = true;
+            this.btnLaunchOptimizer.Enabled = true;
 
-            this.UpdateBestFitnessLabels();
+            this.ipLog.Refresh();
             this.ipStrategy.Refresh();
         }
 
         private void btnStart_Click(object sender, EventArgs e)
         {
             this.btnStart.Text = "Restart!";
-            if (this.IsStarted)
-            {
-                this.InitPopulation();
-            } 
-            else
-            {
-                this.Restrategize();
-            }
-            this.btnGeneratePopulation.Enabled = true;
+            this.btnLaunchOptimizer.Enabled = true;
             this.btnRestrategize.Enabled = true;
-            this.IsStarted = true;
+            this.MyOptimizer.InitOptimizer();
+            this.ipLog.Refresh();
+            this.ipStrategy.Refresh();
         }
 
         private void btnRestrategize_Click(object sender, EventArgs e)
         {
-            this.Restrategize();
-            //var a = new TaamCalendar();
-            //var b = a.GetTaamChunks(new DateTime(2018,1,1));
-        }
-
-        private void Restrategize()
-        {
-            CStrategyPool.CreateRandomStrategy(this.Terrain);
-            // this.ipStrategy.TransformOrigin = new Point2D(-this.Terrain.GetWidth() / 2, -this.Terrain.GetHeight() / 2);
-            this.InitPopulation();
-        }
-
-        private void InitPopulation()
-        {
-            PopGen = new God(this.GetPopulationGenerator());
-
-            this.UpdateBestFitnessLabels();
+            this.MyOptimizer.Restrategize();
+            this.ipLog.Refresh();
             this.ipStrategy.Refresh();
-        }
-
-        public Func<IDNA> GetPopulationGenerator()
-        {
-            return () => new CTaamAssignment();
-        }
-
-        private void UpdateBestFitnessLabels()
-        {
-            this.lblGenerationCount.Text = "Curr gen count: " + PopGen.GenerationCount;
-            this.lblAverageFitness.Text = "Average fitness: " + PopGen.AvreageFitness;
-            this.lblBestFitness.Text = "Best Fitness: " + PopGen.BestFitness.GetFitnesss();
         }
 
         private void tbConfig_TextChanged(object sender, EventArgs e)
@@ -279,18 +142,46 @@ namespace TaamAssign
             }
         }
 
-        private void pnlStatusGraph_Paint(object sender, PaintEventArgs e)
+        private void OptimizationTab_SelectedIndexChanged(object sender, EventArgs e)
         {
-            e.Graphics.Clear(Color.Silver);
-            if (PopGen?.BestFitness != null)
+            TabControl Tab = (TabControl)sender;
+            this.btnStart.Text = "Start!";
+            this.btnLaunchOptimizer.Enabled = false;
+            this.btnRestrategize.Enabled = false;
+
+            if (Tab.SelectedTab.Name == "Annealing")
             {
-                PopGen.StatusGraph.Draw(e.Graphics);
+                this.MyOptimizer = new AnnealerLogic();
+                GlobalConfiguration.SwitchMutation = true;
+            }
+            else// if(Tab.SelectedTab.Name == "Genetic")
+            {
+                this.MyOptimizer = new GeneticLogic();
+                GlobalConfiguration.SwitchMutation = false;
+            }
+
+            this.InitIPs();
+        }
+
+        private void tmrStatusUpdate_Tick(object sender, EventArgs e)
+        {
+            if (!this.btnStart.Enabled)
+            {
+                this.ipLog.Refresh();
+                this.ipStatusGraph.TransformOrigin.X = -this.MyOptimizer.GetStatusGraph()?.GetWidth() ?? 0;
+                this.ipStatusGraph.TransformOrigin.Y = -this.MyOptimizer.GetStatusGraph()?.GetHeight() ?? 0;
+                this.ipStatusGraph.Refresh();
             }
         }
 
-        private void timer1_Tick_1(object sender, EventArgs e)
+        private void InitIPs()
         {
-            this.ipStatus.Refresh();
+            this.ipBattalionToSectorSum.DrawFunction = this.MyOptimizer.GetBattalionToSectorSumDrawer();
+            this.ipStrategy.DrawFunction = this.MyOptimizer.GetStrategyDrawer();
+            this.ipStrategy.UpdateFunction = () => CStrategyPool.ActiveStrategy.Update();
+
+            this.ipStatusGraph.DrawFunction = this.MyOptimizer.GetStatusGraphDrawer();
+            this.ipLog.DrawFunction = this.MyOptimizer.GetLoggerDrawer();
         }
     }
 }

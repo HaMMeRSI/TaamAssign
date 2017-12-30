@@ -72,6 +72,9 @@
     <Compile Include="InteractivePanel.Designer.cs">
       <DependentUpon>InteractivePanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="OptimizationLogic\AnnealerLogics.cs" />
+    <Compile Include="OptimizationLogic\BaseOptimizationLogic.cs" />
+    <Compile Include="OptimizationLogic\GeneticLogic.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -117,8 +120,6 @@
       <Name>TaamLogics</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="GeneticLogic\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

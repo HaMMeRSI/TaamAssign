@@ -21,7 +21,7 @@ namespace TaamAssign
         private Point2D MouseDownLocation { get; set; }
         public Point2D TransformOrigin { get; set; }
         private float Angle { get; set; }
-
+        public bool CenterDraw { get; set; }
         public Action<Graphics> DrawFunction { get; set; }
         public Action UpdateFunction { get; set; }
 
@@ -47,7 +47,12 @@ namespace TaamAssign
         {
             e.Graphics.Clear(Color.Silver);
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            e.Graphics.TranslateTransform(this.Width / 2, this.Height / 2);
+
+            if (CenterDraw)
+            {
+                e.Graphics.TranslateTransform(this.Width / 2, this.Height / 2);
+            }
+
             e.Graphics.ScaleTransform(this.TScale, this.TScale);
             e.Graphics.RotateTransform(this.Angle);
             e.Graphics.TranslateTransform((float)this.TransformOrigin.X, (float)this.TransformOrigin.Y);

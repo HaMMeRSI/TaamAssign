@@ -39,6 +39,11 @@ namespace EvolutionaryLogic
             }
         }
 
+        public void ClearHistory()
+        {
+            this.BestFitnessHistory.Clear();
+        }
+
         public int GetWidth()
         {
             return this.BestFitnessHistory.Count * X_JUMP;
@@ -56,6 +61,11 @@ namespace EvolutionaryLogic
 
         public void Draw(Graphics g)
         {
+            if (BestFitnessHistory.Count == 0)
+            {
+                return;
+            }
+
             PointF[] points = new PointF[BestFitnessHistory.Count];
 
             for (int i = 0; i < points.Length; i++)
