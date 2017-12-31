@@ -7,8 +7,8 @@
     <ProjectGuid>{A15C7BDC-4C0A-4C4A-8918-A7800885596A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EvolutionaryLogic</RootNamespace>
-    <AssemblyName>EvolutionaryLogic</AssemblyName>
+    <RootNamespace>OptimizationLogics</RootNamespace>
+    <AssemblyName>OptimizationLogics</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -55,15 +55,17 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnnealingProccess.cs" />
+    <Compile Include="Particle Swarm\Particle.cs" />
+    <Compile Include="Simulated Annealing\AnnealingProccess.cs" />
     <Compile Include="Core\MergeSort.cs" />
     <Compile Include="Core\RandomByRange.cs" />
     <Compile Include="CStatutsGraph.cs" />
     <Compile Include="DNA.cs" />
-    <Compile Include="God.cs" />
+    <Compile Include="Evolution\God.cs" />
     <Compile Include="IDNA.cs" />
-    <Compile Include="MatingPool.cs" />
-    <Compile Include="PopulationSelector.cs" />
+    <Compile Include="Evolution\MatingPool.cs" />
+    <Compile Include="Particle Swarm\ParticleSwarm.cs" />
+    <Compile Include="Evolution\PopulationSelector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
