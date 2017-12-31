@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EvolutionaryLogic
+namespace OptimizationLogics
 {
     public abstract class DNA<T>: IDNA
     {
@@ -59,6 +59,7 @@ namespace EvolutionaryLogic
 
         public abstract void CalculateFitness();
         public abstract bool Mutate();
+        public abstract bool Mutate(Random rnd);
         public abstract IDNA Clone();
         public abstract IDNA Revive();
     }

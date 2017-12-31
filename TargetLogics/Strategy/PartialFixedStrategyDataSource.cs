@@ -136,6 +136,14 @@ namespace TaamLogics
         {
             CSimpleSector[] Secotrs = new CSimpleSector[GlobalConfiguration.Assignemnt.SectorCount];
             var objSectorialBrigade = Enum.GetValues(typeof(ESectorialBrigade));
+            ESectorialBrigade[] BrigadeAss = new ESectorialBrigade[GlobalConfiguration.Assignemnt.SectorCount];
+
+            for (int i = 0; i < GlobalConfiguration.Assignemnt.SectorCount; i++)
+            {
+                BrigadeAss[i] = (ESectorialBrigade)objSectorialBrigade.GetValue(Shared.Next(objSectorialBrigade.Length));
+            }
+
+            BrigadeAss = BrigadeAss.OrderBy(x => (int)x).ToArray();
 
             DateTime FirstWednesday = new DateTime(2018, 1, 1);
             while (FirstWednesday.Date.DayOfWeek != DayOfWeek.Wednesday)
@@ -147,7 +155,7 @@ namespace TaamLogics
             {
                 Secotrs[i] = new CSimpleSector(
                     EConstraints.All,
-                    (ESectorialBrigade)objSectorialBrigade.GetValue(Shared.Next(objSectorialBrigade.Length - 3) + 3),
+                    BrigadeAss[i],
                     FirstWednesday);
                 Secotrs[i].SetUID(i);
             }

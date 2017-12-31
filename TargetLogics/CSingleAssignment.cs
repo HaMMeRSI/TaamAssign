@@ -36,5 +36,10 @@ namespace TaamLogics
         {
             this.BattalionUID = -1;
         }
+
+        public override string ToString()
+        {
+            return "S: " + this.SectorUID + " B: " + this.BattalionUID;
+        }
     }
 }

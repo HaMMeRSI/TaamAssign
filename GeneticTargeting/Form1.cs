@@ -1,4 +1,4 @@
-﻿using EvolutionaryLogic;
+﻿using OptimizationLogics;
 using Library;
 using System;
 using System.Collections.Generic;
@@ -24,7 +24,7 @@ namespace TaamAssign
             InitializeComponent();
             this.MyOptimizer = new GeneticLogic();
             this.InitIPs();
-
+            this.MyOptimizer.Restrategize();
             this.initConfigDelegation();
         }
 
@@ -59,6 +59,9 @@ namespace TaamAssign
 
             this.nmTempatureDecay.Value = (decimal)GlobalConfiguration.TempatureDecay;
             this.nmTempatureDecay.Tag = GlobalConfiguration.GetDelegate("TempatureDecay");
+
+            this.nmAnnealingInstances.Value = GlobalConfiguration.AnealingInstances;
+            this.nmAnnealingInstances.Tag = GlobalConfiguration.GetDelegate("AnealingInstances");
 
             #endregion
 

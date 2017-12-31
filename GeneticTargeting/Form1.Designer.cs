@@ -63,6 +63,11 @@
             this.OptimizationTab = new System.Windows.Forms.TabControl();
             this.Genetic = new System.Windows.Forms.TabPage();
             this.Annealing = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.nmInitialTempature = new System.Windows.Forms.NumericUpDown();
+            this.nmTempatureDecay = new System.Windows.Forms.NumericUpDown();
             this.Swarm = new System.Windows.Forms.TabPage();
             this.ipStrategy = new TaamAssign.InteractivePanel();
             this.ipBattalionToSectorSum = new TaamAssign.InteractivePanel();
@@ -70,11 +75,8 @@
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.ipStatusGraph = new TaamAssign.InteractivePanel();
             this.tmrStatusUpdate = new System.Windows.Forms.Timer(this.components);
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.nmInitialTempature = new System.Windows.Forms.NumericUpDown();
-            this.nmTempatureDecay = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
+            this.nmAnnealingInstances = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.numCycles)).BeginInit();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -92,10 +94,11 @@
             this.OptimizationTab.SuspendLayout();
             this.Genetic.SuspendLayout();
             this.Annealing.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nmInitialTempature)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nmTempatureDecay)).BeginInit();
+            this.tableLayoutPanel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nmAnnealingInstances)).BeginInit();
             this.SuspendLayout();
             // 
             // btnLaunchOptimizer
@@ -118,21 +121,21 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 5);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(153, 15);
+            this.label1.Size = new System.Drawing.Size(164, 15);
             this.label1.TabIndex = 3;
             this.label1.Text = "Number of generations:";
             // 
             // numCycles
             // 
             this.numCycles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.numCycles.Location = new System.Drawing.Point(162, 3);
+            this.numCycles.Location = new System.Drawing.Point(173, 3);
             this.numCycles.Maximum = new decimal(new int[] {
             1000000,
             0,
             0,
             0});
             this.numCycles.Name = "numCycles";
-            this.numCycles.Size = new System.Drawing.Size(169, 20);
+            this.numCycles.Size = new System.Drawing.Size(164, 20);
             this.numCycles.TabIndex = 4;
             this.numCycles.Value = new decimal(new int[] {
             1,
@@ -164,17 +167,14 @@
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(340, 105);
+            this.panel1.Size = new System.Drawing.Size(340, 184);
             this.panel1.TabIndex = 8;
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 47.65101F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 52.34899F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.numCycles, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.tbMutationChance, 1, 1);
@@ -183,24 +183,26 @@
             this.tableLayoutPanel1.Controls.Add(this.tbPopulationSize, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.tbParentChance, 1, 3);
             this.tableLayoutPanel1.Controls.Add(this.label4, 0, 2);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 4;
+            this.tableLayoutPanel1.RowCount = 5;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(334, 99);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(340, 184);
             this.tableLayoutPanel1.TabIndex = 13;
             // 
             // tbMutationChance
             // 
             this.tbMutationChance.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.tbMutationChance.DecimalPlaces = 5;
-            this.tbMutationChance.Location = new System.Drawing.Point(161, 28);
+            this.tbMutationChance.Location = new System.Drawing.Point(172, 28);
             this.tbMutationChance.Margin = new System.Windows.Forms.Padding(2);
             this.tbMutationChance.Name = "tbMutationChance";
-            this.tbMutationChance.Size = new System.Drawing.Size(171, 20);
+            this.tbMutationChance.Size = new System.Drawing.Size(166, 20);
             this.tbMutationChance.TabIndex = 1;
             this.tbMutationChance.TextChanged += new System.EventHandler(this.tbConfig_TextChanged);
             this.tbMutationChance.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
@@ -212,7 +214,7 @@
             this.label5.Location = new System.Drawing.Point(2, 30);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(155, 15);
+            this.label5.Size = new System.Drawing.Size(166, 15);
             this.label5.TabIndex = 0;
             this.label5.Text = "Mutation chance:";
             // 
@@ -220,17 +222,17 @@
             // 
             this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(2, 79);
+            this.label10.Location = new System.Drawing.Point(2, 78);
             this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(155, 15);
+            this.label10.Size = new System.Drawing.Size(166, 15);
             this.label10.TabIndex = 0;
             this.label10.Text = "Choose parent chance: ";
             // 
             // tbPopulationSize
             // 
             this.tbPopulationSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbPopulationSize.Location = new System.Drawing.Point(161, 52);
+            this.tbPopulationSize.Location = new System.Drawing.Point(172, 52);
             this.tbPopulationSize.Margin = new System.Windows.Forms.Padding(2);
             this.tbPopulationSize.Maximum = new decimal(new int[] {
             9999,
@@ -238,7 +240,7 @@
             0,
             0});
             this.tbPopulationSize.Name = "tbPopulationSize";
-            this.tbPopulationSize.Size = new System.Drawing.Size(171, 20);
+            this.tbPopulationSize.Size = new System.Drawing.Size(166, 20);
             this.tbPopulationSize.TabIndex = 0;
             this.tbPopulationSize.Value = new decimal(new int[] {
             1,
@@ -252,10 +254,10 @@
             // 
             this.tbParentChance.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.tbParentChance.DecimalPlaces = 5;
-            this.tbParentChance.Location = new System.Drawing.Point(161, 76);
+            this.tbParentChance.Location = new System.Drawing.Point(172, 76);
             this.tbParentChance.Margin = new System.Windows.Forms.Padding(2);
             this.tbParentChance.Name = "tbParentChance";
-            this.tbParentChance.Size = new System.Drawing.Size(171, 20);
+            this.tbParentChance.Size = new System.Drawing.Size(166, 20);
             this.tbParentChance.TabIndex = 1;
             this.tbParentChance.TextChanged += new System.EventHandler(this.tbConfig_TextChanged);
             this.tbParentChance.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
@@ -267,7 +269,7 @@
             this.label4.Location = new System.Drawing.Point(2, 54);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(155, 15);
+            this.label4.Size = new System.Drawing.Size(166, 15);
             this.label4.TabIndex = 0;
             this.label4.Text = "Population size:";
             // 
@@ -491,7 +493,7 @@
             this.OptimizationTab.Location = new System.Drawing.Point(882, 126);
             this.OptimizationTab.Name = "OptimizationTab";
             this.OptimizationTab.SelectedIndex = 0;
-            this.OptimizationTab.Size = new System.Drawing.Size(354, 137);
+            this.OptimizationTab.Size = new System.Drawing.Size(354, 216);
             this.OptimizationTab.TabIndex = 12;
             this.OptimizationTab.SelectedIndexChanged += new System.EventHandler(this.OptimizationTab_SelectedIndexChanged);
             // 
@@ -501,7 +503,7 @@
             this.Genetic.Location = new System.Drawing.Point(4, 22);
             this.Genetic.Name = "Genetic";
             this.Genetic.Padding = new System.Windows.Forms.Padding(3);
-            this.Genetic.Size = new System.Drawing.Size(346, 111);
+            this.Genetic.Size = new System.Drawing.Size(346, 190);
             this.Genetic.TabIndex = 0;
             this.Genetic.Text = "Genetic";
             this.Genetic.UseVisualStyleBackColor = true;
@@ -513,9 +515,80 @@
             this.Annealing.Location = new System.Drawing.Point(4, 22);
             this.Annealing.Name = "Annealing";
             this.Annealing.Padding = new System.Windows.Forms.Padding(3);
-            this.Annealing.Size = new System.Drawing.Size(346, 111);
+            this.Annealing.Size = new System.Drawing.Size(346, 190);
             this.Annealing.TabIndex = 1;
             this.Annealing.Text = "Annealing";
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 2;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Controls.Add(this.label6, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.label7, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.nmTempatureDecay, 1, 1);
+            this.tableLayoutPanel3.Controls.Add(this.label8, 0, 2);
+            this.tableLayoutPanel3.Controls.Add(this.nmAnnealingInstances, 1, 2);
+            this.tableLayoutPanel3.Controls.Add(this.nmInitialTempature, 1, 0);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 4;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(340, 184);
+            this.tableLayoutPanel3.TabIndex = 19;
+            // 
+            // label6
+            // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(3, 5);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(164, 15);
+            this.label6.TabIndex = 0;
+            this.label6.Text = "Initial tempature:";
+            // 
+            // label7
+            // 
+            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 31);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(164, 15);
+            this.label7.TabIndex = 1;
+            this.label7.Text = "Tempature decay:";
+            // 
+            // nmInitialTempature
+            // 
+            this.nmInitialTempature.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.nmInitialTempature.Location = new System.Drawing.Point(174, 3);
+            this.nmInitialTempature.Maximum = new decimal(new int[] {
+            999999,
+            0,
+            0,
+            0});
+            this.nmInitialTempature.Name = "nmInitialTempature";
+            this.nmInitialTempature.Size = new System.Drawing.Size(164, 20);
+            this.nmInitialTempature.TabIndex = 2;
+            this.nmInitialTempature.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
+            // 
+            // nmTempatureDecay
+            // 
+            this.nmTempatureDecay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.nmTempatureDecay.DecimalPlaces = 10;
+            this.nmTempatureDecay.Location = new System.Drawing.Point(173, 29);
+            this.nmTempatureDecay.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nmTempatureDecay.Name = "nmTempatureDecay";
+            this.nmTempatureDecay.Size = new System.Drawing.Size(164, 20);
+            this.nmTempatureDecay.TabIndex = 2;
+            this.nmTempatureDecay.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
             // 
             // Swarm
             // 
@@ -563,11 +636,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ipLog.CenterDraw = false;
             this.ipLog.DrawFunction = null;
-            this.ipLog.Location = new System.Drawing.Point(883, 270);
+            this.ipLog.Location = new System.Drawing.Point(883, 347);
             this.ipLog.Margin = new System.Windows.Forms.Padding(2);
             this.ipLog.Name = "ipLog";
             this.ipLog.ScaleFactor = 25;
-            this.ipLog.Size = new System.Drawing.Size(349, 274);
+            this.ipLog.Size = new System.Drawing.Size(349, 197);
             this.ipLog.TabIndex = 16;
             this.ipLog.TransformOrigin = point2D7;
             this.ipLog.UpdateFunction = null;
@@ -606,74 +679,41 @@
             // tmrStatusUpdate
             // 
             this.tmrStatusUpdate.Enabled = true;
-            this.tmrStatusUpdate.Interval = 10;
             this.tmrStatusUpdate.Tick += new System.EventHandler(this.tmrStatusUpdate_Tick);
             // 
-            // tableLayoutPanel3
+            // label8
             // 
-            this.tableLayoutPanel3.ColumnCount = 2;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Controls.Add(this.label6, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.label7, 0, 1);
-            this.tableLayoutPanel3.Controls.Add(this.nmInitialTempature, 1, 0);
-            this.tableLayoutPanel3.Controls.Add(this.nmTempatureDecay, 1, 1);
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 2;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(344, 111);
-            this.tableLayoutPanel3.TabIndex = 19;
+            this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(3, 57);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(164, 15);
+            this.label8.TabIndex = 1;
+            this.label8.Text = "Instances:";
             // 
-            // label6
+            // nmAnnealingInstances
             // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(3, 20);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(166, 15);
-            this.label6.TabIndex = 0;
-            this.label6.Text = "Initial tempature:";
-            // 
-            // label7
-            // 
-            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 75);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(166, 15);
-            this.label7.TabIndex = 1;
-            this.label7.Text = "Tempature decay:";
-            // 
-            // nmInitialTempature
-            // 
-            this.nmInitialTempature.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.nmInitialTempature.Location = new System.Drawing.Point(175, 17);
-            this.nmInitialTempature.Maximum = new decimal(new int[] {
-            999999,
+            this.nmAnnealingInstances.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.nmAnnealingInstances.Location = new System.Drawing.Point(173, 55);
+            this.nmAnnealingInstances.Maximum = new decimal(new int[] {
+            99999,
             0,
             0,
             0});
-            this.nmInitialTempature.Name = "nmInitialTempature";
-            this.nmInitialTempature.Size = new System.Drawing.Size(166, 20);
-            this.nmInitialTempature.TabIndex = 2;
-            this.nmInitialTempature.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
-            // 
-            // nmTempatureDecay
-            // 
-            this.nmTempatureDecay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.nmTempatureDecay.DecimalPlaces = 10;
-            this.nmTempatureDecay.Location = new System.Drawing.Point(175, 73);
-            this.nmTempatureDecay.Maximum = new decimal(new int[] {
+            this.nmAnnealingInstances.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.nmTempatureDecay.Name = "nmTempatureDecay";
-            this.nmTempatureDecay.Size = new System.Drawing.Size(166, 20);
-            this.nmTempatureDecay.TabIndex = 2;
-            this.nmTempatureDecay.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
+            this.nmAnnealingInstances.Name = "nmAnnealingInstances";
+            this.nmAnnealingInstances.Size = new System.Drawing.Size(164, 20);
+            this.nmAnnealingInstances.TabIndex = 2;
+            this.nmAnnealingInstances.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nmAnnealingInstances.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
             // 
             // Form1
             // 
@@ -710,11 +750,12 @@
             this.OptimizationTab.ResumeLayout(false);
             this.Genetic.ResumeLayout(false);
             this.Annealing.ResumeLayout(false);
-            this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nmInitialTempature)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nmTempatureDecay)).EndInit();
+            this.tableLayoutPanel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.nmAnnealingInstances)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -762,6 +803,8 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.NumericUpDown nmInitialTempature;
         private System.Windows.Forms.NumericUpDown nmTempatureDecay;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.NumericUpDown nmAnnealingInstances;
     }
 }
 

@@ -1,4 +1,4 @@
-﻿using EvolutionaryLogic;
+﻿using OptimizationLogics;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EvolutionaryLogic
+namespace OptimizationLogics
 {
     public class AnnealingProccess
     {
@@ -21,14 +21,72 @@ namespace EvolutionaryLogic
             this.BestFitness.CalculateFitness();
         }
 
-        public void Anneal(IProgress<IDNA> progress)
+        public void MultiAnneal(int Instances)
         {
-            this.Temperature = GlobalConfiguration.InitialTempature;
-            this.StatusGraph.ClearHistory();
+            if (Instances == 1)
+            {
+                this.SingleAnneal();
+            }
+            else
+            {
+                Task<IDNA>[] AnnealingInstances = new Task<IDNA>[Instances];
 
+                for (int i = 0; i < Instances; i++)
+                {
+                    AnnealingInstances[i] = Task.Factory.StartNew(() => this.Anneal(this.BestFitness.Clone()), TaskCreationOptions.None);
+                }
+
+                Task.WaitAll(AnnealingInstances);
+
+                for (int i = 0; i < Instances; i++)
+                {
+                    if (AnnealingInstances[i].Result.GetFitnesss() > this.BestFitness.GetFitnesss())
+                    {
+                        this.BestFitness = AnnealingInstances[i].Result;
+                    }
+                }
+            }
+        }
+
+        public IDNA Anneal(IDNA Initial)
+        {
+            double InstanceTempature = GlobalConfiguration.InitialTempature;
+            Random rnd = new Random((int)DateTime.Now.Ticks);
+            IDNA CurrentIterator = Initial.Clone();
+            IDNA InstanceBest = Initial.Clone();
+
+            while (InstanceTempature > 1)
+            {
+                IDNA Neighbour = CurrentIterator.Clone();
+                Neighbour.Mutate(rnd);
+                Neighbour.CalculateFitness();
+
+                double probability = AcceptanceProbability(1 / CurrentIterator.GetFitnesss() * 100000, 1 / Neighbour.GetFitnesss() * 100000, InstanceTempature);
+                if (Shared.HitChance(rnd, probability))
+                {
+                    CurrentIterator = Neighbour;
+                }
+
+                if (BestFitness.GetFitnesss() < Neighbour.GetFitnesss())
+                {
+                    InstanceBest = CurrentIterator;
+                }
+
+                InstanceTempature *= 1 - GlobalConfiguration.TempatureDecay;
+            }
+
+            return InstanceBest;
+        }
+
+        public void SingleAnneal()
+        {
             IDNA CurrentIterator = this.BestFitness.Clone();
+            this.BestFitness = this.BestFitness.Clone();
+            this.StatusGraph.ClearHistory();
+            this.StatusGraph.Average = 0;
+            this.Temperature = GlobalConfiguration.InitialTempature;
 
-            while (this.Temperature > 0)
+            while (this.Temperature > 1)
             {
                 IDNA Neighbour = CurrentIterator.Clone();
                 Neighbour.Mutate();
@@ -46,15 +104,10 @@ namespace EvolutionaryLogic
                 }
 
                 this.StatusGraph.AddToHistory(CurrentIterator.GetFitnesss());
-                this.StatusGraph.Average = 0;
-
                 this.Temperature *= 1 - GlobalConfiguration.TempatureDecay;
-
-                //if(this.Temperature> 1)
-                //progress.Report(this.BestFitness);
             }
-
         }
+
 
         public double AcceptanceProbability(float energy, float newEnergy, double temperature)
         {

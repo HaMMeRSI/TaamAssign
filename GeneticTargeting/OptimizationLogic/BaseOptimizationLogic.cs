@@ -1,4 +1,4 @@
-﻿using EvolutionaryLogic;
+﻿using OptimizationLogics;
 using Library;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,6 @@ namespace TaamAssign
 {
     public abstract class BaseOptimizationLogic
     {
-        public bool IsStarted { get; set; }
         public Font f = new Font(FontFamily.GenericMonospace, 15);
         public SolidBrush b = new SolidBrush(Color.Black);
         public Pen p = new Pen(new SolidBrush(Color.Black), 3);
@@ -26,50 +25,57 @@ namespace TaamAssign
         {
             return (g) =>
             {
-                CTaamAssignment BestFitness = this.GetBestFitness();
-                if (BestFitness != null)
+                DateTime NewYear = new DateTime(2018, 1, 1);
+                CSingleAssignment[] Genes = this.GetBestFitness()?.GetGenes();
+                if (Genes != null)
                 {
                     int CounterY = 0;
-                    var Genes = BestFitness.GetGenes();
+                    int OffsetX = 0;
+                    CSingleAssignment FirstAssignemnt;
+                    CSingleAssignment CurrentAssignemnt;
+                    CSimpleSector ActiveSector;
+
                     for (int i = 0; i < CStrategyPool.ActiveStrategy.GetSectorsCount(); i++)
                     {
-                        var ActiveSector = CStrategyPool.ActiveStrategy.SectorsData[i];
-                        CSimpleBattalion[] AssignedBattalions = new CSimpleBattalion[TaamCalendar.ChunksCount];
-                        Point2D Location = new Point2D();
-
-                        for (int j = 0; j < TaamCalendar.ChunksCount; j++)
-                        {
-                            CSingleAssignment SectorAssignment = Genes[i * TaamCalendar.ChunksCount + j];
-                            AssignedBattalions[j] = CStrategyPool.ActiveStrategy.BattalionsData[SectorAssignment.BattalionUID];
-                        }
-
-                        Location.Y = CounterY;
+                        FirstAssignemnt = Genes[i * TaamCalendar.ChunksCount];
+                        int xPad = (int)(FirstAssignemnt.Start - NewYear).TotalDays * 4;
+                        Point2D Location = new Point2D(xPad, CounterY);
+                        ActiveSector = CStrategyPool.ActiveStrategy.SectorsData[i];
                         g.DrawString(ActiveSector.UID.ToString() + ":", f, b, (int)Location.X - 130, (int)Location.Y + 40);
                         g.DrawString(ActiveSector.MySectorialBrigade.ToString() + ":", f, b, (int)Location.X - 130, (int)Location.Y + 60);
                         g.DrawRectangle(p, (int)Location.X, (int)Location.Y, 800, 100);
 
                         for (int j = 0; j < TaamCalendar.ChunksCount; j++)
                         {
+                            CurrentAssignemnt = Genes[i * TaamCalendar.ChunksCount + j];
+                            CSimpleBattalion AssignedBattalion = CStrategyPool.ActiveStrategy.BattalionsData[CurrentAssignemnt.BattalionUID];
                             g.DrawLine(p, (int)Location.X + 200 * j, (int)Location.Y, (int)Location.X + 200 * j, (int)Location.Y + 100);
-                            if (AssignedBattalions[j] != null)
-                            {
-                                SolidBrush bbb = new SolidBrush(CStrategyPool.ActiveStrategy.BattalionsData[AssignedBattalions[j].UID].ScoreAssignment(Genes[i * TaamCalendar.ChunksCount + j]) > 0 ? Color.Red : Color.Black);
+                            g.DrawString(CurrentAssignemnt.Start.ToShortDateString(), f,b, (int)Location.X + 200 * j, (int)Location.Y);
 
-                                CSimpleBattalion Battalion = CStrategyPool.ActiveStrategy.BattalionsData[Genes[i * TaamCalendar.ChunksCount + j].BattalionUID];
-                                CSimpleSector Sector = CStrategyPool.ActiveStrategy.SectorsData[Genes[i * TaamCalendar.ChunksCount + j].SectorUID];
+                            if(j == TaamCalendar.ChunksCount - 1)
+                            {
+                                g.DrawString(CurrentAssignemnt.End.ToShortDateString(), f,b, (int)Location.X + 200 * TaamCalendar.ChunksCount, (int)Location.Y);
+                            }
+
+                            if (AssignedBattalion != null)
+                            {
+                                SolidBrush bbb = new SolidBrush(CStrategyPool.ActiveStrategy.BattalionsData[AssignedBattalion.UID].ScoreAssignment(CurrentAssignemnt) > 0 ? Color.Red : Color.Black);
+
+                                CSimpleBattalion Battalion = CStrategyPool.ActiveStrategy.BattalionsData[CurrentAssignemnt.BattalionUID];
+                                CSimpleSector Sector = CStrategyPool.ActiveStrategy.SectorsData[CurrentAssignemnt.SectorUID];
 
                                 if ((Battalion.Force & Sector.ForceConstraint) == 0)
                                 {
                                     bbb.Color = Color.Yellow;
                                 }
 
-                                int OffsetX = 90 + (200 * j);
-                                g.DrawString(AssignedBattalions[j].UID.ToString(), f, bbb, (int)Location.X + OffsetX, (int)Location.Y + 40);
+                                OffsetX = 90 + (200 * j);
+                                g.DrawString(AssignedBattalion.UID.ToString(), f, bbb, (int)Location.X + OffsetX, (int)Location.Y + 40);
                             }
                         }
 
 
-                        CounterY += 120;
+                        CounterY += 100;
                     }
                 }
             };
@@ -140,16 +146,7 @@ namespace TaamAssign
 
         public void InitOptimizer()
         {
-            if (this.IsStarted)
-            {
-                this.InitPopulation();
-            }
-            else
-            {
-                this.Restrategize();
-            }
-
-            this.IsStarted = true;
+            this.InitPopulation();
         }
 
         public abstract Task LaunchOptimizer(Progress<IDNA> progress);

@@ -1,4 +1,4 @@
-﻿using EvolutionaryLogic;
+﻿using OptimizationLogics;
 using Library;
 using System;
 using System.Collections.Generic;
@@ -245,12 +245,17 @@ namespace TaamLogics
 
         public override bool Mutate()
         {
+            return this.Mutate(Shared.rnd);
+        }
+
+        public override bool Mutate(Random rnd)
+        {
             bool Mutated = false;
 
             if (GlobalConfiguration.SwitchMutation)
             {
-                int index1 = Shared.Next(this.Genes.Length);
-                int index2 = Shared.Next(this.Genes.Length);
+                int index1 = rnd.Next(this.Genes.Length);
+                int index2 = rnd.Next(this.Genes.Length);
                 int t = this[index2].BattalionUID;
                 this[index2].BattalionUID = this[index1].BattalionUID;
                 this[index1].BattalionUID = t;
@@ -259,7 +264,7 @@ namespace TaamLogics
             {
                 for (int i = 0; i < this.Genes.Length; i++)
                 {
-                    if (Shared.HitChance(GlobalConfiguration.MutationChance / 100))
+                    if (Shared.HitChance(rnd, GlobalConfiguration.MutationChance / 100))
                     {
                         this[i].BattalionUID = CStrategyPool.ActiveStrategy.GetRandomBattalionUID();
                     }

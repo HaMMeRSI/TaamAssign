@@ -22,7 +22,8 @@ namespace Library
         #region Simulated Annealing configuration
 
         public static int InitialTempature = 500;
-        public static double TempatureDecay = 0.0001;
+        public static double TempatureDecay = 0.00025;
+        public static int AnealingInstances = 1;
 
         #endregion
         public static bool SwitchMutation = false;
@@ -41,6 +42,7 @@ namespace Library
             Delegates["SwitchMutation"] = (value) => SwitchMutation = Convert.ToBoolean(value);
             Delegates["InitialTempature"] = (value) => InitialTempature = Convert.ToInt32(value);
             Delegates["TempatureDecay"] = (value) => TempatureDecay = Convert.ToDouble(value);
+            Delegates["AnealingInstances"] = (value) => AnealingInstances = Convert.ToInt32(value);
         }
 
         public static Action<object> GetDelegate(string Name)

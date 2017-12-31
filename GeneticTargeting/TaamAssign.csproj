@@ -107,9 +107,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EvolutionaryLogic\EvolutionaryLogic.csproj">
+    <ProjectReference Include="..\EvolutionaryLogic\OptimizationLogics.csproj">
       <Project>{a15c7bdc-4c0a-4c4a-8918-a7800885596a}</Project>
-      <Name>EvolutionaryLogic</Name>
+      <Name>OptimizationLogics</Name>
     </ProjectReference>
     <ProjectReference Include="..\Library\Library.csproj">
       <Project>{3625c9df-ccfc-48d0-9561-559db497bc67}</Project>

@@ -23,7 +23,12 @@ namespace Library
 
         public static bool HitChance(double fPrecent)
         {
-            return rnd.NextDouble() <= fPrecent;
+            return HitChance(rnd, fPrecent);
+        }
+
+        public static bool HitChance(Random rand, double fPrecent)
+        {
+            return rand.NextDouble() <= fPrecent;
         }
 
         public static float map(float value, float istart, float istop, float ostart, float ostop)

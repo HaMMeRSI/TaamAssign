@@ -1,4 +1,4 @@
-﻿using EvolutionaryLogic;
+﻿using OptimizationLogics;
 using Library;
 using System;
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ namespace TaamAssign
 
         public override Task LaunchOptimizer(Progress<IDNA> progress)
         {
-            return Task.Factory.StartNew(() => Annealer.Anneal(progress), TaskCreationOptions.LongRunning);
+            return Task.Factory.StartNew(() => Annealer.MultiAnneal(GlobalConfiguration.AnealingInstances), TaskCreationOptions.LongRunning);
         }
 
         public override CStatutsGraph GetStatusGraph()
