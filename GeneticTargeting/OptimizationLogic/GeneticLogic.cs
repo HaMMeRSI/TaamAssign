@@ -11,9 +11,9 @@ using System.Diagnostics;
 
 namespace TaamAssign
 {
-    public class GeneticLogic : BaseOptimizationLogic
+    public class GeneticLogic<T> : BaseOptimizationLogic<T>
     {
-        public God PopGen { get; set; }
+        public God<T> PopGen { get; set; }
 
         public GeneticLogic()
         {
@@ -30,12 +30,12 @@ namespace TaamAssign
             return this.PopGen?.StatusGraph;
         }
 
-        public override void InitPopulation()
+        public override void InitPopulation(Func<DNA<T>> GetPopulationGenerator)
         {
-            this.PopGen = new God(this.GetPopulationGenerator());
+            this.PopGen = new God<T>(GetPopulationGenerator);
         }
 
-        public override Task LaunchOptimizer(Progress<IDNA> progress)
+        public override Task LaunchOptimizer(Progress<IDNA<T>> progress)
         {
             return Task.Factory.StartNew(() => PopGen.GeneratePopulation(GlobalConfiguration.GenerationCount, progress), TaskCreationOptions.LongRunning);
         }

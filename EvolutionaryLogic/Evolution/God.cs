@@ -8,30 +8,30 @@ using System.Threading.Tasks;
 
 namespace OptimizationLogics
 {
-    public class God
+    public class God<T>
     {
         #region Properties
 
-        private List<IDNA> Population { get; set; }
+        private List<IDNA<T>> Population { get; set; }
 
-        public IDNA BestFitness { get; set; }
+        public IDNA<T> BestFitness { get; set; }
         public int GenerationCount { get; set; }
         public float AvreageFitness { get; set; }
         public CStatutsGraph StatusGraph { get; set; }
-        public PopulationSelector MySelector { get; set; }
+        public PopulationSelector<T> MySelector { get; set; }
 
         #endregion
 
-        public God(Func<IDNA> PopulationGenerator)
+        public God(Func<IDNA<T>> PopulationGenerator)
         {
-            this.Population = new List<IDNA>();
+            this.Population = new List<IDNA<T>>();
             this.GenerationCount = 0;
             this.StatusGraph = new CStatutsGraph();
-            this.MySelector = new PopulationSelector();
+            this.MySelector = new PopulationSelector<T>();
 
             for (int i = 0; i < GlobalConfiguration.PopulationCount; i++)
             {
-                IDNA dna = PopulationGenerator();
+                IDNA<T> dna = PopulationGenerator();
                 dna.Execute();
                 this.Population.Add(dna);
             }
@@ -39,9 +39,9 @@ namespace OptimizationLogics
             this.AssessPopulation();
         }
 
-        public void GeneratePopulation(int Generations, IProgress<IDNA> progress)
+        public void GeneratePopulation(int Generations, IProgress<IDNA<T>> progress)
         {
-            MatingPool pool = new MatingPool();
+            MatingPool<T> pool = new MatingPool<T>();
             for (int i = 0; i < Generations; i++)
             {
                 if (GlobalConfiguration.ApplyNaturalSelection)
@@ -83,7 +83,7 @@ namespace OptimizationLogics
 
             for (int i = 0; i < this.Population.Count; i++)
             {
-                IDNA objDNA = this.Population[i];
+                IDNA<T> objDNA = this.Population[i];
                 TotalFintess += objDNA.GetFitnesss();
 
                 if (objDNA.GetFitnesss() > BestDNAFitness)
@@ -111,7 +111,7 @@ namespace OptimizationLogics
         public string PrintAll()
         {
             string strAll = "";
-            foreach (IDNA obj in this.Population)
+            foreach (IDNA<T> obj in this.Population)
             {
                 strAll += obj.ToString();
                 strAll += Environment.NewLine;

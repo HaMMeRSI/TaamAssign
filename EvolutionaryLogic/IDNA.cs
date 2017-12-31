@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 
 namespace OptimizationLogics
 {
-    public interface IDNA: INextGeneration<IDNA>
+    public interface IDNA<T>: INextGeneration<IDNA<T>>
     {
-        IDNA Crossover(IDNA objPartner);
+        IDNA<T> Crossover(IDNA<T> objPartner);
         bool Mutate();
         bool Mutate(Random rnd);
         void CalculateFitness();
         float GetFitnesss();
         void Execute();
+        T[] GetGenes();
     }
 }

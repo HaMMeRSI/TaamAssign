@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace OptimizationLogics
 {
-    public class MatingPool
+    public class MatingPool<T>
     {
-        public RandomByRange<IDNA> MyRoulette { get; set; }
+        public RandomByRange<IDNA<T>> MyRoulette { get; set; }
 
         public MatingPool()
         {
-            this.MyRoulette = new RandomByRange<IDNA>();
+            this.MyRoulette = new RandomByRange<IDNA<T>>();
         }
 
-        public List<IDNA> GetEvolvedPopulation(List<IDNA> Population, int nElitilstCount)
+        public List<IDNA<T>> GetEvolvedPopulation(List<IDNA<T>> Population, int nElitilstCount)
         {
-            List<IDNA> NewPop = new List<IDNA>();
+            List<IDNA<T>> NewPop = new List<IDNA<T>>();
             NewPop.AddRange(this.ChooseElitist(Population, nElitilstCount));
             this.InitRoulette(Population);
 
@@ -31,10 +31,10 @@ namespace OptimizationLogics
             return NewPop;
         }
 
-        public IDNA Crossover()
+        public IDNA<T> Crossover()
         {
-            IDNA child = null;
-            IDNA[] arrParents = this.PickParents();
+            IDNA<T> child = null;
+            IDNA<T>[] arrParents = this.PickParents();
 
             if (Shared.HitChance(GlobalConfiguration.ParentChance / 100))
             {
@@ -50,9 +50,9 @@ namespace OptimizationLogics
             return child;
         }
 
-        private IDNA[] PickParents()
+        private IDNA<T>[] PickParents()
         {
-            IDNA[] arrParents = new IDNA[2];
+            IDNA<T>[] arrParents = new IDNA<T>[2];
 
             arrParents[0] = this.MyRoulette.Pick();
             arrParents[1] = this.MyRoulette.Pick();
@@ -60,9 +60,9 @@ namespace OptimizationLogics
             return arrParents;
         }
 
-        private List<IDNA> ChooseElitist(List<IDNA> Population, int nElitistCount)
+        private List<IDNA<T>> ChooseElitist(List<IDNA<T>> Population, int nElitistCount)
         {
-            List<IDNA> Elitist = new List<IDNA>();
+            List<IDNA<T>> Elitist = new List<IDNA<T>>();
             if (GlobalConfiguration.ApplyElitist)
             {
                 if (GlobalConfiguration.ApplyNaturalSelection)
@@ -74,7 +74,7 @@ namespace OptimizationLogics
                 }
                 else
                 {
-                    IDNA[] Elitists = new IDNA[nElitistCount];
+                    IDNA<T>[] Elitists = new IDNA<T>[nElitistCount];
                     for (int j = 0; j < nElitistCount; j++)
                     {
                         Elitists[j] = Population[j];
@@ -102,7 +102,7 @@ namespace OptimizationLogics
             return Elitist;
         }
 
-        private void InitRoulette(List<IDNA> Population)
+        private void InitRoulette(List<IDNA<T>> Population)
         {
             this.MyRoulette.Clear();
             for (int i = Population.Count - 1; i >= 0; i--)

@@ -17,14 +17,14 @@ namespace TaamAssign
 {
     public partial class Form1 : Form
     {
-        public BaseOptimizationLogic MyOptimizer { get; set; }
+        public BaseOptimizationLogic<CSingleAssignment> MyOptimizer { get; set; }
 
         public Form1()
         {
             InitializeComponent();
-            this.MyOptimizer = new GeneticLogic();
+            this.MyOptimizer = new GeneticLogic<CSingleAssignment>();
             this.InitIPs();
-            this.MyOptimizer.Restrategize();
+            this.MyOptimizer.Restrategize(() => new CTaamAssignment());
             this.initConfigDelegation();
         }
 
@@ -86,7 +86,7 @@ namespace TaamAssign
 
         private async void btnLaunch_Click(object sender, EventArgs e)
         {
-            Progress<IDNA> progress = new Progress<IDNA>(world => {
+            Progress<IDNA<CSingleAssignment>> progress = new Progress<IDNA<CSingleAssignment>>(world => {
                 this.ipLog.Refresh();
                 this.ipStatusGraph.TransformOrigin.X = -this.MyOptimizer.GetStatusGraph().GetWidth();
                 this.ipStatusGraph.TransformOrigin.Y = -this.MyOptimizer.GetStatusGraph().GetHeight();
@@ -115,14 +115,14 @@ namespace TaamAssign
             this.btnStart.Text = "Restart!";
             this.btnLaunchOptimizer.Enabled = true;
             this.btnRestrategize.Enabled = true;
-            this.MyOptimizer.InitOptimizer();
+            this.MyOptimizer.InitOptimizer(() => new CTaamAssignment());
             this.ipLog.Refresh();
             this.ipStrategy.Refresh();
         }
 
         private void btnRestrategize_Click(object sender, EventArgs e)
         {
-            this.MyOptimizer.Restrategize();
+            this.MyOptimizer.Restrategize(() => new CTaamAssignment());
             this.ipLog.Refresh();
             this.ipStrategy.Refresh();
         }
@@ -154,12 +154,12 @@ namespace TaamAssign
 
             if (Tab.SelectedTab.Name == "Annealing")
             {
-                this.MyOptimizer = new AnnealerLogic();
+                this.MyOptimizer = new AnnealerLogic<CSingleAssignment>();
                 GlobalConfiguration.SwitchMutation = true;
             }
             else// if(Tab.SelectedTab.Name == "Genetic")
             {
-                this.MyOptimizer = new GeneticLogic();
+                this.MyOptimizer = new GeneticLogic<CSingleAssignment>();
                 GlobalConfiguration.SwitchMutation = false;
             }
 

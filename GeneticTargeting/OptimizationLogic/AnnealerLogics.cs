@@ -10,21 +10,21 @@ using TaamLogics;
 
 namespace TaamAssign
 {
-    class AnnealerLogic : BaseOptimizationLogic
+    class AnnealerLogic<T> : BaseOptimizationLogic<T>
     {
-        public AnnealingProccess Annealer { get; set; }
+        public AnnealingProccess<T> Annealer { get; set; }
 
         public override CTaamAssignment GetBestFitness()
         {
             return Annealer.BestFitness as CTaamAssignment;
         }
 
-        public override void InitPopulation()
+        public override void InitPopulation(Func<DNA<T>> GetPopulationGenerator)
         {
-            this.Annealer = new AnnealingProccess(this.GetPopulationGenerator());
+            this.Annealer = new AnnealingProccess<T>(GetPopulationGenerator);
         }
 
-        public override Task LaunchOptimizer(Progress<IDNA> progress)
+        public override Task LaunchOptimizer(Progress<IDNA<T>> progress)
         {
             return Task.Factory.StartNew(() => Annealer.MultiAnneal(GlobalConfiguration.AnealingInstances), TaskCreationOptions.LongRunning);
         }

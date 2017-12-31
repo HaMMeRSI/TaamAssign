@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OptimizationLogics
 {
-    public abstract class DNA<T>: IDNA
+    public abstract class DNA<T>: IDNA<T>
     {
         #region Properties
 
@@ -45,7 +45,7 @@ namespace OptimizationLogics
             return this.Fitness;
         }
 
-        public abstract IDNA Crossover(IDNA objPartner);
+        public abstract IDNA<T> Crossover(IDNA<T> objPartner);
 
         public override string ToString()
         {
@@ -60,7 +60,7 @@ namespace OptimizationLogics
         public abstract void CalculateFitness();
         public abstract bool Mutate();
         public abstract bool Mutate(Random rnd);
-        public abstract IDNA Clone();
-        public abstract IDNA Revive();
+        public abstract IDNA<T> Clone();
+        public abstract IDNA<T> Revive();
     }
 }

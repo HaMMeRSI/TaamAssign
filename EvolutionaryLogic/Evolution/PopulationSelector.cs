@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace OptimizationLogics
 {
-    public class PopulationSelector
+    public class PopulationSelector<T>
     {
-        MergeSort helper;
+        MergeSort<T> helper;
         public PopulationSelector()
         {
-            helper = new MergeSort();
+            helper = new MergeSort<T>();
         }
-        public void NaturalSelection(List<IDNA> Population)
+        public void NaturalSelection(List<IDNA<T>> Population)
         {
             helper.Sort(Population);
 
@@ -29,10 +29,10 @@ namespace OptimizationLogics
             Population.RemoveRange(0, Population.Count / 2);
         }
 
-        public List<IDNA> AverageSelection(List<IDNA> Population, float Average)
+        public List<IDNA<T>> AverageSelection(List<IDNA<T>> Population, float Average)
         {
-            List<IDNA> NewPop = new List<IDNA>();
-            foreach (IDNA dna in Population)
+            List<IDNA<T>> NewPop = new List<IDNA<T>>();
+            foreach (IDNA<T> dna in Population)
             {
                 if(dna.GetFitnesss() > Average)
                 {

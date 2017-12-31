@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace OptimizationLogics
 {
-    public class MergeSort
+    public class MergeSort<T>
     {
-        public void Sort(List<IDNA> input, int low, int high)
+        public void Sort(List<IDNA<T>> input, int low, int high)
         {
             if (low < high)
             {
@@ -19,16 +19,16 @@ namespace OptimizationLogics
             }
         }
 
-        public void Sort(List<IDNA> input)
+        public void Sort(List<IDNA<T>> input)
         {
             Sort(input, 0, input.Count - 1);
         }
 
-        private void Merge(List<IDNA> input, int low, int middle, int high)
+        private void Merge(List<IDNA<T>> input, int low, int middle, int high)
         {
             int left = low;
             int right = middle + 1;
-            IDNA[] tmp = new IDNA[(high - low) + 1];
+            IDNA<T>[] tmp = new IDNA<T>[(high - low) + 1];
             int tmpIndex = 0;
 
             while ((left <= middle) && (right <= high))
@@ -67,7 +67,7 @@ namespace OptimizationLogics
 
         }
 
-        public string PrintArray(List<IDNA> input)
+        public string PrintArray(List<IDNA<T>> input)
         {
             string result = String.Empty;
 

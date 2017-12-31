@@ -172,7 +172,7 @@ namespace TaamLogics
             return Score / this.Genes.Length;
         }
 
-        public override IDNA Clone()
+        public override IDNA<CSingleAssignment> Clone()
         {
             CTaamAssignment Copy = new CTaamAssignment(false);
             Copy.Fitness = this.Fitness;
@@ -184,12 +184,12 @@ namespace TaamLogics
             return Copy;
         }
 
-        public override IDNA Crossover(IDNA objPartner)
+        public override IDNA<CSingleAssignment> Crossover(IDNA<CSingleAssignment> objPartner)
         {
             return GlobalConfiguration.PartialGenomCrossover || GlobalConfiguration.SwitchMutation ? this.PartialGenomeCrossover(objPartner) : this.CoinCrossover(objPartner);
         }
 
-        public IDNA CoinCrossover(IDNA objPartner)
+        public IDNA<CSingleAssignment> CoinCrossover(IDNA<CSingleAssignment> objPartner)
         {
             CTaamAssignment Child = new CTaamAssignment(false);
             for (int i = 0; i < this.Genes.Length; i++)
@@ -201,7 +201,7 @@ namespace TaamLogics
             return Child;
         }
 
-        public IDNA PartialGenomeCrossover(IDNA objPartner)
+        public IDNA<CSingleAssignment> PartialGenomeCrossover(IDNA<CSingleAssignment> objPartner)
         {
             CTaamAssignment child = new CTaamAssignment(false);
             CTaamAssignment partner = (CTaamAssignment)objPartner;
@@ -238,7 +238,7 @@ namespace TaamLogics
             return child;
         }
 
-        public override IDNA Revive()
+        public override IDNA<CSingleAssignment> Revive()
         {
             return this.Clone();
         }

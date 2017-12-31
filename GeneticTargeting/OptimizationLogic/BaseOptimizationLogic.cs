@@ -10,7 +10,7 @@ using TaamLogics;
 
 namespace TaamAssign
 {
-    public abstract class BaseOptimizationLogic
+    public abstract class BaseOptimizationLogic<T>
     {
         public Font f = new Font(FontFamily.GenericMonospace, 15);
         public SolidBrush b = new SolidBrush(Color.Black);
@@ -132,23 +132,19 @@ namespace TaamAssign
 
         #endregion
 
-        public abstract void InitPopulation();
-        public Func<IDNA> GetPopulationGenerator()
-        {
-            return () => new CTaamAssignment();
-        }
+        public abstract void InitPopulation(Func<DNA<T>> GetPopulationGenerator);
 
-        public void Restrategize()
+        public void Restrategize(Func<DNA<T>> GetPopulationGenerator)
         {
             CStrategyPool.CreateRandomStrategy();
-            this.InitPopulation();
+            this.InitPopulation(GetPopulationGenerator);
         }
 
-        public void InitOptimizer()
+        public void InitOptimizer(Func<DNA<T>> GetPopulationGenerator)
         {
-            this.InitPopulation();
+            this.InitPopulation(GetPopulationGenerator);
         }
 
-        public abstract Task LaunchOptimizer(Progress<IDNA> progress);
+        public abstract Task LaunchOptimizer(Progress<IDNA<T>> progress);
     }
 }

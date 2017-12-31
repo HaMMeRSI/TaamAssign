@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace OptimizationLogics
 {
-    public class Particle
+    public class Particle<T>
     {
-        public IDNA DNA { get; set; }
-        public IDNA PBest { get; set; }
+        public IDNA<T> DNA { get; set; }
+        public IDNA<T> PBest { get; set; }
         public int[] Velocity { get; set; }
         public float Fitness
         {
@@ -19,10 +19,15 @@ namespace OptimizationLogics
             }
         }
 
-        public Particle(Func<IDNA> GetDNA)
+        public Particle(Func<IDNA<T>> GetDNA)
         {
             this.DNA = GetDNA();
-            //this.Velocity = new int[this.DNA]
+            this.Velocity = new int[this.DNA.GetGenes().Length];
+
+            for (int i = 0; i < this.Velocity.Length; i++)
+            {
+                this.Velocity[i] = 0;
+            }
         }
 
         public void Execute()

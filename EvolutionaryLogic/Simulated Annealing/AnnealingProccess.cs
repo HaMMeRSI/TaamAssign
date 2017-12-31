@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace OptimizationLogics
 {
-    public class AnnealingProccess
+    public class AnnealingProccess<T>
     {
-        public IDNA BestFitness { get; set; }
+        public IDNA<T> BestFitness { get; set; }
         public CStatutsGraph StatusGraph { get; set; }
         public double Temperature { get; set; }
 
-        public AnnealingProccess(Func<IDNA> GetDNA)
+        public AnnealingProccess(Func<IDNA<T>> GetDNA)
         {
             this.StatusGraph = new CStatutsGraph();
             this.BestFitness = GetDNA();
@@ -29,7 +29,7 @@ namespace OptimizationLogics
             }
             else
             {
-                Task<IDNA>[] AnnealingInstances = new Task<IDNA>[Instances];
+                Task<IDNA<T>>[] AnnealingInstances = new Task<IDNA<T>>[Instances];
 
                 for (int i = 0; i < Instances; i++)
                 {
@@ -48,16 +48,16 @@ namespace OptimizationLogics
             }
         }
 
-        public IDNA Anneal(IDNA Initial)
+        public IDNA<T> Anneal(IDNA<T> Initial)
         {
             double InstanceTempature = GlobalConfiguration.InitialTempature;
             Random rnd = new Random((int)DateTime.Now.Ticks);
-            IDNA CurrentIterator = Initial.Clone();
-            IDNA InstanceBest = Initial.Clone();
+            IDNA<T> CurrentIterator = Initial.Clone();
+            IDNA<T> InstanceBest = Initial.Clone();
 
             while (InstanceTempature > 1)
             {
-                IDNA Neighbour = CurrentIterator.Clone();
+                IDNA<T> Neighbour = CurrentIterator.Clone();
                 Neighbour.Mutate(rnd);
                 Neighbour.CalculateFitness();
 
@@ -80,7 +80,7 @@ namespace OptimizationLogics
 
         public void SingleAnneal()
         {
-            IDNA CurrentIterator = this.BestFitness.Clone();
+            IDNA<T> CurrentIterator = this.BestFitness.Clone();
             this.BestFitness = this.BestFitness.Clone();
             this.StatusGraph.ClearHistory();
             this.StatusGraph.Average = 0;
@@ -88,7 +88,7 @@ namespace OptimizationLogics
 
             while (this.Temperature > 1)
             {
-                IDNA Neighbour = CurrentIterator.Clone();
+                IDNA<T> Neighbour = CurrentIterator.Clone();
                 Neighbour.Mutate();
                 Neighbour.CalculateFitness();
 
