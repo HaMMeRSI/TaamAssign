@@ -9,6 +9,6 @@ namespace TaamLogics
     public interface IStrategyDataSource
     {
         CSimpleBattalion[] GetBatalionData();
-        CSimpleSector   [] GetSectorData();
+        CSimpleSector   [] GetSectorData(); 
     }
 }

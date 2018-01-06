@@ -36,14 +36,7 @@ namespace TaamLogics
 
         public override void Execute()
         {
-            List<int> BattalionSpread = new List<int>();
-            foreach (var Battalion in CStrategyPool.ActiveStrategy.BattalionsData)
-            {
-                for (int i = 0; i < (int)Math.Ceiling((double)TaamCalendar.ChunksCount / 2); i++)
-                {
-                    BattalionSpread.Add(Battalion.UID);
-                }
-            }
+            List<int> BattalionSpread = new List<int>(CStrategyPool.ActiveStrategy.YearlyPotentialBattalion);
 
             foreach (var Assignment in this.Genes)
             {
@@ -51,16 +44,6 @@ namespace TaamLogics
                 Assignment.BattalionUID = BattalionSpread[index];
                 BattalionSpread.RemoveAt(index);
             }
-
-
-            //foreach (var Assignment in this.Genes)
-            //{
-            //    // DNASequence.Execute();
-            //    if(Assignment.BattalionUID == -1)
-            //    {
-            //        Assignment.BattalionUID = CStrategyPool.ActiveStrategy.GetRandomBattalionUID();
-            //    }
-            //}
         }
 
         public override void CalculateFitness()
@@ -90,43 +73,71 @@ namespace TaamLogics
             }
 
             float TotalDestrebutionFitness = ((float)BattalionDestrebution.Sum(x => x.Count) / (CStrategyPool.ActiveStrategy.GetSectorsCount() * TaamCalendar.ChunksCount));
-            // float TotalDestrebutionFitness = BattalionDestrebution.Sum(x => (float)x.Count / CStrategyPool.ActiveStrategy.GetBattalionsCount() / TaamCalendar.ChunksCount) / TaamCalendar.ChunksCount;
             float TotalRotationSameFitness = 0;
             float TotatlRotationSequenceFitness = 0;
             float TotalSectorBattalionScore = 0;
+            float TotalReservedScore = 0;
 
-            foreach (var follower in BattalionFollowers.Values)
+            foreach (var followerPair in BattalionFollowers)
             {
+                var follower = followerPair.Value;
+                int ReservedScore = 1;
                 int RotationSameSum = 1;
                 int RotationSequenceSum = 1;
 
-                if (follower.Rotations.Count > 1)
+                if(follower.Rotations.Count == 2)
                 {
-                    //RotationSameSum = 0;
-                    //RotationSequenceSum = 0;
-                    for (int j = 0; j < follower.Rotations.Count - 1; j++)
+                    int Score = Math.Abs(follower.Rotations[0] - follower.Rotations[1]);
+                    if (Score == 0)
                     {
-                        int Score = Math.Abs(follower.Rotations[j] - follower.Rotations[j + 1]);
-                        if (Score == 0)
-                        {
-                            RotationSameSum = 0;
-                            RotationSequenceSum = 0;
-                            break;
-                        }
-                        else if (Score != 2)
-                        {
-                            RotationSequenceSum = 0;
-                        }
+                        RotationSameSum = 0;
+                        RotationSequenceSum = 0;
                     }
+                    else if (Score != 2)
+                    {
+                        RotationSequenceSum = 0;
+                    }
+
+                }
+                else if (follower.Rotations.Count == 3)
+                {
+                    int Score1 = Math.Abs(follower.Rotations[0] - follower.Rotations[1]);
+                    int Score2 = Math.Abs(follower.Rotations[1] - follower.Rotations[2]);
+
+                    if (Score1 == Score2)
+                    {
+                        RotationSequenceSum = 0;
+                    }
+
+                    if (follower.Rotations[0] == follower.Rotations[1] || 
+                        follower.Rotations[1] == follower.Rotations[2] ||
+                        follower.Rotations[0] == follower.Rotations[2])
+                    {
+                        RotationSequenceSum = 0;
+                    }
+
+                }
+                else if(follower.Rotations.Count > 3)
+                {
+                    RotationSameSum = 0;
+                    RotationSequenceSum = 0;
                 }
 
+                if (CStrategyPool.ActiveStrategy.BattalionsData[followerPair.Key].IsReservedDuty && follower.Rotations.Count > 1)
+                {
+                    ReservedScore = 0;
+                }
+
+                TotalReservedScore += ReservedScore;
                 TotalRotationSameFitness += RotationSameSum;
                 TotatlRotationSequenceFitness += RotationSequenceSum;
                 TotalSectorBattalionScore += Convert.ToInt32(follower.SectorsValid);
             }
 
-            float RotationScore = (TotalRotationSameFitness * .3f +
-                        TotatlRotationSequenceFitness * .5f +
+            float RotationScore = (
+                        TotalReservedScore * .3f +
+                        TotalRotationSameFitness * .15f +
+                        TotatlRotationSequenceFitness * .35f +
                         TotalSectorBattalionScore * .2f) / BattalionFollowers.Count;
 
             return (RotationScore * .7f + TotalDestrebutionFitness * .3f);
@@ -135,23 +146,27 @@ namespace TaamLogics
         private float CalculateReservesionFitness()
         {
             float BattalionReservedFitness = 0;
-            //Dictionary<int, int> ReservesionForBattalionScore = new Dictionary<int, int>();
             int[] ReservesionForBattalionScore = Shared.SafeArray<int>(CStrategyPool.ActiveStrategy.GetBattalionsCount());
 
-            for (int i = 0; i < CStrategyPool.ActiveStrategy.GetSectorsCount(); i++)
+            foreach (var Assignment in this.Genes)
             {
-                for (int j = 0; j < TaamCalendar.ChunksCount; j++)
-                {
-                    CSingleAssignment Assignment = this[i * TaamCalendar.ChunksCount + j];
-                    ReservesionForBattalionScore[Assignment.BattalionUID] +=
-                        CStrategyPool.ActiveStrategy.BattalionsData[Assignment.BattalionUID].ScoreAssignment(Assignment);
-                }
+                ReservesionForBattalionScore[Assignment.BattalionUID] +=
+                    CStrategyPool.ActiveStrategy.BattalionsData[Assignment.BattalionUID].ScoreAssignment(Assignment);
             }
+            //for (int i = 0; i < CStrategyPool.ActiveStrategy.GetSectorsCount(); i++)
+            //{
+            //    for (int j = 0; j < TaamCalendar.ChunksCount; j++)
+            //    {
+            //        CSingleAssignment Assignment = this[i * TaamCalendar.ChunksCount + j];
+            //        ReservesionForBattalionScore[Assignment.BattalionUID] +=
+            //            CStrategyPool.ActiveStrategy.BattalionsData[Assignment.BattalionUID].ScoreAssignment(Assignment);
+            //    }
+            //}
 
             for (int i = 0; i < ReservesionForBattalionScore.Length; i++)
             {
                 BattalionReservedFitness += (float)ReservesionForBattalionScore[i] /
-                    CStrategyPool.ActiveStrategy.BattalionsData[i].GetReservationsScore();
+                    CStrategyPool.ActiveStrategy.BattalionsData[i].GetReservationsScoreSum();
             }
 
             return 1 - (BattalionReservedFitness / CStrategyPool.ActiveStrategy.GetBattalionsCount());

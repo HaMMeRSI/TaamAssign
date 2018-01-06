@@ -22,6 +22,7 @@ namespace OptimizationLogics
         public Particle(Func<IDNA<T>> GetDNA)
         {
             this.DNA = GetDNA();
+            this.PBest = this.DNA;
             this.Velocity = new int[this.DNA.GetGenes().Length];
 
             for (int i = 0; i < this.Velocity.Length; i++)

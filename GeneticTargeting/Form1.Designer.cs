@@ -29,10 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            Library.Point2D point2D1 = new Library.Point2D();
+            Library.Point2D point2D2 = new Library.Point2D();
+            Library.Point2D point2D3 = new Library.Point2D();
+            Library.Point2D point2D4 = new Library.Point2D();
             Library.Point2D point2D5 = new Library.Point2D();
             Library.Point2D point2D6 = new Library.Point2D();
-            Library.Point2D point2D7 = new Library.Point2D();
-            Library.Point2D point2D8 = new Library.Point2D();
             this.btnLaunchOptimizer = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.numCycles = new System.Windows.Forms.NumericUpDown();
@@ -66,8 +68,10 @@
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.nmInitialTempature = new System.Windows.Forms.NumericUpDown();
             this.nmTempatureDecay = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
+            this.nmAnnealingInstances = new System.Windows.Forms.NumericUpDown();
+            this.nmInitialTempature = new System.Windows.Forms.NumericUpDown();
             this.Swarm = new System.Windows.Forms.TabPage();
             this.ipStrategy = new TaamAssign.InteractivePanel();
             this.ipBattalionToSectorSum = new TaamAssign.InteractivePanel();
@@ -75,8 +79,12 @@
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.ipStatusGraph = new TaamAssign.InteractivePanel();
             this.tmrStatusUpdate = new System.Windows.Forms.Timer(this.components);
-            this.label8 = new System.Windows.Forms.Label();
-            this.nmAnnealingInstances = new System.Windows.Forms.NumericUpDown();
+            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.ipBattalionReservations = new TaamAssign.InteractivePanel();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.ipBattalionPotentialCount = new TaamAssign.InteractivePanel();
             ((System.ComponentModel.ISupportInitialize)(this.numCycles)).BeginInit();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -95,10 +103,14 @@
             this.Genetic.SuspendLayout();
             this.Annealing.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nmInitialTempature)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nmTempatureDecay)).BeginInit();
-            this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nmAnnealingInstances)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmInitialTempature)).BeginInit();
+            this.tableLayoutPanel2.SuspendLayout();
+            this.tabControl2.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage4.SuspendLayout();
+            this.tabPage5.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnLaunchOptimizer
@@ -561,20 +573,6 @@
             this.label7.TabIndex = 1;
             this.label7.Text = "Tempature decay:";
             // 
-            // nmInitialTempature
-            // 
-            this.nmInitialTempature.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.nmInitialTempature.Location = new System.Drawing.Point(174, 3);
-            this.nmInitialTempature.Maximum = new decimal(new int[] {
-            999999,
-            0,
-            0,
-            0});
-            this.nmInitialTempature.Name = "nmInitialTempature";
-            this.nmInitialTempature.Size = new System.Drawing.Size(164, 20);
-            this.nmInitialTempature.TabIndex = 2;
-            this.nmInitialTempature.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
-            // 
             // nmTempatureDecay
             // 
             this.nmTempatureDecay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
@@ -589,97 +587,6 @@
             this.nmTempatureDecay.Size = new System.Drawing.Size(164, 20);
             this.nmTempatureDecay.TabIndex = 2;
             this.nmTempatureDecay.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
-            // 
-            // Swarm
-            // 
-            this.Swarm.BackColor = System.Drawing.SystemColors.Control;
-            this.Swarm.Location = new System.Drawing.Point(4, 22);
-            this.Swarm.Name = "Swarm";
-            this.Swarm.Size = new System.Drawing.Size(346, 111);
-            this.Swarm.TabIndex = 2;
-            this.Swarm.Text = "Swarm";
-            // 
-            // ipStrategy
-            // 
-            this.ipStrategy.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ipStrategy.CenterDraw = false;
-            this.ipStrategy.DrawFunction = null;
-            this.ipStrategy.Location = new System.Drawing.Point(11, 11);
-            this.ipStrategy.Margin = new System.Windows.Forms.Padding(2);
-            this.ipStrategy.Name = "ipStrategy";
-            this.ipStrategy.ScaleFactor = 25;
-            this.ipStrategy.Size = new System.Drawing.Size(555, 697);
-            this.ipStrategy.TabIndex = 13;
-            this.ipStrategy.TransformOrigin = point2D5;
-            this.ipStrategy.UpdateFunction = null;
-            // 
-            // ipBattalionToSectorSum
-            // 
-            this.ipBattalionToSectorSum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ipBattalionToSectorSum.CenterDraw = false;
-            this.ipBattalionToSectorSum.DrawFunction = null;
-            this.ipBattalionToSectorSum.Location = new System.Drawing.Point(570, 208);
-            this.ipBattalionToSectorSum.Margin = new System.Windows.Forms.Padding(2);
-            this.ipBattalionToSectorSum.Name = "ipBattalionToSectorSum";
-            this.ipBattalionToSectorSum.ScaleFactor = 25;
-            this.ipBattalionToSectorSum.Size = new System.Drawing.Size(307, 500);
-            this.ipBattalionToSectorSum.TabIndex = 15;
-            this.ipBattalionToSectorSum.TransformOrigin = point2D6;
-            this.ipBattalionToSectorSum.UpdateFunction = null;
-            // 
-            // ipLog
-            // 
-            this.ipLog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ipLog.CenterDraw = false;
-            this.ipLog.DrawFunction = null;
-            this.ipLog.Location = new System.Drawing.Point(883, 347);
-            this.ipLog.Margin = new System.Windows.Forms.Padding(2);
-            this.ipLog.Name = "ipLog";
-            this.ipLog.ScaleFactor = 25;
-            this.ipLog.Size = new System.Drawing.Size(349, 197);
-            this.ipLog.TabIndex = 16;
-            this.ipLog.TransformOrigin = point2D7;
-            this.ipLog.UpdateFunction = null;
-            // 
-            // tableLayoutPanel2
-            // 
-            this.tableLayoutPanel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.btnStart, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.btnLaunchOptimizer, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.btnRestrategize, 0, 1);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(886, 12);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 2;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(346, 108);
-            this.tableLayoutPanel2.TabIndex = 17;
-            // 
-            // ipStatusGraph
-            // 
-            this.ipStatusGraph.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ipStatusGraph.CenterDraw = true;
-            this.ipStatusGraph.DrawFunction = null;
-            this.ipStatusGraph.Location = new System.Drawing.Point(570, 11);
-            this.ipStatusGraph.Margin = new System.Windows.Forms.Padding(2);
-            this.ipStatusGraph.Name = "ipStatusGraph";
-            this.ipStatusGraph.ScaleFactor = 25;
-            this.ipStatusGraph.Size = new System.Drawing.Size(307, 193);
-            this.ipStatusGraph.TabIndex = 18;
-            this.ipStatusGraph.TransformOrigin = point2D8;
-            this.ipStatusGraph.UpdateFunction = null;
-            // 
-            // tmrStatusUpdate
-            // 
-            this.tmrStatusUpdate.Enabled = true;
-            this.tmrStatusUpdate.Tick += new System.EventHandler(this.tmrStatusUpdate_Tick);
             // 
             // label8
             // 
@@ -715,15 +622,193 @@
             0});
             this.nmAnnealingInstances.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
             // 
+            // nmInitialTempature
+            // 
+            this.nmInitialTempature.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.nmInitialTempature.Location = new System.Drawing.Point(173, 3);
+            this.nmInitialTempature.Maximum = new decimal(new int[] {
+            999999,
+            0,
+            0,
+            0});
+            this.nmInitialTempature.Name = "nmInitialTempature";
+            this.nmInitialTempature.Size = new System.Drawing.Size(164, 20);
+            this.nmInitialTempature.TabIndex = 2;
+            this.nmInitialTempature.ValueChanged += new System.EventHandler(this.tbConfig_TextChanged);
+            // 
+            // Swarm
+            // 
+            this.Swarm.BackColor = System.Drawing.SystemColors.Control;
+            this.Swarm.Location = new System.Drawing.Point(4, 22);
+            this.Swarm.Name = "Swarm";
+            this.Swarm.Size = new System.Drawing.Size(346, 190);
+            this.Swarm.TabIndex = 2;
+            this.Swarm.Text = "Swarm";
+            // 
+            // ipStrategy
+            // 
+            this.ipStrategy.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ipStrategy.CenterDraw = false;
+            this.ipStrategy.DrawFunction = null;
+            this.ipStrategy.Location = new System.Drawing.Point(11, 11);
+            this.ipStrategy.Margin = new System.Windows.Forms.Padding(2);
+            this.ipStrategy.Name = "ipStrategy";
+            this.ipStrategy.ScaleFactor = 25;
+            this.ipStrategy.Size = new System.Drawing.Size(555, 697);
+            this.ipStrategy.TabIndex = 13;
+            this.ipStrategy.TransformOrigin = point2D1;
+            this.ipStrategy.UpdateFunction = null;
+            // 
+            // ipBattalionToSectorSum
+            // 
+            this.ipBattalionToSectorSum.CenterDraw = false;
+            this.ipBattalionToSectorSum.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ipBattalionToSectorSum.DrawFunction = null;
+            this.ipBattalionToSectorSum.Location = new System.Drawing.Point(3, 3);
+            this.ipBattalionToSectorSum.Margin = new System.Windows.Forms.Padding(2);
+            this.ipBattalionToSectorSum.Name = "ipBattalionToSectorSum";
+            this.ipBattalionToSectorSum.ScaleFactor = 25;
+            this.ipBattalionToSectorSum.Size = new System.Drawing.Size(297, 470);
+            this.ipBattalionToSectorSum.TabIndex = 15;
+            this.ipBattalionToSectorSum.TransformOrigin = point2D2;
+            this.ipBattalionToSectorSum.UpdateFunction = null;
+            // 
+            // ipLog
+            // 
+            this.ipLog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ipLog.CenterDraw = false;
+            this.ipLog.DrawFunction = null;
+            this.ipLog.Location = new System.Drawing.Point(883, 347);
+            this.ipLog.Margin = new System.Windows.Forms.Padding(2);
+            this.ipLog.Name = "ipLog";
+            this.ipLog.ScaleFactor = 25;
+            this.ipLog.Size = new System.Drawing.Size(349, 197);
+            this.ipLog.TabIndex = 16;
+            this.ipLog.TransformOrigin = point2D3;
+            this.ipLog.UpdateFunction = null;
+            // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel2.ColumnCount = 2;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.Controls.Add(this.btnStart, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.btnLaunchOptimizer, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.btnRestrategize, 0, 1);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(886, 12);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 2;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(346, 108);
+            this.tableLayoutPanel2.TabIndex = 17;
+            // 
+            // ipStatusGraph
+            // 
+            this.ipStatusGraph.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ipStatusGraph.CenterDraw = true;
+            this.ipStatusGraph.DrawFunction = null;
+            this.ipStatusGraph.Location = new System.Drawing.Point(570, 11);
+            this.ipStatusGraph.Margin = new System.Windows.Forms.Padding(2);
+            this.ipStatusGraph.Name = "ipStatusGraph";
+            this.ipStatusGraph.ScaleFactor = 25;
+            this.ipStatusGraph.Size = new System.Drawing.Size(307, 193);
+            this.ipStatusGraph.TabIndex = 18;
+            this.ipStatusGraph.TransformOrigin = point2D4;
+            this.ipStatusGraph.UpdateFunction = null;
+            // 
+            // tmrStatusUpdate
+            // 
+            this.tmrStatusUpdate.Enabled = true;
+            this.tmrStatusUpdate.Tick += new System.EventHandler(this.tmrStatusUpdate_Tick);
+            // 
+            // tabControl2
+            // 
+            this.tabControl2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl2.Controls.Add(this.tabPage1);
+            this.tabControl2.Controls.Add(this.tabPage4);
+            this.tabControl2.Controls.Add(this.tabPage5);
+            this.tabControl2.Location = new System.Drawing.Point(572, 210);
+            this.tabControl2.Name = "tabControl2";
+            this.tabControl2.SelectedIndex = 0;
+            this.tabControl2.Size = new System.Drawing.Size(311, 502);
+            this.tabControl2.TabIndex = 19;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.ipBattalionToSectorSum);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(303, 476);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Destrebution";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.ipBattalionReservations);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(303, 476);
+            this.tabPage4.TabIndex = 1;
+            this.tabPage4.Text = "Reservations";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // ipBattalionReservations
+            // 
+            this.ipBattalionReservations.CenterDraw = false;
+            this.ipBattalionReservations.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ipBattalionReservations.DrawFunction = null;
+            this.ipBattalionReservations.Location = new System.Drawing.Point(3, 3);
+            this.ipBattalionReservations.Margin = new System.Windows.Forms.Padding(2);
+            this.ipBattalionReservations.Name = "ipBattalionReservations";
+            this.ipBattalionReservations.ScaleFactor = 25;
+            this.ipBattalionReservations.Size = new System.Drawing.Size(297, 470);
+            this.ipBattalionReservations.TabIndex = 0;
+            this.ipBattalionReservations.TransformOrigin = point2D5;
+            this.ipBattalionReservations.UpdateFunction = null;
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.ipBattalionPotentialCount);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(303, 476);
+            this.tabPage5.TabIndex = 2;
+            this.tabPage5.Text = "Potential";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // ipBattalionPotentialCount
+            // 
+            this.ipBattalionPotentialCount.CenterDraw = false;
+            this.ipBattalionPotentialCount.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ipBattalionPotentialCount.DrawFunction = null;
+            this.ipBattalionPotentialCount.Location = new System.Drawing.Point(3, 3);
+            this.ipBattalionPotentialCount.Margin = new System.Windows.Forms.Padding(2);
+            this.ipBattalionPotentialCount.Name = "ipBattalionPotentialCount";
+            this.ipBattalionPotentialCount.ScaleFactor = 25;
+            this.ipBattalionPotentialCount.Size = new System.Drawing.Size(297, 470);
+            this.ipBattalionPotentialCount.TabIndex = 16;
+            this.ipBattalionPotentialCount.TransformOrigin = point2D6;
+            this.ipBattalionPotentialCount.UpdateFunction = null;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1235, 717);
+            this.Controls.Add(this.tabControl2);
             this.Controls.Add(this.ipStatusGraph);
             this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.ipLog);
-            this.Controls.Add(this.ipBattalionToSectorSum);
             this.Controls.Add(this.ipStrategy);
             this.Controls.Add(this.OptimizationTab);
             this.Controls.Add(this.tbcSettings);
@@ -752,10 +837,14 @@
             this.Annealing.ResumeLayout(false);
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nmInitialTempature)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nmTempatureDecay)).EndInit();
-            this.tableLayoutPanel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.nmAnnealingInstances)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmInitialTempature)).EndInit();
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tabControl2.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage5.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -805,6 +894,12 @@
         private System.Windows.Forms.NumericUpDown nmTempatureDecay;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.NumericUpDown nmAnnealingInstances;
+        private System.Windows.Forms.TabControl tabControl2;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage4;
+        private InteractivePanel ipBattalionReservations;
+        private System.Windows.Forms.TabPage tabPage5;
+        private InteractivePanel ipBattalionPotentialCount;
     }
 }
 

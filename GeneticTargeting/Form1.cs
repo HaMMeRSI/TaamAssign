@@ -24,7 +24,8 @@ namespace TaamAssign
             InitializeComponent();
             this.MyOptimizer = new GeneticLogic<CSingleAssignment>();
             this.InitIPs();
-            this.MyOptimizer.Restrategize(() => new CTaamAssignment());
+            CStrategyPool.CreateRandomStrategy();
+            // this.MyOptimizer.Restrategize(() => new CTaamAssignment());
             this.initConfigDelegation();
         }
 
@@ -179,6 +180,8 @@ namespace TaamAssign
 
         private void InitIPs()
         {
+            this.ipBattalionPotentialCount.DrawFunction = this.MyOptimizer.GetBattalionPotentialCount();
+            this.ipBattalionReservations.DrawFunction = this.MyOptimizer.GetBattalionReservationsDrawer();
             this.ipBattalionToSectorSum.DrawFunction = this.MyOptimizer.GetBattalionToSectorSumDrawer();
             this.ipStrategy.DrawFunction = this.MyOptimizer.GetStrategyDrawer();
             this.ipStrategy.UpdateFunction = () => CStrategyPool.ActiveStrategy.Update();

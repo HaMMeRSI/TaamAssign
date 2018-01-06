@@ -116,7 +116,7 @@ namespace TaamLogics
 
             for (int i = 0; i < Battalions.Length; i++)
             {
-                Battalions[i] = new CSimpleBattalion(EConstraints.All, Shared.Next(80) + 20);
+                Battalions[i] = new CSimpleBattalion("", EConstraints.All);
                 Battalions[i].SetUID(i);
 
                 int Reseversions = Shared.Next(2);
@@ -154,6 +154,7 @@ namespace TaamLogics
             for (int i = 0; i < Secotrs.Length; i++)
             {
                 Secotrs[i] = new CSimpleSector(
+                    "Sec1"+i,
                     EConstraints.All,
                     BrigadeAss[i],
                     FirstWednesday);
@@ -161,6 +162,11 @@ namespace TaamLogics
             }
 
             return Secotrs;
+        }
+
+        public CSimpleBattalion[] GetReservedData()
+        {
+            throw new NotImplementedException();
         }
     }
 }

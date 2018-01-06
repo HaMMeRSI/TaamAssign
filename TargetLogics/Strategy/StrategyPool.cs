@@ -10,7 +10,7 @@ namespace TaamLogics
 
         public static void CreateRandomStrategy()
         {
-            PartialFixedStrategyDataSource ds = new PartialFixedStrategyDataSource();
+            OriginalStrategyDataSource ds = new OriginalStrategyDataSource();
             ActiveStrategy = new AssignmentStrategy(ds);
             FreeStrategyPool.Clear();
         }

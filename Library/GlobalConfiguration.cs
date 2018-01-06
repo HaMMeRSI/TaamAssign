@@ -53,8 +53,9 @@ namespace Library
 
         public class Assignemnt
         {
-            public static int BattalionCount = 60;
-            public static int SectorCount = 30;
+            public static int BattalionCount = 38;
+            public static int ReservedCount = 33;
+            public static int SectorCount = 32;
             static Assignemnt()
             {
 

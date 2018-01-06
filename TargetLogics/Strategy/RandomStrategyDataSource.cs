@@ -34,5 +34,10 @@ namespace TaamLogics
         {
             throw new NotImplementedException();
         }
+
+        public CSimpleBattalion[] GetReservedData()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

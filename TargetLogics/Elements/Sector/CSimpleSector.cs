@@ -13,6 +13,7 @@ namespace TaamLogics
         public const int RenderSize = 50;
 
         public int UID { get; set; }
+        public string Name { get; set; }
         public EConstraints ForceConstraint { get; set; }
         public ESectorialBrigade MySectorialBrigade { get; set; }
         public DateTime StartOfYear { get; set; }
@@ -27,8 +28,9 @@ namespace TaamLogics
 
         #endregion
 
-        public CSimpleSector(EConstraints ForceConstraint, ESectorialBrigade MySectorialBrigade, DateTime StartOfYear)
+        public CSimpleSector(string Name, EConstraints ForceConstraint, ESectorialBrigade MySectorialBrigade, DateTime StartOfYear)
         {
+            this.Name = Name;
             this.ForceConstraint = ForceConstraint;
             this.MySectorialBrigade = MySectorialBrigade;
             AssignmentStrategy.BrigadesData[MySectorialBrigade].RegisterSector(this);

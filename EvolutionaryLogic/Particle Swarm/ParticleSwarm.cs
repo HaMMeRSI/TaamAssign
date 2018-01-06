@@ -37,10 +37,24 @@ namespace OptimizationLogics
 
         public void Search()
         {
-            for (int i = 0; i < this.Particles.Length; i++)
+            Random rnd = new Random();
+
+            int omega = 1;
+            int LearnRate1 = 2, LearnRate2 = 2;
+
+            for (int i = 0; i < 100; i++)
             {
-                // this.Particles[i].DNA = ;
-                // this.Particles[i].Velocity = ;
+                for (int j = 0; j < this.Particles.Length; j++)
+                {
+                    for (int d = 0; d < this.Particles[j].Velocity.Length; d++)
+                    {
+                        double Rp = rnd.NextDouble();
+                        double Rb = rnd.NextDouble();
+                        //this.Particles[i].Velocity[d] = omega * this.Particles[i].Velocity[d] + LearnRate1 * Rp (this.Particles[i].PBest.GetGenes()[d] - this.Particles[i].DNA.GetG)
+                    }
+                    // this.Particles[i].DNA = ;
+                    // this.Particles[i].Velocity = ;
+                }
             }
         }
     }

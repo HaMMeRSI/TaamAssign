@@ -11,12 +11,14 @@ namespace TaamLogics
     {
         public const int RenderSize = 50;
 
+        public string Name { get; set; }
         public int UID { get; set; }
         public Point2D Location { get; set; }
         public List<Reservation> Reservations { get; set; }
         public EConstraints Force { get; set; }
         public int Price { get; set; }
         public int Justice { get; set; }
+        public bool IsReservedDuty { get; set; }
 
         #region Builder
         private Point2D RenderLoc { get; set; }
@@ -44,13 +46,13 @@ namespace TaamLogics
 
         #endregion
 
-        public CSimpleBattalion(EConstraints Force, int Price)
+        public CSimpleBattalion(string Name, EConstraints Force)
         {
             this.Location = new Point2D();
             this.Reservations = new List<Reservation>();
             this.Force = Force;
-            this.Price = Price;
-            this.Justice = 0;
+            this.Justice = Shared.Next(3);
+            this.Name = Name;
         }
 
         public int ScoreAssignment(CSingleAssignment Assignment)
@@ -58,13 +60,17 @@ namespace TaamLogics
             int Score = 0;
             foreach (Reservation item in this.Reservations)
             {
-                Score += item.Date >= Assignment.Start && item.Date <= Assignment.End ? (int)item.Importance : 0;
+                if(item.Date >= Assignment.Start && item.Date <= Assignment.End)
+                {
+                    Score += (int)item.Importance;
+                    break;
+                }
             }
 
             return Score;
         }
 
-        public int GetReservationsScore()
+        public int GetReservationsScoreSum()
         {
             var res = this.Reservations.Sum(x => (int)x.Importance);
             return res == 0 ? 1 : res;

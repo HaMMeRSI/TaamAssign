@@ -54,6 +54,7 @@
     <Compile Include="Elements\Battalion\CSimpleBattalion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Strategy\Interfaces\IStrategyDataSource.cs" />
+    <Compile Include="Strategy\OriginalStrategyDataSource.cs" />
     <Compile Include="Strategy\PartialFixedStrategyDataSource.cs" />
     <Compile Include="Strategy\RandomStrategyDataSource.cs" />
     <Compile Include="Strategy\StrategyPool.cs" />
