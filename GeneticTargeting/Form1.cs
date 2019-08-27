@@ -28,10 +28,6 @@ namespace TaamAssign
             CStrategyPool.CreateRandomStrategy();
             // this.MyOptimizer.Restrategize(() => new CTaamAssignment());
             this.initConfigDelegation();
-            WebClient w = new WebClient();
-            w.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome / 58.0.3029.110 Safari / 537.36");
-
-            var a = w.DownloadString(@"https://www.bit2c.co.il/Exchanges/BtcNis/Ticker.json");
         }
 
         public void initConfigDelegation()
