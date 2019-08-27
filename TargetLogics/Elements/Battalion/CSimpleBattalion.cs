@@ -55,12 +55,12 @@ namespace TaamLogics
             this.Name = Name;
         }
 
-        public int ScoreAssignment(CSingleAssignment Assignment)
+        public int ScoreAssignment(DateTime Start, DateTime End)
         {
             int Score = 0;
             foreach (Reservation item in this.Reservations)
             {
-                if(item.Date >= Assignment.Start && item.Date <= Assignment.End)
+                if(item.Date >= Start && item.Date <= End)
                 {
                     Score += (int)item.Importance;
                     break;

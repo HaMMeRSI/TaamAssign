@@ -54,16 +54,16 @@ namespace TaamAssign
                             CurrentAssignemnt = Genes[i * TaamCalendar.ChunksCount + j];
                             CSimpleBattalion AssignedBattalion = CStrategyPool.ActiveStrategy.BattalionsData[CurrentAssignemnt.BattalionUID];
                             g.DrawLine(p, (int)Location.X + 200 * j, (int)Location.Y, (int)Location.X + 200 * j, (int)Location.Y + 100);
-                            g.DrawString(CurrentAssignemnt.Start.ToShortDateString(), f,b, (int)Location.X + 200 * j, (int)Location.Y);
+                            g.DrawString(CurrentAssignemnt.Start.ToShortDateString(), f, b, (int)Location.X + 200 * j, (int)Location.Y);
 
-                            if(j == TaamCalendar.ChunksCount - 1)
+                            if (j == TaamCalendar.ChunksCount - 1)
                             {
-                                g.DrawString(CurrentAssignemnt.End.ToShortDateString(), f,b, (int)Location.X + 200 * TaamCalendar.ChunksCount, (int)Location.Y);
+                                g.DrawString(CurrentAssignemnt.End.ToShortDateString(), f, b, (int)Location.X + 200 * TaamCalendar.ChunksCount, (int)Location.Y);
                             }
 
                             if (AssignedBattalion != null)
                             {
-                                SolidBrush bbb = new SolidBrush(CStrategyPool.ActiveStrategy.BattalionsData[AssignedBattalion.UID].ScoreAssignment(CurrentAssignemnt) > 0 ? Color.Red : Color.Black);
+                                SolidBrush bbb = new SolidBrush(CStrategyPool.ActiveStrategy.BattalionsData[AssignedBattalion.UID].ScoreAssignment(CurrentAssignemnt.Start, CurrentAssignemnt.End) > 0 ? Color.Red : Color.Black);
 
                                 CSimpleBattalion Battalion = CStrategyPool.ActiveStrategy.BattalionsData[CurrentAssignemnt.BattalionUID];
                                 CSimpleSector Sector = CStrategyPool.ActiveStrategy.SectorsData[CurrentAssignemnt.SectorUID];
@@ -84,6 +84,7 @@ namespace TaamAssign
                 }
             };
         }
+
         public Action<Graphics> GetBattalionToSectorSumDrawer()
         {
             return g =>

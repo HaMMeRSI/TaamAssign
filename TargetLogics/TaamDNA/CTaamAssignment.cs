@@ -48,22 +48,24 @@ namespace TaamLogics
 
         public override void CalculateFitness()
         {
-            this.Fitness = 
-                this.CalculateAssignmentRulesFitness() * .65f + 
-                this.CalculateReservesionFitness() * .125f + 
-                this.CalculateConstraintsFitness() * .225f;
-        }
-
-        private float CalculateAssignmentRulesFitness()
-        {
+            int[] ReservesionForBattalionScore = Shared.SafeArray<int>(CStrategyPool.ActiveStrategy.GetBattalionsCount());
             Dictionary<int, BattalionAssignmentFollower> BattalionFollowers = new Dictionary<int, BattalionAssignmentFollower>();
             HashSet<int>[] BattalionDestrebution = Shared.SafeArray(TaamCalendar.ChunksCount, () => new HashSet<int>());
+            float ConstraintsFitness = 0;
 
             for (int i = 0; i < this.Genes.Length; i++)
             {
+                // Constraint counter
+                ConstraintsFitness += this.CalculateConstraintsFitness(i);
+
+                // Reservation follower
+                ReservesionForBattalionScore[this.Genes[i].BattalionUID] +=
+                    CStrategyPool.ActiveStrategy.BattalionsData[this.Genes[i].BattalionUID].ScoreAssignment(this.Genes[i].Start, this.Genes[i].End);
+
+                // Battalion follower
                 BattalionDestrebution[i % 4].Add(this.Genes[i].BattalionUID);
 
-                if(!BattalionFollowers.ContainsKey(this.Genes[i].BattalionUID))
+                if (!BattalionFollowers.ContainsKey(this.Genes[i].BattalionUID))
                 {
                     BattalionFollowers[this.Genes[i].BattalionUID] = new BattalionAssignmentFollower();
                 }
@@ -72,6 +74,16 @@ namespace TaamLogics
                 BattalionFollowers[this.Genes[i].BattalionUID].AddSector(this.Genes[i].SectorUID);
             }
 
+            ConstraintsFitness = ConstraintsFitness / this.Genes.Length;
+
+            this.Fitness =
+                this.CalculateAssignmentRulesFitness(BattalionDestrebution, BattalionFollowers) * .65f +
+                this.CalculateReservesionFitness(ReservesionForBattalionScore) * .125f +
+                ConstraintsFitness * .225f;
+        }
+
+        private float CalculateAssignmentRulesFitness(HashSet<int>[] BattalionDestrebution, Dictionary<int, BattalionAssignmentFollower> BattalionFollowers)
+        {
             float TotalDestrebutionFitness = ((float)BattalionDestrebution.Sum(x => x.Count) / (CStrategyPool.ActiveStrategy.GetSectorsCount() * TaamCalendar.ChunksCount));
             float TotalRotationSameFitness = 0;
             float TotatlRotationSequenceFitness = 0;
@@ -143,26 +155,9 @@ namespace TaamLogics
             return (RotationScore * .7f + TotalDestrebutionFitness * .3f);
         }
 
-        private float CalculateReservesionFitness()
+        private float CalculateReservesionFitness(int[] ReservesionForBattalionScore)
         {
             float BattalionReservedFitness = 0;
-            int[] ReservesionForBattalionScore = Shared.SafeArray<int>(CStrategyPool.ActiveStrategy.GetBattalionsCount());
-
-            foreach (var Assignment in this.Genes)
-            {
-                ReservesionForBattalionScore[Assignment.BattalionUID] +=
-                    CStrategyPool.ActiveStrategy.BattalionsData[Assignment.BattalionUID].ScoreAssignment(Assignment);
-            }
-            //for (int i = 0; i < CStrategyPool.ActiveStrategy.GetSectorsCount(); i++)
-            //{
-            //    for (int j = 0; j < TaamCalendar.ChunksCount; j++)
-            //    {
-            //        CSingleAssignment Assignment = this[i * TaamCalendar.ChunksCount + j];
-            //        ReservesionForBattalionScore[Assignment.BattalionUID] +=
-            //            CStrategyPool.ActiveStrategy.BattalionsData[Assignment.BattalionUID].ScoreAssignment(Assignment);
-            //    }
-            //}
-
             for (int i = 0; i < ReservesionForBattalionScore.Length; i++)
             {
                 BattalionReservedFitness += (float)ReservesionForBattalionScore[i] /
@@ -172,20 +167,14 @@ namespace TaamLogics
             return 1 - (BattalionReservedFitness / CStrategyPool.ActiveStrategy.GetBattalionsCount());
         }
 
-        private float CalculateConstraintsFitness()
+        private float CalculateConstraintsFitness(int GeneIdx)
         {
-            float Score = 0;
+            CSimpleBattalion Battalion  = CStrategyPool.ActiveStrategy.BattalionsData[this.Genes[GeneIdx].BattalionUID];
+            CSimpleSector Sector        = CStrategyPool.ActiveStrategy.SectorsData[this.Genes[GeneIdx].SectorUID];
 
-            for (int i = 0; i < this.Genes.Length; i++)
-            {
-                CSimpleBattalion Battalion  = CStrategyPool.ActiveStrategy.BattalionsData[this.Genes[i].BattalionUID];
-                CSimpleSector Sector        = CStrategyPool.ActiveStrategy.SectorsData[this.Genes[i].SectorUID];
-
-                Score += ((Battalion.Force & Sector.ForceConstraint) > 0) ? 1 : 0;
-            }
-
-            return Score / this.Genes.Length;
+            return ((Battalion.Force & Sector.ForceConstraint) > 0) ? 1 : 0;
         }
+
 
         public override IDNA<CSingleAssignment> Clone()
         {
